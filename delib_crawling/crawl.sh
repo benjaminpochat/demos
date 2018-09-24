@@ -1,0 +1,1 @@
+scrapy crawl bulk_link_spider
