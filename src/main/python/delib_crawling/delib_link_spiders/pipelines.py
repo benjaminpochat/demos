@@ -2,7 +2,7 @@ import json
 
 class BulkLinksJsonFileWriterPipeline(object):
     def open_spider(self, spider):
-        self.file = open('../bulk_data/bulk_links.json', 'w')
+        self.file = open('../data/bulk_links.json', 'w')
 
     def close_spider(self, spider):
         self.file.close()
