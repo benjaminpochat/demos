@@ -14,17 +14,25 @@ def load_texts_and_labels(text_file_root_folder :str, training_text_files_folder
     training_labels = []
     validation_texts = []
     validation_labels = []
+    label_dict = {}
+    label_index = 0
 
     for input_subdir_name in os.listdir(text_file_root_folder + '/' + training_text_files_folder):
         label = input_subdir_name
+        if label not in label_dict:
+            label_dict[label] = label_index
+            label_index = label_index + 1
         for text_file_name in os.listdir(text_file_root_folder + '/' + training_text_files_folder + '/' + input_subdir_name):
             text_file = open(text_file_root_folder + '/' + training_text_files_folder + '/' + input_subdir_name + '/' + text_file_name, 'r')
             training_texts.append(text_file.read())
-            training_labels.append(label)
+            training_labels.append(label_dict[label])
     for input_subdir_name in os.listdir(text_file_root_folder + '/' + validation_text_files_folder):
         label = input_subdir_name
+        if label not in label_dict:
+            label_dict[label] = label_index
+            label_index = label_index + 1
         for text_file_name in os.listdir(text_file_root_folder + '/' + validation_text_files_folder + '/' + input_subdir_name):
             text_file = open(text_file_root_folder + '/' + validation_text_files_folder + '/' + input_subdir_name + '/' + text_file_name, 'r')
             validation_texts.append(text_file.read())
-            validation_labels.append(label)
+            validation_labels.append(label_dict[label])
     return training_texts, training_labels, validation_texts, validation_labels

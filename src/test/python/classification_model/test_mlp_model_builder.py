@@ -16,6 +16,7 @@ class TestMlpModelBuilder(unittest.TestCase):
             validation_text_files_folder)
 
         data = (texts_and_labels[0], texts_and_labels[1]), (texts_and_labels[2], texts_and_labels[3])
+        print(texts_and_labels[1])
         print(texts_and_labels[3])
 
         # when
