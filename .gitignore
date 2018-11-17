@@ -2,4 +2,4 @@ venv
 data
 .idea
 /**/*.pyc
-/**/_trial_temp
+/**/_trial_temp*

@@ -1,6 +1,6 @@
 import unittest
 from classification_model.mlp_model_builder import MlpModelBuilder
-from data_preparation.text_dataset_producer import text_dataset_loader
+from data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestMlpModelBuilder(unittest.TestCase):
@@ -10,7 +10,8 @@ class TestMlpModelBuilder(unittest.TestCase):
         text_file_root_folder = '../../../resources/data_preparation/text_dataset_producer'
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
-        texts_and_labels = text_dataset_loader.load_texts_and_labels(
+        text_and_label_loader = TextAndLabelLoader();
+        texts_and_labels = text_and_label_loader.load_texts_and_labels(
             text_file_root_folder,
             training_text_files_folder,
             validation_text_files_folder)
