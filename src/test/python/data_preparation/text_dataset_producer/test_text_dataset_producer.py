@@ -1,6 +1,6 @@
 import unittest
 
-from data_preparation.text_dataset_producer import TextDatasetProducer
+from src.main.python.data_preparation.text_dataset_producer.text_dataset_producer import TextDatasetProducer
 
 
 class TestTextDatasetProducer(unittest.TestCase):

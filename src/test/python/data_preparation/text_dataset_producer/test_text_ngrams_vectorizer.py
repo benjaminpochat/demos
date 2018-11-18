@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 
-from data_preparation.text_dataset_producer import NgramVectorizer
-from data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+from src.main.python.data_preparation.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
+from src.main.python.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestTextNgramsVectorizer(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestTextNgramsVectorizer(unittest.TestCase):
     def test_vectorize_few_big_texts(self):
         # given
         vectorizer = NgramVectorizer()
-        text_file_root_folder = '../../../../resources/data_preparation/text_dataset_producer'
+        text_file_root_folder = 'src/test/resources/data_preparation/text_dataset_producer'
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
         text_and_label_loader = TextAndLabelLoader()

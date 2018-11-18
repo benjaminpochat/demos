@@ -1,4 +1,3 @@
-__all__ = ['TextDatasetProducer', 'NgramVectorizer']
-
-from .text_dataset_producer import TextDatasetProducer
-from .text_ngrams_vectorizer import NgramVectorizer
+import src.main.python.data_preparation.text_dataset_producer.text_dataset_producer
+import src.main.python.data_preparation.text_dataset_producer.text_dataset_loader
+import src.main.python.data_preparation.text_dataset_producer.text_ngrams_vectorizer

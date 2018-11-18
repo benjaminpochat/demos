@@ -1,13 +1,13 @@
 import unittest
-from classification_model.mlp_model_builder import MlpModelBuilder
-from data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+from main.python.classification_model.mlp_model_builder import MlpModelBuilder
+from main.python.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestMlpModelBuilder(unittest.TestCase):
     def test_build_model_with_few_small_texts(self):
         # given
         model_builder = MlpModelBuilder()
-        text_file_root_folder = '../../../resources/data_preparation/text_dataset_producer'
+        text_file_root_folder = 'src/test/resources/data_preparation/text_dataset_producer'
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
         text_and_label_loader = TextAndLabelLoader();

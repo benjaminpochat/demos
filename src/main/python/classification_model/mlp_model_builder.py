@@ -1,7 +1,8 @@
 from tensorflow.python.keras import models
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.layers import Dropout
-from data_preparation.text_dataset_producer import text_ngrams_vectorizer
+
+from src.main.python.data_preparation.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
 import tensorflow as tf
 
 
@@ -43,7 +44,7 @@ class MlpModelBuilder:
 
         self._verify_data(validation_labels)
 
-        vectorizer = text_ngrams_vectorizer.NgramVectorizer()
+        vectorizer = NgramVectorizer()
         training_vector, validation_vector = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
 
         self._create_mlp_model(input_shape=training_vector.shape[1:])
