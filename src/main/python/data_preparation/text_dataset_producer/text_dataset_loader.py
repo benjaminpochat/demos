@@ -1,6 +1,15 @@
 import os
+import random
 
 class TextAndLabelLoader:
+
+    def __init__(self):
+        self._training_texts = []
+        self._training_labels = []
+        self._validation_texts = []
+        self._validation_labels = []
+        self._label_dict = {}
+        self._label_index = 0
 
     def load_texts_and_labels(
             self,
@@ -8,20 +17,11 @@ class TextAndLabelLoader:
             training_text_files_folder: str,
             validation_text_files_folder: str):
         """
-        TODO : suppress copy/paste in the code
-        TODO : extract in a loading class
-        TODO : add randomization
         :param text_file_root_folder:
         :param training_text_files_folder:
         :param validation_text_files_folder:
         :return:
         """
-        self._training_texts = []
-        self._training_labels = []
-        self._validation_texts = []
-        self._validation_labels = []
-        self._label_dict = {}
-        self._label_index = 0\
 
         self._load_text_files_foldered_by_label(
             text_file_root_folder,
@@ -33,6 +33,7 @@ class TextAndLabelLoader:
             validation_text_files_folder,
             self._validation_texts,
             self._validation_labels)
+        self._training_texts, self._training_labels = self.shuffle_texts_and_labels(self._training_texts, self._training_labels)
         return self._training_texts, self._training_labels, self._validation_texts, self._validation_labels
 
     def _load_text_files_foldered_by_label(
@@ -67,3 +68,12 @@ class TextAndLabelLoader:
             texts.append(text_file.read())
             labels.append(self._label_dict[label])
 
+    def shuffle_texts_and_labels(self, texts, labels):
+        random_indices = [i for i in range(0, len(texts))]
+        random.shuffle(random_indices)
+        shuffled_texts = []
+        shuffled_labels = []
+        for j in range(0, len(texts)):
+            shuffled_texts.append(texts[random_indices[j]])
+            shuffled_labels.append(labels[random_indices[j]])
+        return shuffled_texts, shuffled_labels
