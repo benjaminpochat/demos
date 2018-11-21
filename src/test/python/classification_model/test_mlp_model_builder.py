@@ -11,7 +11,7 @@ class TestMlpModelBuilder(unittest.TestCase):
 
         # given
         model_builder = MlpModelBuilder()
-        #model_builder._train_model = Mock(side_effect=print('MlpModelBuilder._train_model mocked'))
+        model_builder._train_model = Mock(side_effect=print('MlpModelBuilder._train_model mocked'))
         text_file_root_folder = os.path.join(os.path.dirname(__file__), '../../resources/data_preparation/text_dataset_producer')
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
