@@ -1,13 +1,18 @@
 import unittest
+import os
+
+from unittest.mock import Mock
 from main.python.classification_model.mlp_model_builder import MlpModelBuilder
 from main.python.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestMlpModelBuilder(unittest.TestCase):
     def test_build_model_with_few_small_texts(self):
+
         # given
         model_builder = MlpModelBuilder()
-        text_file_root_folder = 'src/test/resources/data_preparation/text_dataset_producer'
+        model_builder._train_model = Mock(side_effect=print('MlpModelBuilder._train_model mocked'))
+        text_file_root_folder = os.path.join(os.path.dirname(__file__), '../../resources/data_preparation/text_dataset_producer')
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
         text_and_label_loader = TextAndLabelLoader();
@@ -24,3 +29,6 @@ class TestMlpModelBuilder(unittest.TestCase):
         model_builder.build_model(data)
 
         # then
+
+if __name__ == '__main__':
+    unittest.main()
