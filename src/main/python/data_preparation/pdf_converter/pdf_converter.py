@@ -78,7 +78,7 @@ class PdfConverter:
             self.convert_directory_content(input_subdir_path, output_subdir_path)
 
 
-#converter = PdfConverter()
-#converter.convert_sub_directories("../../data/pdf", "../../data/text")
-#converter.convert_file("../../data/pdf/ville-guerande.fr/Guerande%20navette%20Tygwen%20depliant%20.pdf", "../../data/text/ville-guerande.fr/Guerande%20navette%20Tygwen%20depliant%20.pdf.txt")
+if __name__ == '__main__':
+    converter = PdfConverter()
+    converter.convert_sub_directories("./data/pdf", "./data/text")
 
