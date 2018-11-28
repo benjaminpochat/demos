@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 
-from src.main.python.data_preparation.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
-from src.main.python.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+from main.python.process.data_preparation.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
+from main.python.process.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestTextNgramsVectorizer(unittest.TestCase):

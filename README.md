@@ -21,10 +21,12 @@ The following paragraphs explain how to dive in them.
 
 [... to be completed]
 
+Crawling and scraping the web sites is based on [scrapy framework](https://scrapy.org/) 
+
 
 ## Identifying official city council reports among a bunch of data
 
-To realize this recognition, we use Tensor Flow machine learning framework.
+To realize this recognition, we use [Tensor Flow machine learning framework](https://www.tensorflow.org/).
 To learn Tensor Flow how to recognize a spécific type of document, you have to train the machine with a set of data which is already classified.
 Today, we are still on the way gathering such a dataset and training the machine.
 To do so, we use documents that are published as pdf files in official city web sites :
@@ -46,3 +48,4 @@ To train the TensorFlow model, we have to :
 ## Store and publish
 
 [... nothing done so far]
+

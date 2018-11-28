@@ -1,6 +1,8 @@
 venv
 data
 .idea
+.directory
+dump.rdb
 /**/*.pyc
 /**/_trial_temp*
 .coverage

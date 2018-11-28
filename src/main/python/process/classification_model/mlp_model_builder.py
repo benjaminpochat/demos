@@ -2,7 +2,7 @@ from tensorflow.python.keras import models
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.layers import Dropout
 
-from src.main.python.data_preparation.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
+from main.python.process.data_preparation.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
 import tensorflow as tf
 
 

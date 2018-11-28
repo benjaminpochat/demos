@@ -1,6 +1,6 @@
 import unittest
 
-from src.main.python.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+from main.python.process.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestTextAndLabelLoader(unittest.TestCase):
