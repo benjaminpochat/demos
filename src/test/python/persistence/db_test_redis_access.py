@@ -1,7 +1,7 @@
 import unittest
 import json
 from src.main.python.persistence.redis_access import RedisAccess
-from src.main.python.model.agregate_root import AggregateRoot
+from src.main.python.model.aggregate_root import AggregateRoot
 
 
 class SimpleAgregateRoot(AggregateRoot):
@@ -20,7 +20,7 @@ class TestRedisAccess(unittest.TestCase):
         agregate_root = SimpleAgregateRoot()
 
         #when
-        redis_access.store_agregate(agregate_root)
+        redis_access.store_aggregate(agregate_root)
 
         #then
 

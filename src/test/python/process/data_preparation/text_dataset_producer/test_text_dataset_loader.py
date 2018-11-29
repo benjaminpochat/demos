@@ -4,7 +4,7 @@ from main.python.process.data_preparation.text_dataset_producer.text_dataset_loa
 
 
 class TestTextAndLabelLoader(unittest.TestCase):
-    def test_randomize_training_texts_and_labels(self):
+    def test_randomize_training_texts_and_labels_should_shuffle_numbers_one_to_ten(self):
         # given
         texts = ['un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix']
         labels = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']

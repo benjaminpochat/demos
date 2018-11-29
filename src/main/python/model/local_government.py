@@ -1,4 +1,4 @@
-from src.main.python.model.agregate_root import AggregateRoot
+from src.main.python.model.aggregate_root import AggregateRoot
 
 
 class LocalGovernment(AggregateRoot):
