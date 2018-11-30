@@ -9,34 +9,49 @@ class TestLocalGovernmentInitializer(unittest.TestCase):
     def test_try_domain_should_return_first_try(self):
         # given
         commune = LocalGovernment()
-        commune.national_typology = {'nomcomplet': 'Béchy'}
+        commune.national_typology = {'nom_complet': 'Béchy'}
+        commune.id = 'bechy'
         initializer = LocalGovernmentInitializer()
         initializer.get_page = MagicMock(return_value='site web de la commune de Béchy')
 
         # when
-        domain = initializer.find_domain(commune)
+        initializer.find_domain(commune)
 
         # then
-        self.assertEqual(domain, 'bechy.fr')
+        self.assertEqual(commune.domain_name, 'bechy.fr')
 
     def test_try_domain_should_return_nothing(self):
         # given
         commune = LocalGovernment()
-        commune.national_typology = {'nomcomplet': 'Gruffy'}
+        commune.national_typology = {'nom_complet': 'Gruffy'}
         initializer = LocalGovernmentInitializer()
         initializer.get_page = MagicMock(return_value='Le site commercial de l\épicerie de Gruffy')
 
         # when
-        domain = initializer.find_domain(commune)
+        initializer.find_domain(commune)
 
         # then
-        self.assertEqual(domain, None)
+        self.assertEqual(commune.domain_name, None)
+
+    def test_try_domain_should_set_domain_if_dash_ommited(self):
+        # given
+        commune = LocalGovernment()
+        commune.national_typology = {'nom_complet': 'La Chapelle-Faucher'}
+        commune.id = 'le_chapelle_faucher'
+        initializer = LocalGovernmentInitializer()
+        initializer.get_page = MagicMock(return_value='Le site de la commune de La Chapelle Faucher')
+
+        # when
+        initializer.find_domain(commune)
+
+        # then
+        self.assertEqual(commune.domain_name, 'la_chapelle_faucher.fr')
 
     def test_get_domain_tries_for_Guerandes_with_an_accent(self):
         # given
         initializer = LocalGovernmentInitializer()
         commune = LocalGovernment()
-        commune.national_typology = {'nomcomplet': 'Guérandes'}
+        commune.national_typology = {'nom_complet': 'Guérandes'}
 
         # when
         domains = initializer.get_domain_tries(commune)
@@ -51,7 +66,7 @@ class TestLocalGovernmentInitializer(unittest.TestCase):
         # given
         initializer = LocalGovernmentInitializer()
         commune = LocalGovernment()
-        commune.national_typology = {'nomcomplet': 'Le Mans'}
+        commune.national_typology = {'nom_complet': 'Le Mans'}
 
         # when
         domains = initializer.get_domain_tries(commune)
@@ -74,7 +89,7 @@ class TestLocalGovernmentInitializer(unittest.TestCase):
         # given
         initializer = LocalGovernmentInitializer()
         commune = LocalGovernment()
-        commune.national_typology = {'nomcomplet': 'L\'Hôpital'}
+        commune.national_typology = {'nom_complet': 'L\'Hôpital'}
 
         # when
         domains = initializer.get_domain_tries(commune)
@@ -84,6 +99,20 @@ class TestLocalGovernmentInitializer(unittest.TestCase):
         self.assertTrue(domains.__contains__('l-hopital.fr'))
         self.assertTrue(domains.__contains__('l_hopital.fr'))
 
+    def test_try(self):
+        # given
+        commune = LocalGovernment()
+        commune.national_typology = {'nom_complet': 'Champs'}
+        initializer = LocalGovernmentInitializer()
+        #initializer.get_page = MagicMock(return_value='site web de la commune de Béchy')
+
+        # when
+        initializer.find_domain(commune)
+
+        # then
+        print(commune.domain_name)
+
+#lachapellefaucher
 
 if __name__ == '__main__':
     unittest.main()

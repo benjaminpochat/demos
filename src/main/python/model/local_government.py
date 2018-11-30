@@ -3,7 +3,7 @@ from src.main.python.model.aggregate_root import AggregateRoot
 
 class LocalGovernment(AggregateRoot):
 
-    def __init__(self, id: str = '', name: str = '', national_typology: dict = {}, domain_name: str = ''):
+    def __init__(self, id: str = None, name: str = None, national_typology: dict = {}, domain_name: str = None):
         self.id = id
         self.name = name
         self.national_typology = national_typology

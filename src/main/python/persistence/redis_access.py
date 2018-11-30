@@ -32,14 +32,36 @@ class RedisAccess:
             elif type(attribute_value) is dict:
                 self._store_dict_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
 
-    def _store_simple_attribute(self, aggregate_root, attribute_key, attribute_value):
+    def _store_simple_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value):
         self._redis.hset(
             self._get_aggregate_key(aggregate_root),
             attribute_key,
             attribute_value)
 
-    def _store_dict_attribute(self, aggregate_root, attribute_key, attribute_value):
+    def _store_dict_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value: dict):
         self._redis.hset(
             self._get_aggregate_key(aggregate_root),
             attribute_key,
             json.dumps(attribute_value))
+
+    def list_aggregates(self, the_class: type, pattern: str= '*'):
+        instances = []
+        key_iterator = self._redis.scan_iter(the_class.__name__ + ':' + pattern)
+        for key in key_iterator:
+            key_as_str = key.decode()
+            instance = the_class()
+            aggregate_root_id = key_as_str[the_class.__name__.__len__() + 1:]
+            for attribute_name in instance.__dict__.keys():
+                if attribute_name == 'id':
+                    attribute_value = aggregate_root_id
+                else:
+                    attribute_value = getattr(instance, attribute_name)
+                    if attribute_value.__class__ == str:
+                        attribute_value = self._redis.hget(key, attribute_name).decode()
+                    elif attribute_value.__class__ == dict:
+                        attribute_value = json.loads(self._redis.hget(key, attribute_name).decode())
+                setattr(instance, attribute_name, attribute_value)
+
+            instances.append(instance)
+
+        return instances
