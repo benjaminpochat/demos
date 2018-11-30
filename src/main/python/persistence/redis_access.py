@@ -31,6 +31,8 @@ class RedisAccess:
                 self._store_simple_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
             elif type(attribute_value) is dict:
                 self._store_dict_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
+            elif type(attribute_value) is bool:
+                self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
 
     def _store_simple_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value):
         self._redis.hset(
@@ -60,6 +62,13 @@ class RedisAccess:
                         attribute_value = self._redis.hget(key, attribute_name).decode()
                     elif attribute_value.__class__ == dict:
                         attribute_value = json.loads(self._redis.hget(key, attribute_name).decode())
+                    elif attribute_value.__class__ == bool:
+                        if self._redis.hget(key, attribute_name) is None:
+                            attribute_value = False
+                        elif self._redis.hget(key, attribute_name).decode().lower() == 'true':
+                            attribute_value = True
+                        else:
+                            attribute_value = False
                 setattr(instance, attribute_name, attribute_value)
 
             instances.append(instance)

@@ -31,18 +31,23 @@ class LocalGovernmentInitializer(Loggable):
     def update_communes_of_france_with_domains(self):
         communes = self._redis_access.list_aggregates(LocalGovernment, 'fr-commune*')
         for commune in communes:
-            self.find_domain(commune)
-            self._redis_access.store_aggregate(commune)
+            if commune.domain_searched is None or not commune.domain_searched:
+                self.find_domain(commune)
+                commune.domain_searched = True
+                self._redis_access.store_aggregate(commune)
 
     def find_domain(self, commune: LocalGovernment):
+        self.log_info('start finding domain for commune \"' + commune.get_id() + '\"')
         domain_tries = self.get_domain_tries(commune)
         commune.domain_name = None
         for domain in domain_tries:
             page_content = self.get_page(domain)
             if page_content is not None and self.is_official_commune_web_page(page_content, commune):
-                self.log_debug('\"' + domain + '\" set as domain_name for commune \"' + commune.get_id() + '\"')
+                self.log_info('\"' + domain + '\" found as domain_name for commune \"' + commune.get_id() + '\"')
                 commune.domain_name = domain
                 break
+        if commune.domain_name is None:
+            self.log_info('no domain found for commune \"' + commune.get_id() + '\"')
 
     def get_domain_tries(self, commune):
         ascii_names = self.get_ascii_commune_names(commune)
@@ -68,7 +73,7 @@ class LocalGovernmentInitializer(Loggable):
     def get_page(self, url: str):
         self.log_debug('Try to request \"' + url + '\"')
         try:
-            response = requests.get('http://' + url, allow_redirects=False)
+            response = requests.get('http://' + url, allow_redirects=False, timeout=60)
             content = response.text
         except Exception as e:
             self.log_debug('Failed to request \"' + url + '\"')
@@ -98,6 +103,6 @@ class LocalGovernmentInitializer(Loggable):
 if __name__ == '__main__':
     initializer = LocalGovernmentInitializer()
     initializer.log_info('Starting initialization of french communes')
-    #initializer.store_communes_of_france()
+    initializer.store_communes_of_france()
     initializer.update_communes_of_france_with_domains()
 
