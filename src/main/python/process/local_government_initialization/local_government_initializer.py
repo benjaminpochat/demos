@@ -10,6 +10,9 @@ from src.main.python.commons.loggable import Loggable
 
 class LocalGovernmentInitializer(Loggable):
     _redis_access = RedisAccess()
+    _number_of_communes = 0
+    _number_of_domains_previously_searched = 0
+    _number_of_domains_currently_searched = 0
 
     def store_communes_of_france(self):
         """
@@ -30,33 +33,47 @@ class LocalGovernmentInitializer(Loggable):
 
     def update_communes_of_france_with_domains(self):
         communes = self._redis_access.list_aggregates(LocalGovernment, 'fr-commune*')
+        self._number_of_communes = communes.__len__()
         for commune in communes:
             if commune.domain_searched is None or not commune.domain_searched:
                 self.find_domain(commune)
                 commune.domain_searched = True
                 self._redis_access.store_aggregate(commune)
+                self._number_of_domains_currently_searched = self._number_of_domains_currently_searched + 1
+            else:
+                self._number_of_domains_previously_searched = self._number_of_domains_previously_searched + 1
+            self.log_info(str(self._number_of_domains_currently_searched)
+                          + ' domains currently searched - '
+                          + str(self._number_of_domains_previously_searched)
+                          + ' domains previously searched - '
+                          + str(self._number_of_communes)
+                          + ' communes.')
 
     def find_domain(self, commune: LocalGovernment):
-        self.log_info('start finding domain for commune \"' + commune.get_id() + '\"')
+        self.log_info('Start finding domain for commune \"' + commune.get_id() + '\" (' + commune.name + ')')
         domain_tries = self.get_domain_tries(commune)
         commune.domain_name = None
         for domain in domain_tries:
             page_content = self.get_page(domain)
             if page_content is not None and self.is_official_commune_web_page(page_content, commune):
-                self.log_info('\"' + domain + '\" found as domain_name for commune \"' + commune.get_id() + '\"')
+                self.log_info('\"' + domain + '\" found as domain_name for commune \"' + commune.get_id() + '\" (' + commune.name + ')')
                 commune.domain_name = domain
                 break
         if commune.domain_name is None:
-            self.log_info('no domain found for commune \"' + commune.get_id() + '\"')
+            self.log_info('no domain found for commune \"' + commune.get_id() + '\" (' + commune.name + ')')
 
     def get_domain_tries(self, commune):
         ascii_names = self.get_ascii_commune_names(commune)
         domain_tries = []
         for ascii_name in ascii_names:
             domain_tries.append(ascii_name + '.fr')
-            domain_tries.append(ascii_name + '.org')
-            domain_tries.append(ascii_name + '.com')
+            domain_tries.append('www.' + ascii_name + '.fr')
             domain_tries.append('ville-' + ascii_name + '.fr')
+            domain_tries.append('www.ville-' + ascii_name + '.fr')
+            domain_tries.append(ascii_name + '.org')
+            domain_tries.append('www.' + ascii_name + '.org')
+            domain_tries.append(ascii_name + '.com')
+            domain_tries.append('www.' + ascii_name + '.com')
         return domain_tries
 
     def get_ascii_commune_names(self, commune):
@@ -103,6 +120,6 @@ class LocalGovernmentInitializer(Loggable):
 if __name__ == '__main__':
     initializer = LocalGovernmentInitializer()
     initializer.log_info('Starting initialization of french communes')
-    initializer.store_communes_of_france()
+    #initializer.store_communes_of_france()
     initializer.update_communes_of_france_with_domains()
 

@@ -8,7 +8,7 @@ class LocalGovernment(AggregateRoot):
                  name: str = '',
                  national_typology: dict = {},
                  domain_name: str = '',
-                 domain_searched:bool = False):
+                 domain_searched: bool = False):
         self.id = id
         self.name = name
         self.national_typology = national_typology

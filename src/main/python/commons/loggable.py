@@ -8,7 +8,7 @@ class Loggable:
         self._init_logger()
 
     def _init_logger(self):
-        log_level = logging.DEBUG
+        log_level = logging.INFO
         log_handler = StreamHandler()
         log_handler.setLevel(log_level)
         log_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
