@@ -1,8 +1,6 @@
 import unittest
 import os
 import re
-import signal
-import time
 from src.main.python.process.data_preparation.pdf_converter.pdf_converter import PdfConverter
 
 
