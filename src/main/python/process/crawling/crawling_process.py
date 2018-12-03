@@ -5,6 +5,7 @@ from scrapy.spiders import CrawlSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 from scrapy.http import Response
+from src.main.python.process.data_preparation.pdf_converter.pdf_converter import PdfConverter
 
 
 class PdfSpider(CrawlSpider):
@@ -24,11 +25,14 @@ class PdfSpider(CrawlSpider):
 
     def convert_and_save(self, response: Response):
         print('PDF found : ' + response.url)
+        pdf_converter = PdfConverter()
+        pdf_converter.convert(response.body)
+
 
 
 class LocalGovernmentCrawlingProcess(Loggable):
     """
-    A process that crawls local government's domain, and collects all data that could be an official council meeting report
+    A process that crawls a local government's domain, and collects all data that could be an official council meeting report
     """
     def __init__(self, local_government: LocalGovernment):
         super().__init__()
