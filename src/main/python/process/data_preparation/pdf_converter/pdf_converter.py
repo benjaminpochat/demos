@@ -19,7 +19,7 @@ class PdfConverter(Loggable):
         temporary_pdf_file.write(pdf_bytes)
         manager = PDFResourceManager()
         output = StringIO()
-        pdf_to_text_converter = TextConverter(manager, output, laparams=LAParams())
+        pdf_to_text_converter = TextConverter(manager, output, 'utf-8', laparams=LAParams())
         interpreter = PDFPageInterpreter(manager, pdf_to_text_converter)
 
         def timeout_handler(signum, frame):

@@ -14,7 +14,7 @@ class WebDocument(AggregateRoot):
 
     def get_id(self):
         sha1_process = hashlib.sha1()
-        sha1_process.update(bytes(self.url))
+        sha1_process.update(bytes(self.text_content, 'utf-8'))
         return sha1_process.hexdigest()
 
 

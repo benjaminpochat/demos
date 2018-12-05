@@ -23,7 +23,7 @@ class TestPdfConverter(unittest.TestCase):
         # It would be better if the conversion result contained only "Hello world !".
         self.assertTrue(re.match('^Hello world !\s*$', pdf_text_content))
 
-    def test_convert_pdf_ok(self):
+    def test_convert_complex_pdf_ok(self):
         # given
         timeout_in_seconds = 1
         pdf_converter = PdfConverter(timeout=timeout_in_seconds)
