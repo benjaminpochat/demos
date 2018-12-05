@@ -5,7 +5,7 @@ from scrapy.spiders import CrawlSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 from scrapy.http import Response
-from src.main.python.process.data_preparation.pdf_converter.pdf_converter import PdfConverter
+from main.python.process.pdf_converter import PdfConverter
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.persistence.redis_access import RedisAccess
 

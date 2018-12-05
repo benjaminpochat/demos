@@ -2,8 +2,8 @@ import unittest
 import os
 
 from unittest.mock import Mock
-from main.python.process.classification_model.mlp_model_builder import MlpModelBuilder
-from main.python.process.data_preparation.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+from main.python.process.training.classification_model.mlp_model_builder import MlpModelBuilder
+from main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 
 
 class TestMlpModelBuilder(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestMlpModelBuilder(unittest.TestCase):
         # given
         model_builder = MlpModelBuilder()
         model_builder._train_model = Mock(side_effect=print('MlpModelBuilder._train_model mocked'))
-        text_file_root_folder = os.path.join(os.path.dirname(__file__), '../../../resources/data_preparation/text_dataset_producer')
+        text_file_root_folder = os.path.join(os.path.dirname(__file__), '../../../../resources/process/training/text_dataset_producer')
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
         text_and_label_loader = TextAndLabelLoader();

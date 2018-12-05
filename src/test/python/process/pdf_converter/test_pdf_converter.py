@@ -1,7 +1,7 @@
 import unittest
 import os
 import re
-from src.main.python.process.data_preparation.pdf_converter.pdf_converter import PdfConverter
+from main.python.process.pdf_converter.pdf_converter import PdfConverter
 
 
 class TestPdfConverter(unittest.TestCase):
@@ -9,7 +9,7 @@ class TestPdfConverter(unittest.TestCase):
         # given
         pdf_converter = PdfConverter(timeout=60)
         simple_pdf_file_path = os.path.join(os.path.dirname(__file__),
-                                            '../../../../resources/data_preparation/pdf_converter/simple.pdf')
+                                            '../../../resources/process/pdf_converter/simple.pdf')
         simple_pdf_file = open(simple_pdf_file_path, 'rb')
         pdf_bytes = simple_pdf_file.read()
         simple_pdf_file.close()
@@ -28,7 +28,7 @@ class TestPdfConverter(unittest.TestCase):
         timeout_in_seconds = 1
         pdf_converter = PdfConverter(timeout=timeout_in_seconds)
         complex_pdf_file_path = os.path.join(os.path.dirname(__file__),
-                                             '../../../../resources/data_preparation/pdf_converter/complex.pdf')
+                                             '../../../resources/process/pdf_converter/complex.pdf')
         complex_pdf_file = open(complex_pdf_file_path, 'rb')
         pdf_bytes = complex_pdf_file.read()
         complex_pdf_file.close()
