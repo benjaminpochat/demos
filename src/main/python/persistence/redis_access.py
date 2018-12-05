@@ -1,3 +1,5 @@
+from numpy.f2py.auxfuncs import throw_error
+
 from src.main.python.model.aggregate_root import AggregateRoot
 
 import redis
@@ -7,7 +9,6 @@ import json
 class RedisAccess:
     """
     Access data persisted in Redis
-    #TODO : use hset instead of set redis command
     #TODO : check if the connexion should be closed properly
     """
 
@@ -74,3 +75,13 @@ class RedisAccess:
             instances.append(instance)
 
         return instances
+
+    def get_aggregate(self, the_class, aggregate_id):
+        return self.list_aggregates(the_class=the_class, pattern=aggregate_id)[0]
+
+    def get_random_aggregate(self, the_class: type):
+        key = self._redis.randomkey()
+        while not key.decode().startswith(the_class.__name__):
+            key = self._redis.randomkey()
+        aggregate_id = key.decode()[the_class.__name__.__len__() + 1:]
+        return self.get_aggregate(the_class=the_class, aggregate_id=aggregate_id)

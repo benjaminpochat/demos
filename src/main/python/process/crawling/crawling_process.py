@@ -5,7 +5,7 @@ from scrapy.spiders import CrawlSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 from scrapy.http import Response
-from main.python.process.pdf_converter import PdfConverter
+from main.python.process.pdf_converter.pdf_converter import PdfConverter
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.persistence.redis_access import RedisAccess
 
@@ -45,6 +45,6 @@ class LocalGovernmentCrawlingProcess(Loggable):
     def crawl(self):
         crawler_process = CrawlerProcess()
         crawler_process.crawl(LocalGovernmentPdfSpider, [self.local_government])
-        self.log_info('Start crawling domain \"' + self.local_government.domain_name + '\"')
+        self.log_info('Starts crawling domain \"' + self.local_government.domain_name + '\"')
         crawler_process.start()
-        self.log_info('Stop crawling domain \"' + self.local_government.domain_name + '\"')
+        self.log_info('Stops crawling domain \"' + self.local_government.domain_name + '\"')

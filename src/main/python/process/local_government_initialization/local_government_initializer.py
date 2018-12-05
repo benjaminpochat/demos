@@ -2,6 +2,7 @@ import json
 import requests
 import unidecode
 import re
+import sys
 
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.model.local_government import LocalGovernment
@@ -118,8 +119,15 @@ class LocalGovernmentInitializer(Loggable):
 
 
 if __name__ == '__main__':
+    if sys.argv.__contains__('-h'):
+        print('Command line for initializing the list of french communes with their domain names in database')
+        print('Preresites : start the database, see start_sb.sh script')
+        print('Usage : init_french_communes [opt]')
+        print('Options :')
+        print('  -R reset the data')
+        print('')
     initializer = LocalGovernmentInitializer()
     initializer.log_info('Starting initialization of french communes')
-    #initializer.store_communes_of_france()
+    if sys.argv.__contains__('-R'):
+        initializer.store_communes_of_france()
     initializer.update_communes_of_france_with_domains()
-
