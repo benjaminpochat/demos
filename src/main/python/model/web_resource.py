@@ -3,6 +3,7 @@ import hashlib
 from src.main.python.model.aggregate_root import AggregateRoot
 from src.main.python.model.local_government import LocalGovernment
 
+
 class WebDocument(AggregateRoot):
     """
     An object that represents a document found on the web.
@@ -11,6 +12,7 @@ class WebDocument(AggregateRoot):
         self.text_content = text_content
         self.url = url
         self.local_government = local_government
+        self.classified_as_official_report = None
 
     def get_id(self):
         sha1_process = hashlib.sha1()
