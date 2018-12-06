@@ -1,5 +1,3 @@
-from numpy.f2py.auxfuncs import throw_error
-
 from src.main.python.model.aggregate_root import AggregateRoot
 
 import redis

@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-python3 -m main.python.process.local_government_initialization $@
+
+export PYTHONPATH=/home/benjamin/Documents/workspace/delib-archiver::/home/benjamin/.local/lib/python3.5/site-packages
+python3 src/main/python/process/local_government_initialization/local_government_initializer.py

@@ -122,7 +122,7 @@ if __name__ == '__main__':
     if sys.argv.__contains__('-h'):
         print('Command line for initializing the list of french communes with their domain names in database')
         print('Preresites : start the database, see start_sb.sh script')
-        print('Usage : init_french_communes [opt]')
+        print('Usage : sh init_local_governments.sh [opt]')
         print('Options :')
         print('  -R reset the data')
         print('')

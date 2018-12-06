@@ -40,6 +40,7 @@ if __name__ == '__main__':
     print('Welcome to the local government data classifier program !')
     classifier = ManualWebDocumentClassifier()
     while True:
-        classifier.classify()
         input('Start next classification ? [Ctrl+C : stop | Enter : start next]')
+        classifier.classify()
+
 
