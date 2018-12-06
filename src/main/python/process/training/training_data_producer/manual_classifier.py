@@ -19,8 +19,12 @@ class ManualWebDocumentClassifier:
 
     def _select_randomly_web_document(self):
         self._current_web_document = self._redis_access.get_random_aggregate(WebDocument)
-        while self._current_web_document.classified_as_official_report != Boolean.UNKNOWN:
+        while self._is_classification_defined():
             self._current_web_document = self._redis_access.get_random_aggregate(WebDocument)
+
+    def _is_classification_defined(self):
+        return self._current_web_document.classified_as_official_report == Boolean.TRUE \
+               or self._current_web_document.classified_as_official_report == Boolean.FALSE
 
     def _display_random_web_document(self):
         echo_content = subprocess.Popen(('echo', self._current_web_document.text_content), stdout=subprocess.PIPE)
