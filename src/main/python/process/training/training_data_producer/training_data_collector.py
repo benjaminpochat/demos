@@ -25,9 +25,8 @@ class TrainingDataCollector(Loggable):
         return random_local_government.domain_name.__len__() < 1 or self._training_subset.__contains__(random_local_government)
 
     def _crawl_subset(self):
-        for local_government in self._training_subset:
-            crawling_process = LocalGovernmentCrawlingProcess(local_government=local_government)
-            crawling_process.crawl()
+        crawling_process = LocalGovernmentCrawlingProcess(local_governments=self._training_subset)
+        crawling_process.crawl()
 
     def collect(self):
         self._initilize_subset()
@@ -43,7 +42,7 @@ if __name__ == '__main__':
         print('  -n number of local governments\' web sites to crawl (default is 1)')
         print('')
     else:
-        subset_size = 2
+        subset_size = 1
         if sys.argv.__contains__('-n'):
             n_option_index = sys.argv.index('-n')
             subset_size = int(sys.argv[n_option_index + 1])

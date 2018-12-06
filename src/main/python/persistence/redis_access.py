@@ -1,7 +1,10 @@
-from src.main.python.model.aggregate_root import AggregateRoot
+from builtins import isinstance
 
 import redis
 import json
+
+from src.main.python.model.aggregate_root import AggregateRoot
+from enum import Enum
 
 
 class RedisAccess:
@@ -24,13 +27,17 @@ class RedisAccess:
         """
         for attribute_key in aggregate_root.__dict__.keys():
             attribute_value = aggregate_root.__dict__[attribute_key]
-            if type(attribute_value) is str:
+            if attribute_value is None:
+                self._remove_attribute(aggregate_root, attribute_key)
+            elif type(attribute_value) is str:
                 self._store_simple_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
             elif type(attribute_value) is int:
                 self._store_simple_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
             elif type(attribute_value) is dict:
                 self._store_dict_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
             elif type(attribute_value) is bool:
+                self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
+            elif isinstance(attribute_value, Enum):
                 self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
 
     def _store_simple_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value):
@@ -62,12 +69,15 @@ class RedisAccess:
                     elif attribute_value.__class__ == dict:
                         attribute_value = json.loads(self._redis.hget(key, attribute_name).decode())
                     elif attribute_value.__class__ == bool:
-                        if self._redis.hget(key, attribute_name) is None:
-                            attribute_value = False
-                        elif self._redis.hget(key, attribute_name).decode().lower() == 'true':
+                        if self._redis.hget(key, attribute_name).decode().lower() == 'true':
                             attribute_value = True
                         else:
                             attribute_value = False
+                    elif issubclass(attribute_value.__class__, Enum):
+                        enum_class = attribute_value.__class__
+                        enum_str_value = self._redis.hget(key, attribute_name)
+                        if enum_str_value is not None:
+                            attribute_value = enum_class(enum_str_value.decode()[enum_class.__name__.__len__() + 1:])
                 setattr(instance, attribute_name, attribute_value)
 
             instances.append(instance)
@@ -83,3 +93,6 @@ class RedisAccess:
             key = self._redis.randomkey()
         aggregate_id = key.decode()[the_class.__name__.__len__() + 1:]
         return self.get_aggregate(the_class=the_class, aggregate_id=aggregate_id)
+
+    def _remove_attribute(self, aggregate_root, attribute_key):
+        self._redis.hdel(self._get_aggregate_key(aggregate_root), attribute_key)

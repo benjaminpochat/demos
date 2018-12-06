@@ -39,19 +39,21 @@ class LocalGovernmentCrawlingProcess(Loggable):
     """
     A process that crawls a local government's domain, and collects all data that could be an official council meeting report
     """
-    def __init__(self, local_government: LocalGovernment):
+    def __init__(self, local_governments: list):
         super().__init__()
-        self.local_government = local_government
+        self.local_governments = local_governments
+        self.crawler_process = CrawlerProcess()
 
     def crawl(self):
-        crawler_process = CrawlerProcess()
-        if(self.local_government.domain_name.__len__() < 1):
-            raise Exception('Impossible to crawl local government \"'
-                            + self.local_government.name
+        for local_government in self.local_governments:
+            self._add_local_government_to_crawl(local_government)
+        self.crawler_process.start()
+
+    def _add_local_government_to_crawl(self, local_government: LocalGovernment):
+        if local_government.domain_name.__len__() < 1:
+            self.log_error('Impossible to crawl local government \"'
+                            + local_government.name
                             + '\" with id '
-                            + self.local_government.name.get_id()
+                            + local_government.name.get_id()
                             + 'because it has no domain name')
-        crawler_process.crawl(LocalGovernmentPdfSpider, [self.local_government])
-        self.log_info('Starts crawling domain \"' + self.local_government.domain_name + '\" for ' + self.local_government.name)
-        crawler_process.start()
-        self.log_info('Stops crawling domain \"' + self.local_government.domain_name + '\" for ' + self.local_government.name)
+        self.crawler_process.crawl(LocalGovernmentPdfSpider, [local_government])
