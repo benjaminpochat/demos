@@ -32,6 +32,8 @@ class ManualWebDocumentClassifier:
 
     def _ask_for_classification(self):
         response = input('Is this an official report ? [ y | n ]')
+        while response.lower() not in ['y', 'n']:
+            response = input('Is this an official report ? [ y | n ]')
         if response.lower() == 'y':
             self._current_web_document.classified_as_official_report = Boolean.TRUE
         else:
@@ -42,7 +44,7 @@ class ManualWebDocumentClassifier:
         print('Classification for category \'official report\' stored \n'
               + ' - WebDocument\'s id  : ' + self._current_web_document.get_id () + '\n'
               + ' - WebDocument\'s url : ' + self._current_web_document.url + '\n'
-              + ' - Classified as \'official report\' : ' + str(self._current_web_document.classified_as_official_report))
+              + ' - Classification for \'official report\' : ' + str(self._current_web_document.classified_as_official_report))
 
     def _clear_classification(self):
         confirmation = input('Are you sure to delete all classification data ? [ y | n ]')
@@ -58,6 +60,23 @@ class ManualWebDocumentClassifier:
         else:
             print('Cleaning classification canceled.')
 
+    def _show_classification_status(self):
+        web_documents = self._redis_access.list_aggregates(WebDocument)
+        classified_document_counter = 0
+        document_counter = 0
+        for web_document in web_documents:
+            document_counter += 1
+            if self._is_document_classified(web_document):
+                classified_document_counter += 1
+        print('Classification status :')
+        print(str(document_counter) + ' documents in total')
+        print(str(classified_document_counter) + ' classified documents')
+
+    def _is_document_classified(self, web_document):
+        return web_document.classified_as_official_report == Boolean.TRUE \
+               or web_document.classified_as_official_report == Boolean.FALSE
+
+
 if __name__ == '__main__':
     print('Welcome to the local government documents classifier program !')
     if sys.argv.__contains__('-h'):
@@ -66,11 +85,14 @@ if __name__ == '__main__':
         print('Usage : sh classify_training_data.sh [opt]')
         print('Options :')
         print('  -C clear the classification on all documents before starting')
+        print('  -s get the status of the classification : number of documents classified, total of documents')
         print('')
     else:
         classifier = ManualWebDocumentClassifier()
         if sys.argv.__contains__('-C'):
             classifier._clear_classification()
+        if sys.argv.__contains__('-s'):
+            classifier._show_classification_status()
         while True:
             input('Start next classification ? [Ctrl+C : stop | Enter : start next]')
             classifier.classify()
