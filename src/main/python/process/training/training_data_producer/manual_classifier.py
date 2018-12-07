@@ -69,8 +69,8 @@ if __name__ == '__main__':
         print('')
     else:
         classifier = ManualWebDocumentClassifier()
-        #if sys.argv.__contains__('-C'):
-        classifier._clear_classification()
+        if sys.argv.__contains__('-C'):
+            classifier._clear_classification()
         while True:
             input('Start next classification ? [Ctrl+C : stop | Enter : start next]')
             classifier.classify()

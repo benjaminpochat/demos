@@ -86,6 +86,7 @@ class RedisAccess:
 
     def _load_enum_attribute_value(self, attribute_name, enum_class, key):
         enum_str_value = self._redis.hget(key, attribute_name)
+        attribute_value = None
         if enum_str_value is not None:
             attribute_value = enum_class(enum_str_value.decode()[enum_class.__name__.__len__() + 1:])
         return attribute_value
