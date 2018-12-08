@@ -94,5 +94,5 @@ if __name__ == '__main__':
         if sys.argv.__contains__('-s'):
             classifier._show_classification_status()
         while True:
-            input('Start next classification ? [Ctrl+C : stop | Enter : start next]')
+            input('Start next classification ? [Ctrl+C : quit | Enter : continue]')
             classifier.classify()

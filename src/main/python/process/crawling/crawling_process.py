@@ -29,7 +29,7 @@ class LocalGovernmentPdfSpider(CrawlSpider):
 
     def convert_and_save(self, response: Response):
         print('PDF found : ' + response.url)
-        pdf_converter = PdfConverter()
+        pdf_converter = PdfConverter(timeout=300)
         text_content = pdf_converter.convert(response.body)
         web_document = WebDocument(url=response.url, local_government=self.local_government, text_content=text_content)
         self.redis_access.store_aggregate(web_document)
