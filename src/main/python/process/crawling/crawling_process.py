@@ -32,6 +32,7 @@ class LocalGovernmentPdfSpider(CrawlSpider):
         pdf_converter = PdfConverter(timeout=300)
         text_content = pdf_converter.convert(response.body)
         web_document = WebDocument(url=response.url, local_government=self.local_government, text_content=text_content)
+        web_document.generate_id()
         self.redis_access.store_aggregate(web_document)
 
 

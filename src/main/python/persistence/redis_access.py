@@ -38,6 +38,8 @@ class RedisAccess:
                 self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
             elif isinstance(attribute_value, Enum):
                 self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
+            elif isinstance(attribute_value, AggregateRoot):
+                self._store_simple_attribute(aggregate_root, attribute_key, self._get_aggregate_key(attribute_value))
 
     def _store_simple_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value):
         self._redis.hset(
@@ -79,17 +81,12 @@ class RedisAccess:
                         attribute_value = self._load_bool_attribute_value(attribute_name, key)
                     elif issubclass(attribute_value.__class__, Enum):
                         attribute_value = self._load_enum_attribute_value(attribute_name, attribute_value.__class__, key)
+                    elif issubclass(attribute_value.__class__, AggregateRoot):
+                        attribute_value = self._load_aggregate_root_attribute(attribute_name, attribute_value.__class__, key)
                 setattr(instance, attribute_name, attribute_value)
             instances.append(instance)
 
         return instances
-
-    def _load_enum_attribute_value(self, attribute_name, enum_class, key):
-        enum_str_value = self._redis.hget(key, attribute_name)
-        attribute_value = None
-        if enum_str_value is not None:
-            attribute_value = enum_class(enum_str_value.decode()[enum_class.__name__.__len__() + 1:])
-        return attribute_value
 
     def _load_bool_attribute_value(self, attribute_name, key):
         if self._load_str_attribute(attribute_name, key).lower() == 'true':
@@ -106,6 +103,21 @@ class RedisAccess:
 
     def _load_str_attribute(self, attribute_name, key):
         return self._redis.hget(key, attribute_name).decode()
+
+    def _load_enum_attribute_value(self, attribute_name, enum_class, key):
+        enum_str_value = self._redis.hget(key, attribute_name)
+        attribute_value = None
+        if enum_str_value is not None:
+            attribute_value = enum_class(enum_str_value.decode()[enum_class.__name__.__len__() + 1:])
+        return attribute_value
+
+    def _load_aggregate_root_attribute(self, attribute_name, aggregate_root_class, key):
+        aggregate_root_id_str_value = self._redis.hget(key, attribute_name)
+        attribute_value = None
+        if aggregate_root_id_str_value is not None:
+            attribute_value = aggregate_root_class()
+            attribute_value.set_id(aggregate_root_id_str_value.decode()[len(aggregate_root_class.__name__) + 1:])
+        return attribute_value
 
     def _remove_attribute(self, aggregate_root, attribute_key):
         self._redis.hdel(self._get_aggregate_key(aggregate_root), attribute_key)

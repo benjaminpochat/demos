@@ -64,12 +64,14 @@ class ManualWebDocumentClassifier:
         web_documents = self._redis_access.list_aggregates(WebDocument)
         classified_document_counter = 0
         document_counter = 0
+        local_governments_documented = set()
         for web_document in web_documents:
             document_counter += 1
+            local_governments_documented.add(web_document.local_government)
             if self._is_document_classified(web_document):
                 classified_document_counter += 1
         print('Classification status :')
-        print(str(document_counter) + ' documents in total')
+        print(str(document_counter) + ' documents in total found in ' + str(len(local_governments_documented)) + ' local governments')
         print(str(classified_document_counter) + ' classified documents')
 
     def _is_document_classified(self, web_document):
@@ -91,8 +93,8 @@ if __name__ == '__main__':
         classifier = ManualWebDocumentClassifier()
         if sys.argv.__contains__('-C'):
             classifier._clear_classification()
-        if sys.argv.__contains__('-s'):
-            classifier._show_classification_status()
+        #if sys.argv.__contains__('-s'):
+        classifier._show_classification_status()
         while True:
             input('Start next classification ? [Ctrl+C : quit | Enter : continue]')
             classifier.classify()

@@ -4,12 +4,12 @@ from src.main.python.model.aggregate_root import AggregateRoot
 class LocalGovernment(AggregateRoot):
 
     def __init__(self,
-                 id: str = '',
+                 ident: str = '',
                  name: str = '',
                  national_typology: dict = {},
                  domain_name: str = '',
                  domain_searched: bool = False):
-        self.id = id
+        self.id = ident
         self.name = name
         self.national_typology = national_typology
         self.domain_name = domain_name
@@ -17,3 +17,6 @@ class LocalGovernment(AggregateRoot):
 
     def get_id(self):
         return self.id
+
+    def set_id(self, ident: str):
+        self.id = ident

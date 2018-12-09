@@ -7,6 +7,17 @@ from src.main.python.commons.boolean_enum import Boolean
 from redis import Redis
 
 
+class VerySimpleAggregateRoot(AggregateRoot):
+    def __init__(self, id: str = ''):
+        self.id = id
+
+    def get_id(self):
+        return self.id
+
+    def set_id(self, id: str):
+        self.id = id
+
+
 class SimpleAggregateRoot(AggregateRoot):
     def __init__(self,
                  id: str = '1',
@@ -14,7 +25,8 @@ class SimpleAggregateRoot(AggregateRoot):
                  int_attribute: int = 1,
                  dict_attribute: dict = {'field1': 1, 'field2': 'a'},
                  bool_attribute: bool = False,
-                 enum_attribute: Boolean = Boolean.TRUE):
+                 enum_attribute: Boolean = Boolean.TRUE,
+                 aggregate_root_attribute: VerySimpleAggregateRoot = VerySimpleAggregateRoot()):
         self.id = id
         self.str_attribute = str_attribute
         self.int_attribute = int_attribute
@@ -22,9 +34,13 @@ class SimpleAggregateRoot(AggregateRoot):
         self.bool_attribute = bool_attribute
         self.enum_attribute = enum_attribute
         self.none_attribute = None
+        self.aggregate_root_attribute = aggregate_root_attribute
 
     def get_id(self):
         return self.id
+
+    def set_id(self, id: str):
+        self.id = id
 
 
 class TestRedisAccess(unittest.TestCase):
@@ -45,6 +61,7 @@ class TestRedisAccess(unittest.TestCase):
         #given
         redis_access = RedisAccess()
         aggregate_root = SimpleAggregateRoot()
+        aggregate_root.aggregate_root_attribute = VerySimpleAggregateRoot('1')
 
         # when
         redis_access.store_aggregate(aggregate_root)
@@ -59,11 +76,12 @@ class TestRedisAccess(unittest.TestCase):
         self.assertEquals(dict_value['field2'], 'a')
         self.assertEquals(dict_value.__len__(), 2)
         self.assertEquals(self._redis.hget('SimpleAggregateRoot:1', 'enum_attribute').decode(), 'Boolean.TRUE')
+        self.assertEquals(self._redis.hget('SimpleAggregateRoot:1', 'aggregate_root_attribute').decode(), 'VerySimpleAggregateRoot:1')
 
     def test_get_aggregate_should_load_data_correctly(self):
         # given
         redis_access = RedisAccess()
-        aggregate_root_1 = SimpleAggregateRoot()
+        aggregate_root_1 = SimpleAggregateRoot(aggregate_root_attribute=VerySimpleAggregateRoot('1'))
         redis_access.store_aggregate(aggregate_root_1)
 
         # when
@@ -75,7 +93,8 @@ class TestRedisAccess(unittest.TestCase):
                                           expected_int=1,
                                           expected_bool=False,
                                           expected_enum=Boolean.TRUE,
-                                          expected_dict={'field1': 1, 'field2': 'a'})
+                                          expected_dict={'field1': 1, 'field2': 'a'},
+                                          expected_aggregate_root=VerySimpleAggregateRoot('1'))
 
     def test_get_random_aggregate_should_return_data_loaded(self):
         # given
@@ -98,13 +117,15 @@ class TestRedisAccess(unittest.TestCase):
     def test_list_simple_aggregate_root_should_load_data_correctly(self):
         # given
         redis_access = RedisAccess()
-        aggregate_root_1 = SimpleAggregateRoot(id='11')
+        aggregate_root_1 = SimpleAggregateRoot(id='11',
+                                               aggregate_root_attribute=VerySimpleAggregateRoot('1'))
         aggregate_root_2 = SimpleAggregateRoot(id='12',
                                                str_attribute='We all live on a Yellow submarine',
                                                int_attribute=314,
                                                bool_attribute=True,
                                                dict_attribute={'fieldA': 1, 'fieldB': 2},
-                                               enum_attribute=Boolean.UNKNOWN)
+                                               enum_attribute=Boolean.UNKNOWN,
+                                               aggregate_root_attribute=VerySimpleAggregateRoot('2'))
         redis_access.store_aggregate(aggregate_root_1)
         redis_access.store_aggregate(aggregate_root_2)
 
@@ -122,7 +143,8 @@ class TestRedisAccess(unittest.TestCase):
                                                   expected_int=1,
                                                   expected_bool=False,
                                                   expected_enum=Boolean.TRUE,
-                                                  expected_dict={'field1': 1, 'field2': 'a'})
+                                                  expected_dict={'field1': 1, 'field2': 'a'},
+                                                  expected_aggregate_root=VerySimpleAggregateRoot(id='1'))
                 aggregate_root_1_found = True
             elif aggregate_root.get_id() == '12':
                 self._check_simple_aggregate_root(aggregate_root,
@@ -130,7 +152,8 @@ class TestRedisAccess(unittest.TestCase):
                                                   expected_int=314,
                                                   expected_bool=True,
                                                   expected_enum=Boolean.UNKNOWN,
-                                                  expected_dict={'fieldA': 1, 'fieldB': 2})
+                                                  expected_dict={'fieldA': 1, 'fieldB': 2},
+                                                  expected_aggregate_root=VerySimpleAggregateRoot(id='2'))
                 aggregate_root_2_found = True
         self.assertTrue(aggregate_root_1_found and aggregate_root_2_found, 'some aggregate roots are missing')
 
@@ -140,13 +163,15 @@ class TestRedisAccess(unittest.TestCase):
                                      expected_int: int,
                                      expected_bool: bool,
                                      expected_enum: Boolean,
-                                     expected_dict: dict):
+                                     expected_dict: dict,
+                                     expected_aggregate_root: AggregateRoot):
         self.assertEquals(aggregate_root.str_attribute, expected_str)
         self.assertEquals(aggregate_root.int_attribute, expected_int)
         self.assertEquals(aggregate_root.bool_attribute, expected_bool)
         self.assertEquals(aggregate_root.enum_attribute, expected_enum)
         self.assertEquals(aggregate_root.dict_attribute, expected_dict)
         self.assertEquals(aggregate_root.none_attribute, None)
+        self.assertEquals(aggregate_root.aggregate_root_attribute.get_id(), expected_aggregate_root.get_id())
 
 
 if __name__ == '__main__':
