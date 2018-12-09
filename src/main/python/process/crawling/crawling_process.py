@@ -21,6 +21,7 @@ class LocalGovernmentPdfSpider(CrawlSpider):
         self.allowed_domains = [self.local_government.domain_name]
         self.name = 'local_government_pdf_spider'
         self.redis_access = RedisAccess()
+        self.pdf_converter = PdfConverter(timeout=300)
 
     rules = (
         Rule(LinkExtractor(allow=r'.*\.pdf$', deny_extensions=[]), callback='convert_and_save'),
@@ -29,8 +30,7 @@ class LocalGovernmentPdfSpider(CrawlSpider):
 
     def convert_and_save(self, response: Response):
         print('PDF found : ' + response.url)
-        pdf_converter = PdfConverter(timeout=300)
-        text_content = pdf_converter.convert(response.body)
+        text_content = self.pdf_converter.convert(response.body)
         web_document = WebDocument(url=response.url, local_government=self.local_government, text_content=text_content)
         web_document.generate_id()
         self.redis_access.store_aggregate(web_document)
@@ -52,9 +52,11 @@ class LocalGovernmentCrawlingProcess(Loggable):
 
     def _add_local_government_to_crawl(self, local_government: LocalGovernment):
         if local_government.domain_name.__len__() < 1:
-            self.log_error('Impossible to crawl local government \"'
+            exception = Exception('Impossible to crawl local government \"'
                             + local_government.name
-                            + '\" with id '
-                            + local_government.name.get_id()
-                            + 'because it has no domain name')
+                            + '\" with id \''
+                            + local_government.get_id()
+                            + '\' because it has no domain name')
+            self.log_error(exception)
+            raise exception
         self.crawler_process.crawl(LocalGovernmentPdfSpider, [local_government])
