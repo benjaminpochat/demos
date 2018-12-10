@@ -1,8 +1,9 @@
 import unittest
 
 
-class MyTestCase(unittest.TestCase):
+class TestManualClassifier(unittest.TestCase):
     def test_something(self):
+        # TODO
         self.assertEqual(True, False)
 
 

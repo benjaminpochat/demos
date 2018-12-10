@@ -1,9 +1,9 @@
 import subprocess
 import sys
 
-from src.main.python.persistence.redis_access import RedisAccess
-from src.main.python.model.web_resource import WebDocument
 from src.main.python.commons.boolean_enum import Boolean
+from src.main.python.model.web_resource import WebDocument
+from src.main.python.persistence.redis_access import RedisAccess
 
 
 class ManualWebDocumentClassifier:
@@ -67,7 +67,8 @@ class ManualWebDocumentClassifier:
         local_governments_documented = set()
         for web_document in web_documents:
             document_counter += 1
-            local_governments_documented.add(web_document.local_government)
+            if web_document.local_government is not None:
+                local_governments_documented.add(web_document.local_government)
             if self._is_document_classified(web_document):
                 classified_document_counter += 1
         print('Classification status :')
