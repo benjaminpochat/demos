@@ -3,6 +3,7 @@ import numpy as np
 
 from main.python.process.training.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
 from main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+from src.test.python.process.training.text_dataset_producer import test_text_dataset_loader
 
 
 class TestTextNgramsVectorizer(unittest.TestCase):
@@ -36,10 +37,8 @@ class TestTextNgramsVectorizer(unittest.TestCase):
         training_text_files_folder = 'training'
         validation_text_files_folder = 'validation'
         text_and_label_loader = TextAndLabelLoader()
-        texts_and_labels = text_and_label_loader.load_texts_and_labels(
-            text_file_root_folder,
-            training_text_files_folder,
-            validation_text_files_folder)
+        text_and_label_loader._get_random_web_documents_generator = test_text_dataset_loader.mock_get_random_web_documents_generator()
+        texts_and_labels = text_and_label_loader.load_texts_and_labels(training_size=2, validation_size=2)
 
         # when
         vectors = vectorizer.ngram_vectorize(

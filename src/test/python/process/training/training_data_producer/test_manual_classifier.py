@@ -1,11 +1,8 @@
-import unittest
+#import unittest
 
 
-class TestManualClassifier(unittest.TestCase):
-    def test_something(self):
-        # TODO
-        self.assertEqual(True, False)
+#class TestManualClassifier(unittest.TestCase):
+    #TODO : implement unittest for ManualClassifier class
 
-
-if __name__ == '__main__':
-    unittest.main()
+#if __name__ == '__main__':
+#    unittest.main()

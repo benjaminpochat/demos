@@ -1,13 +1,18 @@
+from logging import StreamHandler
+
 import tensorflow as tf
+import logging
 
 from tensorflow.python.keras import models
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.layers import Dropout
+
+from src.main.python.commons.loggable import Loggable
+from src.main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 from src.main.python.process.training.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
 
 
-
-class MlpModelBuilder:
+class MlpModelBuilder(Loggable):
     """
     A class for building multi layer perceptron model
     See https://developers.google.com/machine-learning/guides/text-classification/step-4#build_n-gram_model_option_a
@@ -16,6 +21,7 @@ class MlpModelBuilder:
                  layers_number :int = 2,
                  unit_number :int = 64,
                  dropout_rate :float = 0.2):
+        super().__init__()
         self._layers_number = layers_number
         self._unit_number = unit_number
         self._dropout_rate = dropout_rate
@@ -40,6 +46,8 @@ class MlpModelBuilder:
             ValueError: If validation data has label values which were not seen
                 in the training data.
         """
+        model_builder.log_info('Starts building the model')
+
         # Get the data.
         (training_texts, training_labels), (validation_texts, validation_labels) = data
 
@@ -63,7 +71,7 @@ class MlpModelBuilder:
         #self._model.save('IMDb_mlp_model.h5')
 
     def _verify_data(self, validation_labels):
-        # Verify that validation labels are in the same range as training labels.
+        self.log_info('Verifies that validation labels are in the same range as training labels.')
         unexpected_labels = [v for v in validation_labels if v not in range(2)]
         if len(unexpected_labels):
             raise ValueError('Unexpected label values found in the validation set:'
@@ -84,6 +92,7 @@ class MlpModelBuilder:
         # Returns
             An MLP model instance.
         """
+        self.log_info('Creates an instance of a multi-layer perceptron model.')
 
         self._model = models.Sequential()
         self._model.add(Dropout(rate=self._dropout_rate, input_shape=input_shape))
@@ -95,6 +104,7 @@ class MlpModelBuilder:
         self._model.add(Dense(units=1, activation='sigmoid'))
 
     def _compile_model(self, learning_rate):
+        self.log_info('Compiles the multi-layer perceptron model.')
         optimizer = tf.keras.optimizers.Adam(lr=learning_rate)
         self._model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['acc'])
 
@@ -105,6 +115,7 @@ class MlpModelBuilder:
                      training_labels,
                      validation_vector,
                      validation_labels):
+        self.log_info('Trains the multi-layer perceptron model.')
         # Create callback for early stopping on validation loss. If the loss does
         # not decrease in two consecutive tries, stop training.
         callbacks = [tf.keras.callbacks.EarlyStopping(
@@ -123,5 +134,19 @@ class MlpModelBuilder:
         history = history.history
         print('Validation accuracy: {acc}, loss: {loss}'.format(
                 acc=history['val_acc'][-1], loss=history['val_loss'][-1]))
+
+
+if __name__ == '__main__':
+    log_handler = StreamHandler()
+    log_handler.setLevel(logging.INFO)
+    log_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+
+    model_builder = MlpModelBuilder()
+    model_builder._logger.addHandler(log_handler)
+
+    text_and_label_loader = TextAndLabelLoader()
+    texts_and_labels = text_and_label_loader.load_texts_and_labels(training_size=10, validation_size=10)
+    data = (texts_and_labels[0], texts_and_labels[1]), (texts_and_labels[2], texts_and_labels[3])
+    model_builder.build_model(data)
 
 
