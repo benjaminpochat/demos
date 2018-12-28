@@ -2,6 +2,7 @@ from logging import StreamHandler
 
 import tensorflow as tf
 import logging
+import pickle
 
 from tensorflow.python.keras import models
 from tensorflow.python.keras.layers import Dense
@@ -46,7 +47,7 @@ class MlpModelBuilder(Loggable):
             ValueError: If validation data has label values which were not seen
                 in the training data.
         """
-        model_builder.log_info('Starts building the model')
+        self.log_info('Starts building the model')
 
         # Get the data.
         (training_texts, training_labels), (validation_texts, validation_labels) = data
@@ -54,7 +55,10 @@ class MlpModelBuilder(Loggable):
         self._verify_data(validation_labels)
 
         vectorizer = NgramVectorizer()
-        training_vector, validation_vector = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
+        training_vector, validation_vector, vocabulary = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
+        vocabulary_file = open('vocabulary.pkl', 'wb')
+        pickle.dump(vocabulary, vocabulary_file)
+        vocabulary_file.close()
 
         self._create_mlp_model(input_shape=training_vector.shape[1:])
 
@@ -68,7 +72,7 @@ class MlpModelBuilder(Loggable):
             validation_vector,
             validation_labels)
 
-        #self._model.save('IMDb_mlp_model.h5')
+        self._model.save('mlp_model.h5')
 
     def _verify_data(self, validation_labels):
         self.log_info('Verifies that validation labels are in the same range as training labels.')
@@ -150,3 +154,9 @@ if __name__ == '__main__':
     model_builder.build_model(data)
 
 
+#TODO :
+#   Save the vocab
+#   Load the model
+#   Load the vocab (https://stackoverflow.com/questions/42068474/tfidfvectorizer-how-does-the-vectorizer-with-fixed-vocab-deal-with-new-words)
+#   Vectorize new input
+#   Run model prediction (model.precict)

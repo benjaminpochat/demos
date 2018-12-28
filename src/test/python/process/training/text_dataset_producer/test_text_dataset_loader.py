@@ -9,9 +9,9 @@ from src.main.python.process.training.text_dataset_producer.text_dataset_loader 
 def mock_get_random_web_documents_generator():
     doc1 = WebDocument(ident='1', text_content='This is the highway to hell')
     doc1.classified_as_official_report = Boolean.TRUE
-    doc2 = WebDocument(ident='2', text_content='Baby you can drive my car')
+    doc2 = WebDocument(ident='2', text_content='Baby you can drive this car to hell')
     doc2.classified_as_official_report = Boolean.FALSE
-    doc3 = WebDocument(ident='3', text_content='Hey Mr Tambourine man')
+    doc3 = WebDocument(ident='3', text_content='Hey Mr Tambourine man, let''s get away')
     doc3.classified_as_official_report = Boolean.FALSE
     doc4 = WebDocument(ident='4', text_content='Ticking away the moment that make up a dull day')
     doc4.classified_as_official_report = Boolean.TRUE
@@ -31,9 +31,9 @@ class TestTextAndLabelLoader(unittest.TestCase):
 
         # then
         training_texts, training_labels, validation_texts, validation_labels = text_and_labels_loaded
-        self.assertEquals(training_texts, ['This is the highway to hell', 'Baby you can drive my car'])
+        self.assertEquals(training_texts, ['This is the highway to hell', 'Baby you can drive this car to hell'])
         self.assertEquals(training_labels, [1, 0])
-        self.assertEquals(validation_texts, ['Hey Mr Tambourine man', 'Ticking away the moment that make up a dull day'])
+        self.assertEquals(validation_texts, ['Hey Mr Tambourine man, let''s get away', 'Ticking away the moment that make up a dull day'])
         self.assertEquals(validation_labels, [0, 1])
 
     def test_is_random_web_document_acceptable_should_return_true_for_document_classified_as_true(self):

@@ -54,10 +54,12 @@ class NgramVectorizer:
         # Vectorize validation texts.
         validation_vector = tf_idf_vectorizer.transform(validation_texts)
 
+
         # Select top 'k' of the vectorized features.
         selector = SelectKBest(f_classif, k=min(self._feature_number_limit, training_vector.shape[1]))
         selector.fit(training_vector, training_labels)
         training_vector = selector.transform(training_vector).astype('float32')
         validation_vector = selector.transform(validation_vector).astype('float32')
-        return training_vector, validation_vector
+        vocabulary = tf_idf_vectorizer.vocabulary_
+        return training_vector, validation_vector, vocabulary
 

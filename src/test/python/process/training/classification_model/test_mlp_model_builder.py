@@ -1,9 +1,10 @@
+import os
 import unittest
 from unittest.mock import Mock
 
+import src.test.python.process.training.text_dataset_producer.test_text_dataset_loader as test_text_dataset_loader
 from src.main.python.process.training.classification_model.mlp_model_builder import MlpModelBuilder
 from src.main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
-import src.test.python.process.training.text_dataset_producer.test_text_dataset_loader as test_text_dataset_loader
 
 
 class TestMlpModelBuilder(unittest.TestCase):
@@ -24,6 +25,10 @@ class TestMlpModelBuilder(unittest.TestCase):
         model_builder.build_model(data)
 
         # then
+        self.assertTrue(os.path.isfile('vocabulary.pkl'))
+        self.assertTrue(os.path.isfile('mlp_model.h5'))
+        os.remove('vocabulary.pkl')
+        os.remove('mlp_model.h5')
 
 if __name__ == '__main__':
     unittest.main()
