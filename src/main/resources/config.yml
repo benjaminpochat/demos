@@ -1,7 +1,7 @@
-database:
-  host: localhost
-  port: 6379
+# database section
+database_host: localhost
+database_port: 6379
 
-machine_learning_model:
-  model_file: mlp_model.h5
-  vocabulary_file: vocabulary.pkl
+# machine learning model section
+model_file: mlp_model.h5
+vocabulary_file: vocabulary.pkl
