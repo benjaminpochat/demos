@@ -2,8 +2,10 @@ from builtins import isinstance
 
 import redis
 import json
+import re
 
 from src.main.python.model.aggregate_root import AggregateRoot
+from src.main.python.commons.configuration import Configuration
 from enum import Enum
 
 
@@ -12,8 +14,9 @@ class RedisAccess:
     Access data stored in Redis database
     """
 
-    def __init__(self, host: str = 'localhost', port: int = '6379', db: int = 0):
-        self._redis = redis.Redis(host, port, db)
+    def __init__(self):
+        configuration = Configuration()
+        self._redis = redis.Redis(configuration.get_database_host(), configuration.get_database_port())
 
     def _get_aggregate_key(self, aggregate_root: AggregateRoot):
         return aggregate_root.__class__.__name__ + ':' + aggregate_root.get_id()
@@ -36,6 +39,8 @@ class RedisAccess:
                 self._store_dict_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
             elif type(attribute_value) is bool:
                 self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
+            elif type(attribute_value) is list:
+                self._store_list_attribute(aggregate_root, attribute_key, aggregate_root.__dict__[attribute_key])
             elif isinstance(attribute_value, Enum):
                 self._store_simple_attribute(aggregate_root, attribute_key, str(aggregate_root.__dict__[attribute_key]))
             elif isinstance(attribute_value, AggregateRoot):
@@ -52,6 +57,26 @@ class RedisAccess:
             self._get_aggregate_key(aggregate_root),
             attribute_key,
             json.dumps(attribute_value))
+
+    def _store_list_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value: list):
+        attribute_value_as_str = ';'
+        attribute_value_as_str = attribute_value_as_str.join(self._convert_list_item_as_str(value) for value in attribute_value)
+        self._redis.hset(
+            self._get_aggregate_key(aggregate_root),
+            attribute_key,
+            attribute_value_as_str
+        )
+
+    def _convert_list_item_as_str(self, list_item):
+        list_item_as_str = None
+        if issubclass(list_item.__class__, AggregateRoot):
+            list_item_as_str = list_item.get_id()
+        else:
+            list_item_as_str = str(list_item)
+        return self._escape_spacial_characters_in_list_item(list_item_as_str)
+
+    def _escape_spacial_characters_in_list_item(self, list_item_as_str):
+        return list_item_as_str.replace('\\', '\\\\').replace(';', '\;')
 
     def list_aggregates(self, the_class: type, pattern: str= '*'):
         """
@@ -73,12 +98,14 @@ class RedisAccess:
                     attribute_value = getattr(instance, attribute_name)
                     if attribute_value.__class__ == str:
                         attribute_value = self._load_str_attribute(attribute_name, key)
-                    if attribute_value.__class__ == int:
+                    elif attribute_value.__class__ == int:
                         attribute_value = self._load_int_attribute_value(attribute_name, key)
                     elif attribute_value.__class__ == dict:
                         attribute_value = self._load_dict_attribute_value(attribute_name, key)
                     elif attribute_value.__class__ == bool:
                         attribute_value = self._load_bool_attribute_value(attribute_name, key)
+                    elif attribute_value.__class__ == list:
+                        attribute_value = self._load_list_attribute_value(attribute_name, key)
                     elif issubclass(attribute_value.__class__, Enum):
                         attribute_value = self._load_enum_attribute_value(attribute_name, attribute_value.__class__, key)
                     elif issubclass(attribute_value.__class__, AggregateRoot):
@@ -103,6 +130,14 @@ class RedisAccess:
 
     def _load_str_attribute(self, attribute_name, key):
         return self._redis.hget(key, attribute_name).decode()
+
+    def _load_list_attribute_value(self, attribute_name, key):
+        list_as_str = self._redis.hget(key, attribute_name).decode()
+        list_of_str = re.split('(?<!\\\\);', list_as_str)
+        list_of_str_unescaped = []
+        for item in list_of_str:
+            list_of_str_unescaped.append(item.replace('\\;', ';').replace('\\\\', '\\'))
+        return list_of_str_unescaped
 
     def _load_enum_attribute_value(self, attribute_name, enum_class, key):
         enum_str_value = self._redis.hget(key, attribute_name)
@@ -142,3 +177,4 @@ class RedisAccess:
             key = self._redis.randomkey()
         aggregate_id = key.decode()[the_class.__name__.__len__() + 1:]
         return self.get_aggregate(the_class=the_class, aggregate_id=aggregate_id)
+

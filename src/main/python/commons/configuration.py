@@ -5,8 +5,9 @@ from src.main.python.commons.singleton import Singleton
 
 class Configuration(metaclass=Singleton):
     """
-    A class to handle configuration
-    Every attribute of the configuration is a string
+    A class to handle configuration.
+    Every attribute of the configuration is a string.
+    See config.yml to know the entire list of configuration items.
     """
 
     def __init__(self, command_line_arguments: list = []):
@@ -35,6 +36,18 @@ class Configuration(metaclass=Singleton):
     def convert_attributes_as_strings(self):
         for key in self.__dict__.keys():
             self.__dict__[key] = str(self.__dict__[key])
+
+    def get_database_host(self):
+        return self.database_host
+
+    def get_database_port(self):
+        return self.database_port
+
+    def get_model_file(self):
+        return self.model_file
+
+    def get_vocabulary_file(self):
+        return self.vocabulary_file
 
 
 class ConfigurationException(Exception):

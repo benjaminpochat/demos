@@ -15,10 +15,10 @@ class TestConfiguration(unittest.TestCase):
         configuration = Configuration()
 
         # then
-        self.assertEqual(configuration.database_host, 'localhost')
-        self.assertEqual(configuration.database_port, '6379')
-        self.assertEqual(configuration.model_file, 'mlp_model.h5')
-        self.assertEqual(configuration.vocabulary_file, 'vocabulary.pkl')
+        self.assertEqual(configuration.get_database_host(), 'localhost')
+        self.assertEqual(configuration.get_database_port(), '6379')
+        self.assertEqual(configuration.get_model_file(), 'mlp_model.h5')
+        self.assertEqual(configuration.get_vocabulary_file(), 'vocabulary.pkl')
 
     def test_init_with_arguments_should_load_primarily_arguments_configuration_values(self):
         # given

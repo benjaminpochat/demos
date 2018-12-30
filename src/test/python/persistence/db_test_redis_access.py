@@ -19,6 +19,7 @@ class VerySimpleAggregateRoot(AggregateRoot):
 
 
 class SimpleAggregateRoot(AggregateRoot):
+
     def __init__(self,
                  id: str = '1',
                  str_attribute: str = 'Message in a bottle',
@@ -159,7 +160,7 @@ class TestRedisAccess(unittest.TestCase):
                                                   expected_enum=Boolean.UNKNOWN,
                                                   expected_dict={'fieldA': 1, 'fieldB': 2},
                                                   expected_aggregate_root=VerySimpleAggregateRoot(id='2'),
-                                                  expected_list=[VerySimpleAggregateRoot(id='AZERTY'), VerySimpleAggregateRoot(id='QWERTY')])
+                                                  expected_list=['AZERTY', 'QWERTY'])
                 aggregate_root_2_found = True
         self.assertTrue(aggregate_root_1_found and aggregate_root_2_found, 'some aggregate roots are missing')
 
