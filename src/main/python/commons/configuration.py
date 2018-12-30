@@ -1,9 +1,9 @@
 import os
-
 import yaml
 
+from src.main.python.commons.singleton import Singleton
 
-class Configuration:
+class Configuration(metaclass=Singleton):
     """
     A class to handle configuration
     Every attribute of the configuration is a string

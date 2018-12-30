@@ -4,6 +4,9 @@ from src.main.python.commons.configuration import ConfigurationException
 
 
 class TestConfiguration(unittest.TestCase):
+    def tearDown(self):
+        configuration_class = Configuration.__class__
+        configuration_class._instances.clear()
 
     def test_init_should_load_default_configuration_values(self):
         # given
