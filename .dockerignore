@@ -1,0 +1,15 @@
+data
+doc
+htmlcov
+scripts
+src/test
+venv
+**/*.pyc
+**/_trial_temp*
+*.tar
+.gitignore
+.coverage
+.directory
+.idea
+.directory
+README.md
