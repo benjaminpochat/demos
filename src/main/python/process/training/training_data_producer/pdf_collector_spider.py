@@ -2,9 +2,9 @@ from scrapy.http import Response
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
-from main.python.model.web_resource import WebDocument
-from main.python.persistence.redis_access import RedisAccess
-from main.python.process.pdf_converter.pdf_converter import PdfConverter
+from src.main.python.model.web_resource import WebDocument
+from src.main.python.persistence.redis_access import RedisAccess
+from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
 
 
 class LocalGovernmentPdfCollectorSpider(CrawlSpider):
