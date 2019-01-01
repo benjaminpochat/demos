@@ -4,6 +4,7 @@ from src.main.python.commons.loggable import Loggable
 from src.main.python.model.local_government import LocalGovernment
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.process.crawling.crawling_process import LocalGovernmentCrawlingProcess
+from src.main.python.process.training.training_data_producer.pdf_collector_spider import LocalGovernmentPdfCollectorSpider
 
 
 class TrainingDataCollector(Loggable):
@@ -39,7 +40,9 @@ class TrainingDataCollector(Loggable):
         return random_local_government.domain_name.__len__() < 1 or self._training_subset.__contains__(random_local_government)
 
     def _crawl_subset(self):
-        crawling_process = LocalGovernmentCrawlingProcess(local_governments=self._training_subset)
+        crawling_process = LocalGovernmentCrawlingProcess(
+            local_governments=self._training_subset,
+            spider_class=LocalGovernmentPdfCollectorSpider)
         crawling_process.crawl()
 
     def collect(self):

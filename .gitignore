@@ -6,3 +6,4 @@ data
 /**/_trial_temp*
 .coverage
 /htmlcov
+*.tar

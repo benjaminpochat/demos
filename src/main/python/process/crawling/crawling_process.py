@@ -1,48 +1,18 @@
 from scrapy.crawler import CrawlerProcess
-from scrapy.spiders import CrawlSpider
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import Rule
-from scrapy.http import Response
+
 from src.main.python.commons.loggable import Loggable
 from src.main.python.model.local_government import LocalGovernment
-from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
-from src.main.python.model.web_resource import WebDocument
-from src.main.python.persistence.redis_access import RedisAccess
-
-
-class LocalGovernmentPdfSpider(CrawlSpider):
-    """
-    A Scrapy spider that collects all pdf files found on a given domain
-    """
-    def __init__(self, args):
-        super().__init__(self)
-        self.local_government = args[0]
-        self.start_urls = ['http://' + self.local_government.domain_name]
-        self.allowed_domains = [self.local_government.domain_name]
-        self.name = 'local_government_pdf_spider'
-        self.redis_access = RedisAccess()
-        self.pdf_converter = PdfConverter(timeout=300)
-
-    rules = (
-        Rule(LinkExtractor(allow=r'.*\.pdf$', deny_extensions=[]), callback='convert_and_save'),
-        Rule(LinkExtractor())
-    )
-
-    def convert_and_save(self, response: Response):
-        print('PDF found : ' + response.url)
-        text_content = self.pdf_converter.convert(response.body)
-        web_document = WebDocument(url=response.url, local_government=self.local_government, text_content=text_content)
-        web_document.generate_id()
-        self.redis_access.store_aggregate(web_document)
 
 
 class LocalGovernmentCrawlingProcess(Loggable):
     """
-    A process that crawls a local government's domain, and collects all data that could be an official council meeting report
+    A process that crawls a local government's domain,
+    and apply the process implemented in the spider class given as attribute
     """
-    def __init__(self, local_governments: list):
+    def __init__(self, local_governments: list, spider_class):
         super().__init__()
         self.local_governments = local_governments
+        self.spider_class = spider_class
         self.crawler_process = CrawlerProcess()
 
     def crawl(self):
@@ -59,4 +29,4 @@ class LocalGovernmentCrawlingProcess(Loggable):
                             + '\' because it has no domain name')
             self.log_error(exception)
             raise exception
-        self.crawler_process.crawl(LocalGovernmentPdfSpider, [local_government])
+        self.crawler_process.crawl(self.spider_class, [local_government])
