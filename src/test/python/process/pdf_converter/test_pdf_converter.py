@@ -37,7 +37,7 @@ class TestPdfConverter(unittest.TestCase):
         pdf_text_content = pdf_converter.convert(pdf_bytes)
 
         # then
-        self.assertRegex(pdf_text_content, '[\x0c]+')
+        self.assertRegex(pdf_text_content, '[\x0c]?')
 
 
 if __name__ == '__main__':
