@@ -152,11 +152,3 @@ if __name__ == '__main__':
     texts_and_labels = text_and_label_loader.load_texts_and_labels(training_size=10, validation_size=10)
     data = (texts_and_labels[0], texts_and_labels[1]), (texts_and_labels[2], texts_and_labels[3])
     model_builder.build_model(data)
-
-
-#TODO :
-#   Save the vocab
-#   Load the model
-#   Load the vocab (https://stackoverflow.com/questions/42068474/tfidfvectorizer-how-does-the-vectorizer-with-fixed-vocab-deal-with-new-words)
-#   Vectorize new input
-#   Run model prediction (model.precict)

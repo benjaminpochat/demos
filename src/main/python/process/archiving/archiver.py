@@ -10,6 +10,6 @@ def log_configuration():
 
 
 if __name__ == '__main__':
-    print('Welcome in the delib_archer process.')
+    print('Welcome in the local government_archiver process.')
     configuration = Configuration(sys.argv[1:])
     log_configuration()
