@@ -20,6 +20,7 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider):
         self.redis_access = RedisAccess()
         self.pdf_converter = PdfConverter(timeout=300)
 
+
     rules = (
         Rule(LinkExtractor(allow=r'.*\.pdf$', deny_extensions=[]), callback='process_pdf'),
         Rule(LinkExtractor())
@@ -36,9 +37,11 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider):
         """
         print('PDF found : ' + response.url)
         classifier = LocalGovernmentPdfClassifier()
-        classification = classifier.classify(response.body)
+        text_content = self.pdf_converter.convert(response.body)
+        classification = classifier.classify([text_content])[0]
         if classification.isOfficialCouncilReport():
             self.saveOfficialCouncilReport(response.url)
 
     def saveOfficialCouncilReport(self, url):
-        pass
+        #TODO : save the document in Redis
+        print("Saving url " + url)

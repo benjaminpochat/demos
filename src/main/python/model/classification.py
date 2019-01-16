@@ -11,4 +11,4 @@ class Classification:
         self.classified_as_official_council_report = Boolean.UNKNOWN
 
     def isOfficialCouncilReport(self):
-        return self.classified_as_official_council_report
+        return self.classified_as_official_council_report == Boolean.TRUE
