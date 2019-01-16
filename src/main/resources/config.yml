@@ -5,3 +5,6 @@ database_port: 6379
 # machine learning model section
 model_file: mlp_model.h5
 vocabulary_file: vocabulary.pkl
+
+# logging configuration
+logging_config_file: logging.conf

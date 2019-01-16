@@ -1,3 +1,4 @@
+import logging
 import os
 import yaml
 
@@ -48,6 +49,9 @@ class Configuration(metaclass=Singleton):
 
     def get_vocabulary_file(self):
         return self.vocabulary_file
+
+    def get_logging_config_file(self):
+        return self.logging_config_file
 
 
 class ConfigurationException(Exception):
