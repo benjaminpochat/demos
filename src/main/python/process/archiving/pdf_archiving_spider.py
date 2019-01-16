@@ -2,12 +2,14 @@ from scrapy.http import Response
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
+from src.main.python.commons.loggable import Loggable
 from src.main.python.process.archiving.pdf_classifier import LocalGovernmentPdfClassifier
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
 
 
 class LocalGovernmentPdfArchivingSpider(CrawlSpider):
+    #TODO : enabling logging with multi-inheritance (CrawlSpider + Loggable)
     """
     A Scrapy spider that stores the pdf content if it's classified as official council report by machine learning model
     """
@@ -40,7 +42,10 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider):
         text_content = self.pdf_converter.convert(response.body)
         classification = classifier.classify([text_content])[0]
         if classification.isOfficialCouncilReport():
+            print('The PDF at ' + response.url + ' has been classified as an official city council report')
             self.saveOfficialCouncilReport(response.url)
+        else:
+            print('The PDF at ' + response.url + ' has not been classified as an official city council report')
 
     def saveOfficialCouncilReport(self, url):
         #TODO : save the document in Redis

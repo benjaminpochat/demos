@@ -19,15 +19,27 @@ class DelibArchiver(Loggable):
             attribute_value = Configuration().__dict__[attribute_key]
             self.log_info(attribute_key + '=' + attribute_value)
 
+    def archive(self):
+        local_governments = self._init_local_governments()
+        self._archive_official_city_council_reports(local_governments)
+
+    def _archive_official_city_council_reports(self, local_governments):
+        crawling_process = LocalGovernmentCrawlingProcess(
+            local_governments=local_governments,
+            spider_class=LocalGovernmentPdfArchivingSpider)
+        crawling_process.crawl()
+
+    def _init_local_governments(self):
+        redis_access = RedisAccess()
+        random_local_government = redis_access.get_random_aggregate(the_class=LocalGovernment)
+        while random_local_government.domain_name.__len__() < 1:
+            random_local_government = redis_access.get_random_aggregate(the_class=LocalGovernment)
+        return [random_local_government]
+
 
 if __name__ == '__main__':
     print('Welcome in the local government_archiver process.')
     Configuration(sys.argv[1:])
     archiver = DelibArchiver()
     archiver.log_configuration()
-    redis_access = RedisAccess()
-    random_local_governments = redis_access.get_random_aggregate(the_class=LocalGovernment)
-    crawling_process = LocalGovernmentCrawlingProcess(
-        local_governments=[random_local_governments],
-        spider_class=LocalGovernmentPdfArchivingSpider)
-    #crawling_process.crawl()
+    archiver.archive()
