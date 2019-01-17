@@ -84,7 +84,7 @@ if __name__ == '__main__':
     print('Welcome to the local government documents classifier program !')
     if sys.argv.__contains__('-h'):
         print('Command line to classify documents found on the local governments\' web sites.')
-        print('Preresites : start the database, see start_sb.sh script')
+        print('Preresites : start the database')
         print('Usage : sh classify_training_data.sh [opt]')
         print('Options :')
         print('  -C clear the classification on all documents before starting')

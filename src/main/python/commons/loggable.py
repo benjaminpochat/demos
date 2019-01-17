@@ -1,6 +1,5 @@
 import logging
 import logging.config
-import os
 
 from src.main.python.commons.configuration import Configuration
 
@@ -12,11 +11,7 @@ class Loggable:
 
     def _init_logger(self):
         configuration = Configuration()
-        logging_file_path = os.path.join(
-            os.path.dirname(__file__),
-            '../../resources',
-            configuration.get_logging_config_file())
-        logging.config.fileConfig(logging_file_path)
+        configuration.configure_logging()
         self._logger = logging.getLogger('delib-archiver')
 
     def log_debug(self, message: str):

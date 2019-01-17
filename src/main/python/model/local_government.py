@@ -8,12 +8,14 @@ class LocalGovernment(AggregateRoot):
                  name: str = '',
                  national_typology: dict = {},
                  domain_name: str = '',
-                 domain_searched: bool = False):
+                 domain_searched: bool = False,
+                 official_council_reports: set = set()):
         self.id = ident
         self.name = name
         self.national_typology = national_typology
         self.domain_name = domain_name
         self.domain_searched = domain_searched
+        self.official_council_reports = official_council_reports
 
     def get_id(self):
         return self.id
