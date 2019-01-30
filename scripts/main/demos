@@ -8,4 +8,4 @@ if [ -z "$DEMOS_PATH" ]
 fi
 
 export PYTHONPATH=$DEMOS_PATH
-python3 $DEMOS_PATH/src/main/python/launcher/demos_launcher.py  $*
+python3 $DEMOS_PATH/src/main/python/launcher/main_launcher.py  $*

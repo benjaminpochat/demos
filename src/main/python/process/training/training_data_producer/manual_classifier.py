@@ -46,7 +46,7 @@ class ManualWebDocumentClassifier:
               + ' - WebDocument\'s url : ' + self._current_web_document.url + '\n'
               + ' - Classification for \'official report\' : ' + str(self._current_web_document.classified_as_official_report))
 
-    def _clear_classification(self):
+    def clear_classification(self):
         confirmation = input('Are you sure to delete all classification data ? [ y | n ]')
         if confirmation.lower() == 'y':
             web_documents = self._redis_access.list_aggregates(WebDocument)
@@ -60,7 +60,7 @@ class ManualWebDocumentClassifier:
         else:
             print('Cleaning classification canceled.')
 
-    def _show_classification_status(self):
+    def show_classification_status(self):
         web_documents = self._redis_access.list_aggregates(WebDocument)
         classified_document_counter = 0
         document_counter = 0
@@ -78,24 +78,3 @@ class ManualWebDocumentClassifier:
     def _is_document_classified(self, web_document):
         return web_document.classified_as_official_report == Boolean.TRUE \
                or web_document.classified_as_official_report == Boolean.FALSE
-
-
-if __name__ == '__main__':
-    print('Welcome to the local government documents classifier program !')
-    if sys.argv.__contains__('-h'):
-        print('Command line to classify documents found on the local governments\' web sites.')
-        print('Preresites : start the database')
-        print('Usage : sh classify_training_data.sh [opt]')
-        print('Options :')
-        print('  -C clear the classification on all documents before starting')
-        print('  -s get the status of the classification : number of documents classified, total of documents')
-        print('')
-    else:
-        classifier = ManualWebDocumentClassifier()
-        if sys.argv.__contains__('-C'):
-            classifier._clear_classification()
-        if sys.argv.__contains__('-s'):
-            classifier._show_classification_status()
-        while True:
-            input('Start next classification ? [Ctrl+C : quit | Enter : continue]')
-            classifier.classify()
