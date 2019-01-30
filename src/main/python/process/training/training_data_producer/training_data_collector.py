@@ -1,5 +1,6 @@
 import sys
 
+from src.main.python.commons.configuration import Configuration
 from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
 from src.main.python.commons.loggable import Loggable
 from src.main.python.process.crawling.crawling_process import LocalGovernmentCrawlingProcess
@@ -43,6 +44,7 @@ if __name__ == '__main__':
             subset_size = int(sys.argv[n_option_index + 1])
         print('Start collecting data...')
         print('[ Ctrl + C ] to quit')
+        Configuration(sys.argv[1:])
         selector = LocalGovernmentSelector(subset_size=subset_size, domains=domains)
         collector = TrainingDataCollector(selector=selector)
         collector.collect()

@@ -37,6 +37,8 @@ class Configuration(metaclass=Singleton):
                 argument_value = command_line_arguments[i + 1]
                 self.__dict__[argument_key] = argument_value
                 i += 2
+            else:
+                i += 1
 
     def convert_attributes_as_strings(self):
         for key in self.__dict__.keys():

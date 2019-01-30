@@ -49,7 +49,7 @@ if __name__ == '__main__':
             subset_size = int(sys.argv[n_option_index + 1])
         print('Start archiving data...')
         print('[ Ctrl + C ] to quit')
+        Configuration(sys.argv[1:])
         selector = LocalGovernmentSelector(subset_size=subset_size, domains=domains)
         archiver = DelibArchiver(selector=selector)
-        Configuration(sys.argv[1:])
         archiver.archive()
