@@ -7,10 +7,16 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+# Install gcc
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && \
+    apt-get -y install gcc mono-mcs && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r src/package/requirements.txt
 
 ENV PYTHONPATH /app:/usr/local/lib/python3.5/site-packages
 
 # Run app.py when the container launches
-CMD ["python3", "/app/src/main/python/process/archiving/delib_archiver.py"]
+CMD ["python3", "/app/src/main/python/launcher/main_launcher.py"]
