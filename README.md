@@ -1,7 +1,3 @@
-# Demos
-
-Demos is an experimentation for scraping city council reports from official city web sites, and archiving public deliberations in a centralized database.
-
 The aim of this experimentation is to try how machine learning mecanisms can help to :
 1. identify official city council reports through the web
 2. archive these reports into one centralized database
