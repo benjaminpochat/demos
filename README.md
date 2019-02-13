@@ -142,10 +142,3 @@ A logging configuration file can be found at this path :
 
 It can be customized, according to the [logging module documentation](https://docs.python.org/3/library/logging.config.html).  
 
-### Run demos with docker
-
-As demos is based on web scraping that might be long, it has been designed to be deployed numerously thanks to docker containers.
-The idea is to run as many demos as possible in parallel, in many docker containers.
-
-To run demos in a docker container :
-[to be completed...]
