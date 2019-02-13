@@ -59,7 +59,7 @@ This command iterates over the documents found on step 1. For each document :
 * the text of the document is displayed
 * the user is prompted to tell if the text is an "official report" or not
 
-More options for ```clasify``` command are explained with the following command :
+More options for ```classify``` command are explained with the following command :
 
 ```demos train classify -h```
 
