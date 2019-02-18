@@ -103,7 +103,7 @@ The python dependencies required are listed in the file :
 
 These dependencies can be installed with the following command :
 
-```pip install --trusted-host pypi.python.org -r src/package/requirements.txt```
+```pip3 install --trusted-host pypi.python.org -r src/package/requirements.txt```
  
 
 #### Redis database
