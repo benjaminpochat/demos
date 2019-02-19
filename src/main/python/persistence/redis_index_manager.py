@@ -1,7 +1,6 @@
 import redis
 
 from src.main.python.commons.loggable import Loggable
-from src.main.python.model.local_government import LocalGovernment
 from src.main.python.commons.configuration import Configuration
 
 
@@ -23,9 +22,3 @@ class RedisIndexManager(Loggable):
             if attribute_value is not None and attribute_value.decode().__len__() > 0 :
                 self.log_debug('Adding the following value to the index ' + the_class.__name__ + '#' + attribute_name + ':' + attribute_value.decode() + ' : ' + aggregate_id)
                 self._redis.rpush(the_class.__name__ + '#' + attribute_name + ':' + attribute_value.decode(), aggregate_id)
-
-
-if __name__ == '__main__':
-    index_manager = RedisIndexManager()
-    index_manager.drop_index(LocalGovernment, 'domain_name')
-    index_manager.create_index(LocalGovernment, 'domain_name')
