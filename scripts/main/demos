@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-if [ -z "$DEMOS_PATH" ]
+if [ -z "$DEMOS_HOME" ]
     then
-        echo "Error : the environment variable DEMOS_PATH is not set."
-        echo "Please set DEMOS_PATH environment variable to the root folder of Demos project."
+        echo "Error : the environment variable DEMOS_HOME is not set."
+        echo "Please set DEMOS_HOME environment variable to the root folder of Demos project."
         exit
 fi
 
-export PYTHONPATH=$DEMOS_PATH
-python3 $DEMOS_PATH/src/main/python/launcher/main_launcher.py  $*
+export PYTHONPATH=$DEMOS_HOME
+python3 $DEMOS_HOME/src/main/python/launcher/main_launcher.py  $*

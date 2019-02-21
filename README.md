@@ -111,6 +111,53 @@ These dependencies can be installed with the following command :
 To run both training and archiving modules, a Redis database must be run (tested with redis-5.0.2). 
 To run Redis, please refer to [Redis documentation](https://redis.io/).
 
+### Installation instruction
+
+To install demos, execute the following steps :
+
+1. Create a python virtual environment with the command below : 
+    ```
+    python3 -m venv ./demos
+    ```
+    It creates a folder named ```demos``` where demos will be installed isolated from any other python program
+
+2. Download demos sources from github into the demos folder created previously.
+    For instance :
+    ```
+    wget https://github.com/benjaminpochat/demos/archive/master.zip
+    unzip master.zip ./demos
+    ```
+
+3. Install the dependencies required to run demos :
+    ```
+    cd ./demos
+    pip3 install -r src/package/requirements.txt 
+    ```
+    This step might take a few minutes.
+
+4. Set up the environment variable DEMOS_HOME to point the ```demos``` folder
+    ```
+    export DEMOS_HOME=/full/path/to/demos/
+    ``` 
+    Or do it permanently in your ```.bash_profile``` file
+
+5. Initialize the database
+    Before running demos for the first time, you have to initialize the database with some minimal data (the list of the web sites to scrape).
+    Demos is delivered with scripts that put in redis database the list of the french communes and their official web sites. 
+    To do so, make sure your redis database runs with an empty db file, and then execute the following command :
+    * If your redis database run on localhost, on the default redis port (6379) :
+        ```
+        demos rebase
+        ```
+    * Otherwise :
+        ```
+        demos rebase --database_host DBSERVER --database_port DBPORT
+        ``` 
+    
+That's done. Demos is installed. 
+Then you must do the technical configuration (next chapter) before starting using demos.   
+
+
 ### Technical configuration
 
 #### Main configuration
@@ -124,7 +171,7 @@ The configuration values can be set in both manner :
 * In the command line with the following key value syntax ```demos <command> --<key> <value>```
     For instance, to set the redis database host in the command line for the archiving module :
     
-    ```demo archive --database_host DBSERVER```
+    ```demos archive --database_host DBSERVER```
     
     Every keys of the yml file can be configured in command line.
     The configuration set in the command line are used in priority.  
@@ -137,4 +184,3 @@ A logging configuration file can be found at this path :
 ```src/main/resources/logging.conf```
 
 It can be customized, according to the [logging module documentation](https://docs.python.org/3/library/logging.config.html).  
-
