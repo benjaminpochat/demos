@@ -1,3 +1,4 @@
+import os
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.persistence.redis_index_manager import RedisIndexManager
 from src.main.python.model.local_government import LocalGovernment
@@ -11,7 +12,8 @@ class LocalGovernmentInitializer(Loggable):
         """
         Importing communes of France from the file data/local_gov_list/france/communes/fr_communes.csv
         """
-        data_file = open('./data/local_gov_list/france/communes/fr_communes.csv', 'r')
+        data_file_path = os.path.join(os.path.dirname(__file__), '../../../../../data/local_gov_list/france/communes/fr_communes.csv')
+        data_file = open(data_file_path, 'r')
         redis_access = RedisAccess()
         for line in data_file :
             self.log_debug('Reading line : ' + line.strip())

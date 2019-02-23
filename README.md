@@ -125,7 +125,9 @@ To install demos, execute the following steps :
     For instance :
     ```
     wget https://github.com/benjaminpochat/demos/archive/master.zip
-    unzip master.zip ./demos
+    unzip master.zip
+    mv ./demos-master/* ./demos
+    rm -r ./demos-master
     ```
 
 3. Install the dependencies required to run demos :
