@@ -1,9 +1,5 @@
 import sys
 
-from src.main.python.launcher.archiving_launcher import ArchivingLauncher
-from src.main.python.launcher.training_launcher import TrainingLauncher
-from src.main.python.launcher.rebasing_launcher import RebasingLauncher
-
 
 class MainLauncher:
     """
@@ -57,15 +53,18 @@ class MainLauncher:
         print('')
 
     def start_rebasing_launcher(self):
-        rebasing_launcher = RebasingLauncher(self.command_line_arguments[1:])
+        import src.main.python.launcher.rebasing_launcher
+        rebasing_launcher = src.main.python.launcher.rebasing_launcher.RebasingLauncher(self.command_line_arguments[1:])
         rebasing_launcher.launch()
 
     def start_training_launcher(self):
-        training_launcher = TrainingLauncher(self.command_line_arguments[1:])
+        import src.main.python.launcher.training_launcher
+        training_launcher = src.main.python.launcher.training_launcher.TrainingLauncher(self.command_line_arguments[1:])
         training_launcher.launch()
 
     def start_archiving_launcher(self):
-        archiving_launcher = ArchivingLauncher(self.command_line_arguments[1:])
+        import src.main.python.launcher.archiving_launcher
+        archiving_launcher = src.main.python.launcher.archiving_launcher.ArchivingLauncher(self.command_line_arguments[1:])
         archiving_launcher.launch()
 
 
