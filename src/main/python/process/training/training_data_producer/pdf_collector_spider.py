@@ -29,5 +29,5 @@ class LocalGovernmentPdfCollectorSpider(CrawlSpider):
         print('PDF found : ' + response.url)
         text_content = self.pdf_converter.convert(response.body)
         web_document = WebDocument(url=response.url, local_government=self.local_government, text_content=text_content)
-        web_document.generate_id()
+        web_document.set_id(web_document.generate_id())
         self.redis_access.store_aggregate(web_document)
