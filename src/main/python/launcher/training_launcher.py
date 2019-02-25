@@ -1,8 +1,3 @@
-from src.main.python.launcher.classifying_launcher import ClassifyingLauncher
-from src.main.python.launcher.modeling_launcher import ModelingLauncher
-from src.main.python.launcher.collecting_launcher import CollectingLauncher
-
-
 class TrainingLauncher:
 
     def __init__(self, options: list):
@@ -50,13 +45,16 @@ class TrainingLauncher:
         print('')
 
     def start_collecting_launcher(self):
-        launcher = CollectingLauncher(self.options[1:])
+        import src.main.python.launcher.collecting_launcher
+        launcher = src.main.python.launcher.collecting_launcher.CollectingLauncher(self.options[1:])
         launcher.launch()
 
     def start_classifying_launcher(self):
-        launcher = ClassifyingLauncher(self.options[1:])
+        import src.main.python.launcher.classifying_launcher
+        launcher = src.main.python.launcher.classifying_launcher.ClassifyingLauncher(self.options[1:])
         launcher.launch()
 
     def start_modeling_launcher(self):
-        launcher = ModelingLauncher(self.options[1:])
+        import src.main.python.launcher.modeling_launcher
+        launcher = src.main.python.launcher.modeling_launcher.ModelingLauncher(self.options[1:])
         launcher.launch()
