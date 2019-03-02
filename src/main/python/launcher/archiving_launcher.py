@@ -1,8 +1,3 @@
-from src.main.python.process.archiving.archiver import DelibArchiver
-from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
-from src.main.python.commons.configuration import Configuration
-
-
 class ArchivingLauncher:
     def __init__(self, options: list):
         self.options = options
@@ -34,6 +29,10 @@ class ArchivingLauncher:
         print('')
 
     def start_archiving(self):
+        from src.main.python.process.archiving.archiver import DelibArchiver
+        from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
+        from src.main.python.commons.configuration import Configuration
+
         subset_size = 1
         domains = []
         if self.options.__contains__('-d'):

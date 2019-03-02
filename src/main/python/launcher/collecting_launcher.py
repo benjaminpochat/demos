@@ -1,8 +1,3 @@
-from src.main.python.commons.configuration import Configuration
-from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
-from src.main.python.process.training.training_data_producer.training_data_collector import TrainingDataCollector
-
-
 class CollectingLauncher:
 
     def __init__(self, options: list):
@@ -15,6 +10,10 @@ class CollectingLauncher:
             self.start_collecting()
 
     def start_collecting(self):
+        from src.main.python.commons.configuration import Configuration
+        from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
+        from src.main.python.process.training.training_data_producer.training_data_collector import TrainingDataCollector
+
         domains = []
         subset_size = 1
         if self.options.__contains__('-d'):

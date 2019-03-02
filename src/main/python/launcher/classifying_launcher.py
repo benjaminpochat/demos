@@ -1,6 +1,3 @@
-from src.main.python.process.training.training_data_producer.manual_classifier import ManualWebDocumentClassifier
-
-
 class ClassifyingLauncher:
     def __init__(self, options: list):
         self.options = options
@@ -28,6 +25,8 @@ class ClassifyingLauncher:
         print('')
 
     def start_classifying(self):
+        from src.main.python.process.training.training_data_producer.manual_classifier import ManualWebDocumentClassifier
+
         classifier = ManualWebDocumentClassifier()
         if self.options.__contains__('-C'):
             classifier.clear_classification()

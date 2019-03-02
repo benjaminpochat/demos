@@ -1,10 +1,3 @@
-import logging
-from logging import StreamHandler
-
-from src.main.python.process.training.classification_model.mlp_model_builder import MlpModelBuilder
-from src.main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
-
-
 class ModelingLauncher:
     def __init__(self, options: list):
         self.options = options
@@ -26,6 +19,12 @@ class ModelingLauncher:
         print('')
 
     def start_modeling(self):
+        import logging
+        from logging import StreamHandler
+
+        from src.main.python.process.training.classification_model.mlp_model_builder import MlpModelBuilder
+        from src.main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
+
         log_handler = StreamHandler()
         log_handler.setLevel(logging.INFO)
         log_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
