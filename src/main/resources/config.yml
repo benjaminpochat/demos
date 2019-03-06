@@ -1,6 +1,5 @@
 # database section
 database_host: localhost
-#database_host: raspberrypi
 database_port: 6379
 
 # machine learning model section

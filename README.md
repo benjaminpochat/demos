@@ -164,7 +164,7 @@ Then you must do the technical configuration (next chapter) before starting usin
 
 #### Main configuration
 
-The main configuration file is ```src/main/resources/config.yml```
+The main configuration file is [```src/main/resources/config.yml```](https://github.com/benjaminpochat/demos/blob/master/src/main/resources/config.yml)
 
 Please see the content of this file to know what can be configured.
 
