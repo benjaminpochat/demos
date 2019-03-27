@@ -12,7 +12,7 @@ class Loggable:
     def _init_logger(self):
         configuration = Configuration()
         configuration.configure_logging()
-        self._logger = logging.getLogger('delib-archiver')
+        self._logger = logging.getLogger('demos')
 
     def log_debug(self, message: str):
         self._logger.debug(message)

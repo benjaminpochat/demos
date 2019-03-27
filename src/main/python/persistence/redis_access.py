@@ -214,7 +214,7 @@ class RedisAccess(Loggable):
         return self.get_aggregate(the_class=the_class, aggregate_id=aggregate_id)
 
     def search_aggregate_keys_by_attribute_value(self, the_class: type, attribute_name: str, attribute_value: str):
-        keys = self._redis.lrange(the_class.__name__ + '#' + attribute_name + ':' + attribute_value, 0, -1)
+        keys = self._redis.lrange(the_class.__name__ + '#' + attribute_name + ':' + attribute_value.__str__(), 0, -1)
         keys_as_str = []
         for key in keys:
             keys_as_str.append(key.decode())

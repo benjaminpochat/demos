@@ -46,7 +46,7 @@ class Configuration(metaclass=Singleton):
 
     def log_configuration(self):
         self.configure_logging()
-        logger = logging.getLogger('delib-archiver')
+        logger = logging.getLogger('demos')
         logger.info('The configuration loaded is :')
         for attribute_key in self.__dict__.keys():
             attribute_value = self.__dict__[attribute_key]

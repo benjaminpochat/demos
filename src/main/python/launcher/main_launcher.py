@@ -15,8 +15,8 @@ class MainLauncher:
     def launch(self):
         if self.command_line_arguments.__len__() == 0 or self.command_line_arguments[0] == '-h':
             self.print_root_manual_page()
-        elif self.command_line_arguments[0] == 'rebase':
-            self.start_rebasing_launcher()
+        elif self.command_line_arguments[0] == 'admin':
+            self.start_admin_launcher()
         elif self.command_line_arguments[0] == 'train':
             self.start_training_launcher()
         elif self.command_line_arguments[0] == 'archive':
@@ -41,8 +41,6 @@ class MainLauncher:
         print('')
         print('The commands available are :')
         print('')
-        print('  "rebase" : Reinitialize the root data such as the list of the wbe sites to crawl ')
-        print('')
         print('  "train" : a set of tools to collect unclassified documents, train a classification model, and produce a classification model to use for real archiving process')
         print('            See training help page to see the options in details :')
         print('            "demos train -h"')
@@ -51,10 +49,14 @@ class MainLauncher:
         print('              See archiving help page to see the options in details :')
         print('              "demos archive -h"')
         print('')
+        print('  "admin" : a set of tools to administrate the system and its data.')
+        print('              See administration help page to see the options in details :')
+        print('              "demos admin -h"')
+        print('')
 
-    def start_rebasing_launcher(self):
-        from src.main.python.launcher.rebasing_launcher import RebasingLauncher
-        rebasing_launcher = RebasingLauncher(self.command_line_arguments[1:])
+    def start_admin_launcher(self):
+        from src.main.python.launcher.admin_launcher import AdminLauncher
+        rebasing_launcher = AdminLauncher(self.command_line_arguments[1:])
         rebasing_launcher.launch()
 
     def start_training_launcher(self):

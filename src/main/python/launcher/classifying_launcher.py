@@ -21,7 +21,7 @@ class ClassifyingLauncher:
         print('')
         print('  -C clear the classification on all documents before starting')
         print('')
-        print('  -s get the status of the classification : number of documents classified, total of documents')
+        print('  -s get the statistics of the classification : number of documents classified, total of documents')
         print('')
 
     def start_classifying(self):
@@ -31,7 +31,8 @@ class ClassifyingLauncher:
         if self.options.__contains__('-C'):
             classifier.clear_classification()
         if self.options.__contains__('-s'):
-            classifier.show_classification_status()
+            classifier.show_classification_statistics()
+            exit(0)
         while True:
             input('Start next classification ? [Ctrl+C : quit | Enter : continue]')
             classifier.classify()

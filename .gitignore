@@ -6,3 +6,4 @@ venv
 .coverage
 /htmlcov
 *.tar
+demos.log

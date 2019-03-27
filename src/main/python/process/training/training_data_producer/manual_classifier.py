@@ -1,6 +1,6 @@
 import subprocess
-import sys
 
+from src.main.python.model.local_government import LocalGovernment
 from src.main.python.commons.boolean_enum import Boolean
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.persistence.redis_access import RedisAccess
@@ -60,21 +60,24 @@ class ManualWebDocumentClassifier:
         else:
             print('Cleaning classification canceled.')
 
-    def show_classification_status(self):
+    def show_classification_statistics(self):
+        print('Classification statistics :')
         web_documents = self._redis_access.list_aggregates(WebDocument)
-        classified_document_counter = 0
-        document_counter = 0
-        local_governments_documented = set()
-        for web_document in web_documents:
-            document_counter += 1
-            if web_document.local_government is not None:
-                local_governments_documented.add(web_document.local_government)
-            if self._is_document_classified(web_document):
-                classified_document_counter += 1
-        print('Classification status :')
-        print(str(document_counter) + ' documents in total found in ' + str(len(local_governments_documented)) + ' local governments')
-        print(str(classified_document_counter) + ' classified documents')
-
-    def _is_document_classified(self, web_document):
-        return web_document.classified_as_official_report == Boolean.TRUE \
-               or web_document.classified_as_official_report == Boolean.FALSE
+        print(web_documents.__len__().__str__() + ' documents available in the database.')
+        web_documents_classified_as_official_reports = \
+            self._redis_access.search_aggregate_keys_by_attribute_value(WebDocument, 'classified_as_official_report', Boolean.TRUE)
+        print(web_documents_classified_as_official_reports.__len__().__str__() + ' documents classified as official reports.')
+        web_documents_classified_as_non_official_reports = \
+            self._redis_access.search_aggregate_keys_by_attribute_value(WebDocument, 'classified_as_official_report', Boolean.FALSE)
+        print(web_documents_classified_as_non_official_reports.__len__().__str__() + ' documents classified as non official reports.')
+        local_governments_with_classified_web_docs = \
+            set([self._redis_access.get_aggregate(WebDocument, web_document_id).local_government.id for web_document_id in web_documents_classified_as_official_reports]) \
+            .union(\
+            set([self._redis_access.get_aggregate(WebDocument, web_document_id).local_government.id for web_document_id in web_documents_classified_as_non_official_reports]))
+        local_gov_names = list()
+        for local_gov_id in local_governments_with_classified_web_docs:
+            local_gov_names.append(self._redis_access.get_aggregate(LocalGovernment, local_gov_id).name)
+            local_gov_names.sort()
+        print(local_gov_names.__len__().__str__() + ' local governments with classified documents :')
+        for local_gov_name in local_gov_names:
+            print('- ' + local_gov_name)

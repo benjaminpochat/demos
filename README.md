@@ -142,18 +142,25 @@ To install demos, execute the following steps :
     export DEMOS_HOME=/full/path/to/demos/
     ``` 
     Or do it permanently in your ```.bash_profile``` file
+    
+5. To get the demos commands everywhere you are, add the demos scripts folder in your path :
+    ```
+    export PATH=$PATH:$DEMOS_HOME/scripts/main
+    ``` 
+    Or do it permanently in your ```.bash_profile``` file
 
-5. Initialize the database
+6. Initialize the database
+
     Before running demos for the first time, you have to initialize the database with some minimal data (the list of the web sites to scrape).
     Demos is delivered with scripts that put in redis database the list of the french communes and their official web sites. 
     To do so, make sure your redis database runs with an empty db file, and then execute the following command :
     * If your redis database run on localhost, on the default redis port (6379) :
         ```
-        demos rebase
+        demos admin init_data
         ```
     * Otherwise :
         ```
-        demos rebase --database_host DBSERVER --database_port DBPORT
+        demos admin init_data --database_host DBSERVER --database_port DBPORT
         ``` 
     
 That's done. Demos is installed. 

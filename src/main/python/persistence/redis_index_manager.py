@@ -22,3 +22,7 @@ class RedisIndexManager(Loggable):
             if attribute_value is not None and attribute_value.decode().__len__() > 0 :
                 self.log_debug('Adding the following value to the index ' + the_class.__name__ + '#' + attribute_name + ':' + attribute_value.decode() + ' : ' + aggregate_id)
                 self._redis.rpush(the_class.__name__ + '#' + attribute_name + ':' + attribute_value.decode(), aggregate_id)
+
+    def update_index(self, the_class: type, attribute_name: str):
+        self.drop_index(the_class, attribute_name)
+        self.create_index(the_class, attribute_name)
