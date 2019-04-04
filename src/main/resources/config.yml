@@ -6,5 +6,10 @@ database_port: 6379
 model_file: mlp_model.h5
 vocabulary_file: vocabulary.pkl
 
+# define how to distribute the dataset classified manually into the 3 slots of data
+traning_dataset_percent: 60
+validation_dataset_percent: 20
+test_dataset_percent: 20
+
 # logging configuration
 logging_config_file: logging.conf

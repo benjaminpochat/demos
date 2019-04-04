@@ -33,7 +33,7 @@ class ModelingLauncher:
         model_builder._logger.addHandler(log_handler)
 
         text_and_label_loader = TextAndLabelLoader()
-        texts_and_labels = text_and_label_loader.load_texts_and_labels(training_size=10, validation_size=10)
+        texts_and_labels = text_and_label_loader.load_texts_and_labels()
         data = (texts_and_labels[0], texts_and_labels[1]), (texts_and_labels[2], texts_and_labels[3])
         model_builder.build_model(data)
 

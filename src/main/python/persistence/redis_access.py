@@ -50,6 +50,14 @@ class RedisAccess(Loggable):
             elif isinstance(attribute_value, AggregateRoot):
                 self._store_simple_attribute(aggregate_root, attribute_key, self._get_aggregate_key(attribute_value))
 
+    def delete_aggregate(self, aggregate_root: AggregateRoot):
+        """
+        Deletes the aggregate
+        :param aggregate_root: the aggregate to be deleted
+        :return:
+        """
+        self._redis.delete(self._get_aggregate_key(aggregate_root))
+
     def _store_simple_attribute(self, aggregate_root: AggregateRoot, attribute_key: str, attribute_value):
         self._redis.hset(
             self._get_aggregate_key(aggregate_root),
@@ -192,7 +200,7 @@ class RedisAccess(Loggable):
     def _remove_attribute(self, aggregate_root, attribute_key):
         self._redis.hdel(self._get_aggregate_key(aggregate_root), attribute_key)
 
-    def get_aggregate(self, the_class, aggregate_id):
+    def get_aggregate(self, the_class: type, aggregate_id: str):
         """
         Gets one single aggregate root
         :param the_class: the class of the object to read. Must be a subclass of AggregateRoot
@@ -214,6 +222,14 @@ class RedisAccess(Loggable):
         return self.get_aggregate(the_class=the_class, aggregate_id=aggregate_id)
 
     def search_aggregate_keys_by_attribute_value(self, the_class: type, attribute_name: str, attribute_value: str):
+        """
+        Returns all the aggregates whose attribute matches with the value given as argument
+        /!\ CAUTION : The index for the class and  attribute used must be up to date.
+        :param the_class: the class or aggregates searched
+        :param attribute_name: the name of the attribute
+        :param attribute_value: the attribute's value that must be matched
+        :return: a list of aggregates
+        """
         keys = self._redis.lrange(the_class.__name__ + '#' + attribute_name + ':' + attribute_value.__str__(), 0, -1)
         keys_as_str = []
         for key in keys:

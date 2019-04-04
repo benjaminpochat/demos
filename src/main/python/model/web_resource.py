@@ -1,5 +1,6 @@
 import hashlib
 
+from src.main.python.commons.data_subset_type import DataSubsetType
 from src.main.python.model.aggregate_root import AggregateRoot
 from src.main.python.model.local_government import LocalGovernment
 from src.main.python.commons.boolean_enum import Boolean
@@ -15,6 +16,7 @@ class WebDocument(AggregateRoot):
         self.url = url
         self.local_government = local_government
         self.classified_as_official_report = Boolean.UNKNOWN
+        self.subset_type = DataSubsetType.UNKNOWN
 
     def get_id(self):
         return self.id

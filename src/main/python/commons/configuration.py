@@ -74,6 +74,15 @@ class Configuration(metaclass=Singleton):
     def get_logging_config_file(self):
         return self.logging_config_file
 
+    def get_traning_dataset_percent(self):
+        return int(self.traning_dataset_percent)
+
+    def get_validation_dataset_percent(self):
+        return int(self.validation_dataset_percent)
+
+    def get_test_dataset_percent(self):
+        return int(self.test_dataset_percent)
+
 
 class ConfigurationException(Exception):
 

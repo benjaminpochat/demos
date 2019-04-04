@@ -37,6 +37,7 @@ class AdminLauncher:
         index_manager.update_index(LocalGovernment, 'domain_name')
         index_manager.update_index(WebDocument, 'classified_as_official_report')
         index_manager.update_index(WebDocument, 'local_government')
+        index_manager.update_index(WebDocument, 'subset_type')
 
     @staticmethod
     def print_manual_page():
