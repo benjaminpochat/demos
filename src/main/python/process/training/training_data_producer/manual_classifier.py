@@ -1,6 +1,7 @@
 import random
 import subprocess
 
+from src.main.python.persistence.redis_index_manager import RedisIndexManager
 from src.main.python.commons.configuration import Configuration
 from src.main.python.model.local_government import LocalGovernment
 from src.main.python.commons.boolean_enum import Boolean
@@ -100,6 +101,8 @@ class ManualWebDocumentClassifier:
             subset_type = subset_type_array[i]
             document.subset_type = subset_type
             self._redis_access.store_aggregate(document)
+        redis_index_manager = RedisIndexManager()
+        redis_index_manager.update_index(WebDocument, 'subset_type')
         print('The classification dataset has been distributed over 3 subsets : ')
         print('* traning subset : ' + str(self._get_subset_size(DataSubsetType.TRAINING, dataset_size)) + ' items')
         print('* validation subset : ' + str(self._get_subset_size(DataSubsetType.VALIDATION, dataset_size)) + ' items')

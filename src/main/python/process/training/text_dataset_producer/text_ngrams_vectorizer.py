@@ -1,8 +1,11 @@
-from builtins import range
+import os
+import pickle
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
+
+from src.main.python.commons.configuration import Configuration
 
 
 class NgramVectorizer:
@@ -18,7 +21,7 @@ class NgramVectorizer:
     see https://developers.google.com/machine-learning/guides/text-classification/step-3#n-gram_vectors_option_a
     """
 
-    def __init__(self, ngram_range :range = (1, 2), feature_number_limit :int = 20000, token_mode :str = 'word', min_document_token_frequency :int = 2):
+    def __init__(self, ngram_range: range = (1, 2), feature_number_limit: int = 20000, token_mode: str = 'word', min_document_token_frequency: int = 2):
         self._ngram_range = ngram_range
         self._feature_number_limit = feature_number_limit
         self._token_mode = token_mode
@@ -37,29 +40,49 @@ class NgramVectorizer:
         # Returns
             training_vector, validation_vector: vectorized training and validation texts
         """
-        # Create keyword arguments to pass to the 'tf-idf' vectorizer.
-        kwargs = {
-                'ngram_range': self._ngram_range,  # Use 1-grams + 2-grams.
-                'dtype': 'int32',
-                'strip_accents': 'unicode',
-                'decode_error': 'replace',
-                'analyzer': self._token_mode,  # Split text into word tokens.
-                'min_df': self._min_document_token_frequency,
-        }
-        tf_idf_vectorizer = TfidfVectorizer(**kwargs)
+        tf_idf_vectorizer = self._initialize_tf_idf_vectorizer()
 
         # Learn vocabulary from training texts and vectorize training texts.
         training_vector = tf_idf_vectorizer.fit_transform(training_texts)
 
-        # Vectorize validation texts.
+        # Learn vocabulary from validation texts and vectorize validation texts.
         validation_vector = tf_idf_vectorizer.transform(validation_texts)
 
-
         # Select top 'k' of the vectorized features.
+        best_feature_selector = self._get_best_features_selector(training_labels, training_vector)
+        reduced_training_vector = self._reduce_vector_to_best_features(best_feature_selector, training_vector)
+        reduced_validation_vector = self._reduce_vector_to_best_features(best_feature_selector, validation_vector)
+
+        self.save_tf_idf_vectorizer(tf_idf_vectorizer)
+        self.save_best_feature_selector(best_feature_selector)
+
+        return reduced_training_vector, reduced_validation_vector
+
+    def _reduce_vector_to_best_features(self, best_feature_selector: SelectKBest, training_vector):
+        return best_feature_selector.transform(training_vector).astype('float32')
+
+    def _get_best_features_selector(self, training_labels, training_vector):
         selector = SelectKBest(f_classif, k=min(self._feature_number_limit, training_vector.shape[1]))
         selector.fit(training_vector, training_labels)
-        training_vector = selector.transform(training_vector).astype('float32')
-        validation_vector = selector.transform(validation_vector).astype('float32')
-        vocabulary = tf_idf_vectorizer.vocabulary_
-        return training_vector, validation_vector, vocabulary
+        return selector
 
+    def _initialize_tf_idf_vectorizer(self):
+        tf_idf_vectorizer = TfidfVectorizer(
+            ngram_range=self._ngram_range,
+            dtype='int32',
+            strip_accents='unicode',
+            decode_error='replace',
+            analyzer=self._token_mode,
+            min_df=self._min_document_token_frequency
+        )
+        return tf_idf_vectorizer
+
+    def save_tf_idf_vectorizer(self, tf_idf_vectorizer):
+        vectorizer_file = open(os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_vectorizer_file()), 'wb')
+        pickle.dump(tf_idf_vectorizer, vectorizer_file)
+        vectorizer_file.close()
+
+    def save_best_feature_selector(self, best_feature_selector):
+        feature_selector_file = open(os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_feature_selector_file()), 'wb')
+        pickle.dump(best_feature_selector, feature_selector_file)
+        feature_selector_file.close()

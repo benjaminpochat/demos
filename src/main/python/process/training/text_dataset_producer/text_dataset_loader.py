@@ -27,18 +27,15 @@ class TextAndLabelLoader(Loggable):
         """
         self.log_info('Starts loading data')
 
-        training_keys = self._redis_access.search_aggregate_keys_by_attribute_value(WebDocument, 'subset_type', DataSubsetType.TRAINING)
-        validation_keys = self._redis_access.search_aggregate_keys_by_attribute_value(WebDocument, 'subset_type', DataSubsetType.VALIDATION)
-
-        random.shuffle(training_keys)
-        random.shuffle(validation_keys)
-
-        training_web_documents = [self._redis_access.get_aggregate(WebDocument, key) for key in training_keys]
-        validation_web_documents = [self._redis_access.get_aggregate(WebDocument, key) for key in validation_keys]
-
-        self._training_texts = [web_document.text_content for web_document in training_web_documents]
-        self._training_labels = [web_document.classified_as_official_report.to_int() for web_document in training_web_documents]
-        self._validation_texts = [web_document.text_content for web_document in validation_web_documents]
-        self._validation_labels = [web_document.classified_as_official_report.to_int() for web_document in validation_web_documents]
+        self._training_texts, self._training_labels = self.load_texts_and_labels_for_subset_type(DataSubsetType.TRAINING)
+        self._validation_texts, self._validation_labels = self.load_texts_and_labels_for_subset_type(DataSubsetType.VALIDATION)
 
         return self._training_texts, self._training_labels, self._validation_texts, self._validation_labels
+
+    def load_texts_and_labels_for_subset_type(self, subset_type: DataSubsetType):
+        keys = self._redis_access.search_aggregate_keys_by_attribute_value(WebDocument, 'subset_type', subset_type)
+        random.shuffle(keys)
+        web_documents = [self._redis_access.get_aggregate(WebDocument, key) for key in keys]
+        texts = [web_document.text_content for web_document in web_documents]
+        labels = [web_document.classified_as_official_report.to_int() for web_document in web_documents]
+        return texts, labels

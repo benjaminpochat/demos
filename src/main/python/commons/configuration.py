@@ -68,8 +68,11 @@ class Configuration(metaclass=Singleton):
     def get_model_file(self):
         return self.model_file
 
-    def get_vocabulary_file(self):
-        return self.vocabulary_file
+    def get_vectorizer_file(self):
+        return self.vectorizer_file
+
+    def get_feature_selector_file(self):
+        return self.feature_selector_file
 
     def get_logging_config_file(self):
         return self.logging_config_file

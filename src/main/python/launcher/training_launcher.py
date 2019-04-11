@@ -12,6 +12,8 @@ class TrainingLauncher:
             self.start_classifying_launcher()
         elif self.options[0] == 'model':
             self.start_modeling_launcher()
+        elif self.options[0] == 'roc':
+            self.build_roc_curve()
         else:
             print('The command ' + self.options[0] + ' is not defined as a Demos training command.')
             print('Please see manual page running "demos train -h"')
@@ -43,6 +45,9 @@ class TrainingLauncher:
         print('            See model manual page to see the options in detail :')
         print('            "demos train model -h"')
         print('')
+        print('  "roc" : draw the roc curve of the model to evaluate model\'s efficiency')
+        print('            (see https://en.wikipedia.org/wiki/Receiver_operating_characteristic)')
+        print('')
 
     def start_collecting_launcher(self):
         from src.main.python.launcher.collecting_launcher import CollectingLauncher
@@ -58,3 +63,8 @@ class TrainingLauncher:
         from src.main.python.launcher.modeling_launcher import ModelingLauncher
         launcher = ModelingLauncher(self.options[1:])
         launcher.launch()
+
+    def build_roc_curve(self):
+        from src.main.python.process.training.classification_model.roc_curve_producer import RocCurveBuilder
+        roc_curve_builder = RocCurveBuilder()
+        roc_curve_builder.build_roc_curve()

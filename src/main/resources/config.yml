@@ -1,10 +1,12 @@
 # database section
-database_host: localhost
+#database_host: localhost
+database_host: raspberrypi
 database_port: 6379
 
 # machine learning model section
 model_file: mlp_model.h5
-vocabulary_file: vocabulary.pkl
+vectorizer_file: vectorizer.pkl
+feature_selector_file: feature_selector.pkl
 
 # define how to distribute the dataset classified manually into the 3 slots of data
 traning_dataset_percent: 60

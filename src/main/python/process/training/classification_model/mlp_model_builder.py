@@ -1,15 +1,13 @@
-from logging import StreamHandler
+import os
 
 import tensorflow as tf
-import logging
-import pickle
 
 from tensorflow.python.keras import models
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.layers import Dropout
 
+from src.main.python.commons.configuration import Configuration
 from src.main.python.commons.loggable import Loggable
-from src.main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
 from src.main.python.process.training.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
 
 
@@ -55,10 +53,7 @@ class MlpModelBuilder(Loggable):
         self._verify_data(validation_labels)
 
         vectorizer = NgramVectorizer()
-        training_vector, validation_vector, vocabulary = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
-        vocabulary_file = open('vocabulary.pkl', 'wb')
-        pickle.dump(vocabulary, vocabulary_file)
-        vocabulary_file.close()
+        training_vector, validation_vector = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
 
         self._create_mlp_model(input_shape=training_vector.shape[1:])
 
@@ -72,7 +67,7 @@ class MlpModelBuilder(Loggable):
             validation_vector,
             validation_labels)
 
-        self._model.save('mlp_model.h5')
+        self._model.save(os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_model_file()))
 
     def _verify_data(self, validation_labels):
         self.log_info('Verifies that validation labels are in the same range as training labels.')
@@ -138,17 +133,3 @@ class MlpModelBuilder(Loggable):
         history = history.history
         print('Validation accuracy: {acc}, loss: {loss}'.format(
                 acc=history['val_acc'][-1], loss=history['val_loss'][-1]))
-
-
-if __name__ == '__main__':
-    log_handler = StreamHandler()
-    log_handler.setLevel(logging.INFO)
-    log_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-
-    model_builder = MlpModelBuilder()
-    model_builder._logger.addHandler(log_handler)
-
-    text_and_label_loader = TextAndLabelLoader()
-    texts_and_labels = text_and_label_loader.load_texts_and_labels()
-    data = (texts_and_labels[0], texts_and_labels[1]), (texts_and_labels[2], texts_and_labels[3])
-    model_builder.build_model(data)
