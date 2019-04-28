@@ -42,7 +42,7 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
         self.log_info('PDF found : ' + response.url)
         classifier = LocalGovernmentPdfClassifier()
         text_content = self.pdf_converter.convert(response.body)
-        classification = classifier.classify([text_content])[0]
+        classification = classifier.classify(text_content)
         if classification.isOfficialCouncilReport():
             self.log_info('The PDF at ' + response.url + ' has been classified as an official city council report')
             self.save_official_council_report(response.url, text_content)

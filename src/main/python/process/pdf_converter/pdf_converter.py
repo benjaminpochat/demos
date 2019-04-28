@@ -10,6 +10,9 @@ from src.main.python.commons.loggable import Loggable
 
 
 class PdfConverter(Loggable):
+    """
+    A process that converts pdf to text
+    """
     def __init__(self, timeout: int = 60):
         super().__init__()
         self._timeout = timeout

@@ -136,6 +136,19 @@ class TestMainLauncher(unittest.TestCase):
         self.assertTrue(captured_output.getvalue().strip().startswith('-- Welcome in Demos archiving manual page ! --'))
         sys.stdout = sys.__stdout__
 
+    def test_launch_should_print_test_manual_page_with_arguments_test_dash_h(self):
+        # given
+        launcher = MainLauncher(['test', '-h'])
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+
+        # when
+        launcher.launch()
+
+        # then
+        self.assertTrue(captured_output.getvalue().strip().startswith('-- Welcome in Demos test manual page ! --'))
+        sys.stdout = sys.__stdout__
+
 
 if __name__ == '__main__':
     unittest.main()

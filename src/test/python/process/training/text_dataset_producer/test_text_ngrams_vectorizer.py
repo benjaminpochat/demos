@@ -1,9 +1,9 @@
+import os
 import unittest
 import numpy as np
 
-from main.python.process.training.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
-from main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
-from src.test.python.process.training.text_dataset_producer import db_test_text_dataset_loader
+from src.main.python.process.training.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
+from src.main.python.commons.boolean_enum import Boolean
 
 
 class TestTextNgramsVectorizer(unittest.TestCase):
@@ -33,18 +33,16 @@ class TestTextNgramsVectorizer(unittest.TestCase):
     def test_vectorize_few_big_texts(self):
         # given
         vectorizer = NgramVectorizer()
-        text_file_root_folder = 'src/test/resources/process/training/text_dataset_producer'
-        training_text_files_folder = 'training'
-        validation_text_files_folder = 'validation'
-        text_and_label_loader = TextAndLabelLoader()
-        text_and_label_loader._get_random_web_documents_generator = db_test_text_dataset_loader.mock_get_random_web_documents_generator()
-        texts_and_labels = text_and_label_loader.load_texts_and_labels()
+        file1 = open(os.path.join(os.path.dirname(__file__), '../../../../resources/process/training/text_dataset_producer/training/city_council_report/CM%2001%2007%202013%20-%20Proc%C3%A8s-verbal.pdf.txt'))
+        file2 = open(os.path.join(os.path.dirname(__file__), '../../../../resources/process/training/text_dataset_producer/training/city_council_report/CM%2015%2009%202014-%20Proc%C3%A8s-verbal.pdf.txt'))
+        file3 = open(os.path.join(os.path.dirname(__file__), '../../../../resources/process/training/text_dataset_producer/training/others/Actus%20politique%20de%20la%20ville%201.pdf.txt'))
+        file4 = open(os.path.join(os.path.dirname(__file__), '../../../../resources/process/training/text_dataset_producer/validation/city_council_report/CM%2004%2002%202013%20-%20PV.pdf.txt'))
 
         # when
         vectors = vectorizer.ngram_vectorize(
-            texts_and_labels[0],
-            texts_and_labels[1],
-            texts_and_labels[2])
+            [file1.read(), file2.read(), file3.read()],
+            [Boolean.TRUE.to_int(), Boolean.TRUE.to_int(), Boolean.FALSE.to_int()],
+            [file4.read()])
 
         # then
         print('Train results')

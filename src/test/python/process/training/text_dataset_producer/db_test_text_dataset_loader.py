@@ -1,7 +1,6 @@
 import unittest
-from unittest.mock import MagicMock
 
-from main.python.persistence.redis_index_manager import RedisIndexManager
+from src.main.python.persistence.redis_index_manager import RedisIndexManager
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.commons.data_subset_type import DataSubsetType
 from src.main.python.commons.boolean_enum import Boolean
@@ -57,7 +56,6 @@ class TestTextAndLabelLoader(unittest.TestCase):
 
         self.assertTrue(validation_texts.__contains__('Ticking away the moment that make up a dull day'))
         self.assertEquals(validation_labels[validation_texts.index('Ticking away the moment that make up a dull day')], 1)
-
 
     def tearDown(self):
         self._redis_access.delete_aggregate(self.doc1)

@@ -18,7 +18,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(configuration.get_database_host(), 'localhost')
         self.assertEqual(configuration.get_database_port(), '6379')
         self.assertEqual(configuration.get_model_file(), 'mlp_model.h5')
-        self.assertEqual(configuration.get_vocabulary_file(), 'vocabulary.pkl')
+        self.assertEqual(configuration.get_feature_selector_file(), 'feature_selector.pkl')
+        self.assertEqual(configuration.get_vectorizer_file(), 'vectorizer.pkl')
 
     def test_init_with_arguments_should_load_primarily_arguments_configuration_values(self):
         # given
@@ -31,7 +32,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(configuration.database_host, 'dbserver')
         self.assertEqual(configuration.database_port, '666')
         self.assertEqual(configuration.model_file, 'mlp_model.h5')
-        self.assertEqual(configuration.vocabulary_file, 'vocabulary.pkl')
+        self.assertEqual(configuration.feature_selector_file, 'feature_selector.pkl')
+        self.assertEqual(configuration.vectorizer_file, 'vectorizer.pkl')
 
     def test_init_with_unknown_arguments_should_raise_an_error(self):
         # given
