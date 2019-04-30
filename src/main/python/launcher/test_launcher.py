@@ -1,8 +1,6 @@
 import urllib.request
 
 from src.main.python.launcher.launcher import Launcher, ManualPage
-from src.main.python.process.archiving.pdf_classifier import LocalGovernmentPdfClassifier
-from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
 
 
 class TestLauncher(Launcher):
@@ -14,10 +12,14 @@ class TestLauncher(Launcher):
         return TestManualPage()
 
     def start_process(self):
+
+        from src.main.python.process.archiving.pdf_classifier import LocalGovernmentPdfClassifier
+        from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
+
         url = self.args[0]
         pdf_content = urllib.request.urlopen(url).read()
         text_content = PdfConverter(timeout=300).convert(pdf_content)
-        classification = LocalGovernmentPdfClassifier().classify([text_content])
+        classification = LocalGovernmentPdfClassifier().classify(text_content)
         print(classification.class_prediction)
         if classification.isOfficialCouncilReport():
             print('Yep : the PDF at ' + url + ' has been classified as an official city council report')

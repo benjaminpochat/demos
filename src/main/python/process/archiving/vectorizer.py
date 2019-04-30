@@ -19,6 +19,6 @@ class Vectorizer:
         self.vectorizer = pickle.load(open(vectorizer_file_path, 'rb'))
 
     def vectorize(self, text: str):
-        vector = self.vectorizer.transform(text)
+        vector = self.vectorizer.transform([text])
         reduced_vector = self.feature_selector.transform(vector).astype('float32')
         return reduced_vector

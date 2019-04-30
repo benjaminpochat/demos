@@ -23,9 +23,9 @@ class LocalGovernmentPdfClassifier:
         classifications = []
         for class_prediction in class_predictions:
             classification = Classification(class_prediction=class_prediction)
-            if class_prediction > 0.75:
+            if class_prediction > 0.5:
                 classification.classified_as_official_council_report = Boolean.TRUE
-            elif class_prediction < 0.25:
+            elif class_prediction < 0.5:
                 classification.classified_as_official_council_report = Boolean.FALSE
         classifications.append(classification)
         return classifications

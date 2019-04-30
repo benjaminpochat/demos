@@ -77,12 +77,12 @@ class NgramVectorizer:
         )
         return tf_idf_vectorizer
 
-    def save_tf_idf_vectorizer(self, tf_idf_vectorizer):
+    def save_tf_idf_vectorizer(self, tf_idf_vectorizer: TfidfVectorizer):
         vectorizer_file = open(os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_vectorizer_file()), 'wb')
         pickle.dump(tf_idf_vectorizer, vectorizer_file)
         vectorizer_file.close()
 
-    def save_best_feature_selector(self, best_feature_selector):
+    def save_best_feature_selector(self, best_feature_selector: SelectKBest):
         feature_selector_file = open(os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_feature_selector_file()), 'wb')
         pickle.dump(best_feature_selector, feature_selector_file)
         feature_selector_file.close()

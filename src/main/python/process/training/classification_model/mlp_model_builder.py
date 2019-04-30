@@ -52,7 +52,7 @@ class MlpModelBuilder(Loggable):
 
         self._verify_data(validation_labels)
 
-        vectorizer = NgramVectorizer()
+        vectorizer = NgramVectorizer(feature_number_limit=1000, ngram_range=range(1,3))
         training_vector, validation_vector = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
 
         self._create_mlp_model(input_shape=training_vector.shape[1:])
