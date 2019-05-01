@@ -10,6 +10,10 @@ from src.main.python.commons.configuration import Configuration
 
 
 class AdminLauncher(Launcher):
+    """
+    A launcher for the administration features.
+    """
+
     INITIALIZE_DATA_COMMAND = 'init_data'
     UPDATE_INDICES_COMMAND = 'update_indices'
 

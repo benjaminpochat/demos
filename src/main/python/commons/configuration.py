@@ -36,7 +36,8 @@ class Configuration(metaclass=Singleton):
                     raise ConfigurationException('Argument \'' + argument_key + '\' has no value !')
                 argument_value = command_line_arguments[i + 1]
                 self.__dict__[argument_key] = argument_value
-                i += 2
+                command_line_arguments.pop(i)
+                command_line_arguments.pop(i)
             else:
                 i += 1
 

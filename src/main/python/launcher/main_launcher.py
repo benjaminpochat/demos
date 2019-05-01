@@ -41,8 +41,8 @@ class MainLauncher(Launcher):
 
     def start_admin_launcher(self):
         from src.main.python.launcher.admin_launcher import AdminLauncher
-        rebasing_launcher = AdminLauncher(self.args[1:])
-        rebasing_launcher.launch()
+        admin_launcher = AdminLauncher(self.args[1:])
+        admin_launcher.launch()
 
     def start_training_launcher(self):
         from src.main.python.launcher.training_launcher import TrainingLauncher

@@ -4,6 +4,10 @@ from src.main.python.launcher.launcher import Launcher, ManualPage, Option
 
 
 class ClassifyingLauncher(Launcher):
+    """
+    A launcher to start the manual classification process.
+    The manual classification process consists in setting manually classification labels to the documents of the dataset.
+    """
 
     SHOW_STATISTICS_OPTION = '-s'
     DISTRIBUTE_CLASSIFICATION_OPTION = '-D'

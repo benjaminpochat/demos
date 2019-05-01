@@ -1,6 +1,8 @@
 import os
 from abc import abstractclassmethod
 
+from src.main.python.commons.configuration import Configuration
+
 
 class Launcher:
     """
@@ -22,6 +24,7 @@ class Launcher:
         if self.args.__len__() > 0 and self.args[0] == '-h':
             self.get_manual_page().display()
         else:
+            Configuration(self.args)
             self.start_process()
 
 

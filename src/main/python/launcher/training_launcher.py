@@ -1,4 +1,7 @@
 class TrainingLauncher:
+    """
+    A launcher to access features to prepare dataset and train a prediction model;
+    """
 
     def __init__(self, options: list):
         self.options = options

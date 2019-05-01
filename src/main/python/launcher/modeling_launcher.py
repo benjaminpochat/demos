@@ -1,4 +1,8 @@
 class ModelingLauncher:
+    """
+    A launcher to build and save the prediction model from the dataset.
+    """
+
     def __init__(self, options: list):
         self.options = options
 
@@ -13,7 +17,7 @@ class ModelingLauncher:
         print('-- Welcome in Demos modeling manual page ! --')
         print('')
         print('Demos modeling build and trains an automatic classification model.')
-        print('It produces 2 files : a model file and a vocabulary file that can be used to collect automatically and widely local government official reports')
+        print('It produces 3 files : a model file a vectorizer file and a feature selector file that can be used to classify automatically documents')
         print('')
         print('Usage : demos train model')
         print('')

@@ -1,7 +1,9 @@
 import unittest
 import io
 import sys
+from unittest.mock import MagicMock
 
+from src.main.python.commons.configuration import Configuration, ConfigurationException
 from src.main.python.launcher.main_launcher import MainLauncher
 
 
@@ -148,6 +150,48 @@ class TestMainLauncher(unittest.TestCase):
         # then
         self.assertTrue(captured_output.getvalue().strip().startswith('-- Welcome in Demos test manual page ! --'))
         sys.stdout = sys.__stdout__
+
+    def test_launch_should_override_database_host_with_database_host_option(self):
+        # given
+        launcher = MainLauncher(['test', '--database_host', 'my_host'])
+        launcher.start_process = MagicMock(return_value=None)
+
+        # when
+        launcher.launch()
+
+        # then
+        self.assertEqual(Configuration().get_database_host(), 'my_host')
+        self.assertEqual(launcher.args, ['test'])
+
+    def test_launch_should_raise_error_if_overridden_option_has_no_value(self):
+        # given
+        launcher = MainLauncher(['test', '--database_host'])
+        launcher.start_process = MagicMock(return_value=None)
+        raised_exception = None
+
+        # when
+        try:
+            launcher.launch()
+        except ConfigurationException as exception:
+            raised_exception = exception
+
+        # then
+        self.assertIsNotNone(raised_exception)
+
+    def test_launch_should_raise_error_if_overridden_option_is_not_an_option(self):
+        # given
+        launcher = MainLauncher(['test', '--foo', 'bar'])
+        launcher.start_process = MagicMock(return_value=None)
+        raised_exception = None
+
+        # when
+        try:
+            launcher.launch()
+        except ConfigurationException as exception:
+            raised_exception = exception
+
+        # then
+        self.assertIsNotNone(raised_exception)
 
 
 if __name__ == '__main__':
