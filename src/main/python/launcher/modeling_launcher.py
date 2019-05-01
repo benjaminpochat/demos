@@ -1,28 +1,20 @@
-class ModelingLauncher:
+import os
+
+from src.main.python.launcher.launcher import Launcher, ManualPage
+
+
+class ModelingLauncher(Launcher):
     """
     A launcher to build and save the prediction model from the dataset.
     """
 
-    def __init__(self, options: list):
-        self.options = options
+    def get_manual_page(self):
+        return ModelingManualPage()
 
-    def launch(self):
-        if self.options.__len__() > 0 and  self.options[0] == '-h':
-            self.print_manual_page()
-        else:
-            self.start_modeling()
+    def __init__(self, args: list):
+        self.args = args
 
-    def print_manual_page(self):
-        print('')
-        print('-- Welcome in Demos modeling manual page ! --')
-        print('')
-        print('Demos modeling build and trains an automatic classification model.')
-        print('It produces 3 files : a model file a vectorizer file and a feature selector file that can be used to classify automatically documents')
-        print('')
-        print('Usage : demos train model')
-        print('')
-
-    def start_modeling(self):
+    def start_process(self):
         import logging
         from logging import StreamHandler
 
@@ -41,3 +33,18 @@ class ModelingLauncher:
         data = (texts_and_labels[0], texts_and_labels[1]), (texts_and_labels[2], texts_and_labels[3])
         model_builder.build_model(data)
 
+
+class ModelingManualPage(ManualPage):
+    def get_title(self):
+        return 'Welcome in Demos modeling manual page !'
+
+    def get_usage(self):
+        return 'demos train model'
+
+    def get_description(self):
+        return 'Demos modeling build and trains an automatic classification model.' + os.linesep +\
+               'It produces 3 files : ' + os.linesep +\
+               '- a model file' + os.linesep +\
+               '- a vectorizer file' + os.linesep +\
+               '- and a feature selector file' + os.linesep +\
+               'These files can be used with \'demos test\' and \'demos archive\' commands to classify automatically documents.'

@@ -24,7 +24,7 @@ class Launcher:
         if self.args.__len__() > 0 and self.args[0] == '-h':
             self.get_manual_page().display()
         else:
-            Configuration(self.args)
+            Configuration(self.args).overload_values_with_command_line_arguments(self.args)
             self.start_process()
 
 

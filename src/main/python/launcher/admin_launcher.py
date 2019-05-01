@@ -70,9 +70,9 @@ class AdminManualPage(ManualPage):
             Command(AdminLauncher.UPDATE_INDICES_COMMAND,
                     'Updates database indices.'),
             Command(AdminLauncher.INITIALIZE_DATA_COMMAND,
-                    'Initialize into database the data necessary to start scraping, classifying, and training.' + os.linesep + \
-                    'The data initialized are :' + os.linesep + \
-                    '- the list of local government(french communes)' + os.linesep + \
-                    '- the domain names of official web sites for each local government' + os.linesep + \
+                    'Initialize into database the data necessary to start scraping, classifying, and training.' + os.linesep +
+                    'The data initialized are :' + os.linesep +
+                    '- the list of local government(french communes)' + os.linesep +
+                    '- the domain names of official web sites for each local government' + os.linesep +
                     '/!\\ CAUTION : If your database is not empty, this will screw up your data !')
         ]
