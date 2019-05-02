@@ -21,7 +21,7 @@ class Launcher:
         pass
 
     def launch(self):
-        if self.args.__len__() > 0 and self.args[0] == '-h':
+        if self.args.__len__() == 0 or self.args[0] == '-h':
             self.get_manual_page().display()
         else:
             Configuration(self.args).overload_values_with_command_line_arguments(self.args)
