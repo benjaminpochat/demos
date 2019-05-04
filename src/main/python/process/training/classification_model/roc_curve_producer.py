@@ -41,10 +41,8 @@ class RocCurveBuilder():
         self.test_texts, self.test_labels = text_and_label_loader.load_texts_and_labels_for_subset_type(DataSubsetType.TEST)
 
     def _load_and_reduce_vector(self):
-        feature_selector_file_path = os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_feature_selector_file())
-        feature_selector = pickle.load(open(feature_selector_file_path, 'rb'))
-        vectorizer_file_path = os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_vectorizer_file())
-        vectorizer = pickle.load(open(vectorizer_file_path, 'rb'))
+        feature_selector = pickle.load(open(Configuration().get_feature_selector_file_path(), 'rb'))
+        vectorizer = pickle.load(open(Configuration().get_vectorizer_file_path(), 'rb'))
         test_vector = vectorizer.transform(self.test_texts)
         reduced_test_vector = feature_selector.transform(test_vector).astype('float32')
         return reduced_test_vector

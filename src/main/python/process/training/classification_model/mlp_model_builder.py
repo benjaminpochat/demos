@@ -52,7 +52,7 @@ class MlpModelBuilder(Loggable):
 
         self._verify_data(validation_labels)
 
-        vectorizer = NgramVectorizer(feature_number_limit=1000, ngram_range=range(1,3))
+        vectorizer = self.get_vectorizer()
         training_vector, validation_vector = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
 
         self._create_mlp_model(input_shape=training_vector.shape[1:])
@@ -67,7 +67,13 @@ class MlpModelBuilder(Loggable):
             validation_vector,
             validation_labels)
 
-        self._model.save(os.path.join(os.path.dirname(__file__), '../../../../resources/', Configuration().get_model_file()))
+        self._model.save(self.get_model_file_path())
+
+    def get_vectorizer(self):
+        return NgramVectorizer(feature_number_limit=1000, ngram_range=range(1, 3))
+
+    def get_model_file_path(self):
+        return Configuration().get_model_file_path()
 
     def _verify_data(self, validation_labels):
         self.log_info('Verifies that validation labels are in the same range as training labels.')

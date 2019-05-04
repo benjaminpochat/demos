@@ -87,6 +87,21 @@ class Configuration(metaclass=Singleton):
     def get_test_dataset_percent(self):
         return int(self.test_dataset_percent)
 
+    def get_demos_home(self):
+        return os.environ.get('DEMOS_HOME')
+
+    def _get_resource_file_path(self, file_name:str):
+        return os.path.join(self.get_demos_home(), 'src', 'main', 'resources', file_name)
+
+    def get_model_file_path(self):
+        return self._get_resource_file_path(self.get_model_file())
+
+    def get_vectorizer_file_path(self):
+        return self._get_resource_file_path(self.get_vectorizer_file())
+
+    def get_feature_selector_file_path(self):
+        return self._get_resource_file_path(self.get_feature_selector_file())
+
 
 class ConfigurationException(Exception):
 

@@ -1,10 +1,8 @@
 import os
 import unittest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
-import src.test.python.process.training.text_dataset_producer.db_test_text_dataset_loader as test_text_dataset_loader
 from src.main.python.commons.boolean_enum import Boolean
-from src.main.python.commons.configuration import Configuration
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.process.training.classification_model.mlp_model_builder import MlpModelBuilder
 from src.main.python.process.training.text_dataset_producer.text_dataset_loader import TextAndLabelLoader
@@ -15,7 +13,11 @@ class TestMlpModelBuilder(unittest.TestCase):
 
         # given
         model_builder = MlpModelBuilder()
-        model_builder._train_model = Mock(side_effect=print('MlpModelBuilder._train_model mocked'))
+        model_builder.get_model_file_path = Mock(return_value=model_builder.get_model_file_path().replace(".h5", ".test.h5"))
+        vectorizer = model_builder.get_vectorizer()
+        vectorizer.get_vectorizer_file_path = Mock(return_value=vectorizer.get_vectorizer_file_path().replace(".pkl", ".test.pkl"))
+        vectorizer.get_feature_selector_file_path = Mock(return_value=vectorizer.get_feature_selector_file_path().replace(".pkl", ".test.pkl"))
+        model_builder.get_vectorizer = Mock(return_value=vectorizer)
         text_and_label_loader = TextAndLabelLoader()
         text_and_label_loader.load_texts_and_labels = self.mock_load_texts_and_labels
         texts_and_labels = text_and_label_loader.load_texts_and_labels()
@@ -25,15 +27,11 @@ class TestMlpModelBuilder(unittest.TestCase):
         model_builder.build_model(data)
 
         # then
-        vectorizer_path = os.path.join(os.path.dirname(__file__), '../../../../../main/resources/', Configuration().get_vectorizer_file())
-        feature_selector_path = os.path.join(os.path.dirname(__file__), '../../../../../main/resources/', Configuration().get_feature_selector_file())
-        model_path = os.path.join(os.path.dirname(__file__), '../../../../../main/resources/', Configuration().get_model_file())
-        self.assertTrue(os.path.isfile(vectorizer_path))
-        self.assertTrue(os.path.isfile(feature_selector_path))
-        self.assertTrue(os.path.isfile(model_path))
-        os.remove(vectorizer_path)
-        os.remove(feature_selector_path)
-        os.remove(model_path)
+        self.assertTrue(model_builder.get_model_file_path())
+        os.remove(model_builder.get_model_file_path())
+        os.remove(vectorizer.get_feature_selector_file_path())
+        os.remove(vectorizer.get_vectorizer_file_path())
+
 
     def mock_load_texts_and_labels(self):
         doc1 = WebDocument(ident='1', text_content='This is the highway to hell')
