@@ -162,6 +162,7 @@ class TestMainLauncher(unittest.TestCase):
         # then
         self.assertEqual(Configuration().get_database_host(), 'my_host')
         self.assertEqual(launcher.args, ['test'])
+        Configuration()
 
     def test_launch_should_raise_error_if_overridden_option_has_no_value(self):
         # given
@@ -193,6 +194,9 @@ class TestMainLauncher(unittest.TestCase):
         # then
         self.assertIsNotNone(raised_exception)
 
+    @classmethod
+    def tearDownClass(cls):
+        Configuration().__init__()
 
 if __name__ == '__main__':
     unittest.main()
