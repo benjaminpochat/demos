@@ -13,10 +13,10 @@ class TestMlpModelBuilder(unittest.TestCase):
 
         # given
         model_builder = MlpModelBuilder()
-        model_builder.get_model_file_path = Mock(return_value=model_builder.get_model_file_path().replace(".h5", ".test.h5"))
+        model_builder.get_keras_model_file_path = Mock(return_value=model_builder.get_keras_model_file_path().replace(".h5", ".test.h5"))
+        model_builder.get_tensorflow_model_file_path = Mock(return_value=model_builder.get_tensorflow_model_file_path().replace(".pb", ".test.pb"))
+        model_builder._save_vectorizer_and_feature_selector = Mock()
         vectorizer = model_builder.get_vectorizer()
-        vectorizer.get_vectorizer_file_path = Mock(return_value=vectorizer.get_vectorizer_file_path().replace(".pkl", ".test.pkl"))
-        vectorizer.get_feature_selector_file_path = Mock(return_value=vectorizer.get_feature_selector_file_path().replace(".pkl", ".test.pkl"))
         model_builder.get_vectorizer = Mock(return_value=vectorizer)
         text_and_label_loader = TextAndLabelLoader()
         text_and_label_loader.load_texts_and_labels = self.mock_load_texts_and_labels
@@ -27,11 +27,14 @@ class TestMlpModelBuilder(unittest.TestCase):
         model_builder.build_model(data)
 
         # then
-        self.assertTrue(model_builder.get_model_file_path())
-        os.remove(model_builder.get_model_file_path())
-        os.remove(vectorizer.get_feature_selector_file_path())
-        os.remove(vectorizer.get_vectorizer_file_path())
-
+        self.assertTrue(model_builder.get_keras_model_file_path())
+        self.assertTrue(model_builder.get_tensorflow_model_file_path())
+        os.remove(model_builder.get_keras_model_file_path())
+        os.remove(model_builder.get_tensorflow_model_file_path() + '/variables/variables.data-00000-of-00001')
+        os.remove(model_builder.get_tensorflow_model_file_path() + '/variables/variables.index')
+        os.removedirs(model_builder.get_tensorflow_model_file_path() + '/variables')
+        os.remove(model_builder.get_tensorflow_model_file_path() + '/saved_model.pb')
+        os.removedirs(model_builder.get_tensorflow_model_file_path())
 
     def mock_load_texts_and_labels(self):
         doc1 = WebDocument(ident='1', text_content='This is the highway to hell')

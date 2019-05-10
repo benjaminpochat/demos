@@ -1,7 +1,7 @@
 import os
 import urllib.request
 
-from src.main.python.launcher.launcher import Launcher, ManualPage, Command
+from src.main.python.launcher.launcher import Launcher, ManualPage, Command, Option
 
 
 class TestLauncher(Launcher):
@@ -11,6 +11,8 @@ class TestLauncher(Launcher):
 
     CLASSIFY_COMMAND = 'classify'
     ROC_CURVE_COMMAND = 'roc'
+
+    TENSORFLOW_SERVING_OPTION = '-tfs'
 
     def __init__(self, args: list):
         super().__init__(args)
@@ -28,17 +30,25 @@ class TestLauncher(Launcher):
             print('Please see manual page running "demos test -h"')
 
     def classify_document(self):
-        from src.main.python.process.archiving.pdf_classifier import LocalGovernmentPdfClassifier
         from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
-        url = self.args[0]
+        url = list(filter(lambda arg: arg.__contains__('://'), self.args))[0]
         pdf_content = urllib.request.urlopen(url).read()
         text_content = PdfConverter(timeout=300).convert(pdf_content)
-        classification = LocalGovernmentPdfClassifier().classify(text_content)
+        classifier = self._get_classifier()
+        classification = classifier.classify(text_content)
         print(classification.class_prediction)
         if classification.isOfficialCouncilReport():
             print('Yep : the PDF at ' + url + ' has been classified as an official city council report')
         else:
             print('Nope : the PDF at ' + url + ' has not been classified as an official city council report')
+
+    def _get_classifier(self):
+        if self.args.__contains__(TestLauncher.TENSORFLOW_SERVING_OPTION):
+            from src.main.python.process.archiving.rest_client_pdf_classifier import RestClientPdfClassifier
+            return RestClientPdfClassifier()
+        else:
+            from src.main.python.process.archiving.local_pdf_classifier import LocalPdfClassifier
+            return LocalPdfClassifier()
 
     def build_roc_curve(self):
         from src.main.python.process.training.classification_model.roc_curve_producer import RocCurveBuilder
@@ -62,8 +72,17 @@ class TestManualPage(ManualPage):
             Command(TestLauncher.CLASSIFY_COMMAND,
                     'Runs the automatic classification process against a PDF documents pointed by the url given as an argument ' + os.linesep +
                     'with the following syntax :' + os.linesep +
-                    '\'demos test http://an/url/to/a/file.pdf\''),
+                    '\'demos test classify http://an/url/to/a/file.pdf\''),
             Command(TestLauncher.ROC_CURVE_COMMAND,
                     'Draws the roc curve of the model to evaluate model\'s efficiency.' + os.linesep +
                     '(see https://en.wikipedia.org/wiki/Receiver_operating_characteristic)')
+        ]
+
+    def get_options(self):
+        return [
+            Option(TestLauncher.TENSORFLOW_SERVING_OPTION,
+                   'Runs the classification process using tensorflow serving service.' + os.linesep +
+                   'This option has an effects only with the ' + TestLauncher.CLASSIFY_COMMAND + ' command.'+ os.linesep +
+                   'To use this option, the prediction model has to be deployed into a tensorflow serving service.' + os.linesep +
+                   'And the parameters "tensorflow_serving_host" and "tensorflow_serving_port" must be set in the confi file.')
         ]

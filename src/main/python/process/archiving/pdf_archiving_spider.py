@@ -6,7 +6,7 @@ from src.main.python.model.local_government import LocalGovernment
 from src.main.python.commons.boolean_enum import Boolean
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.commons.loggable import Loggable
-from src.main.python.process.archiving.pdf_classifier import LocalGovernmentPdfClassifier
+from src.main.python.process.archiving.local_pdf_classifier import LocalPdfClassifier
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
 
@@ -40,7 +40,7 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
         :return: nothing
         """
         self.log_info('PDF found : ' + response.url)
-        classifier = LocalGovernmentPdfClassifier()
+        classifier = LocalPdfClassifier()
         text_content = self.pdf_converter.convert(response.body)
         classification = classifier.classify(text_content)
         if classification.isOfficialCouncilReport():

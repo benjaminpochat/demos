@@ -3,7 +3,7 @@ import pickle
 from src.main.python.commons.configuration import Configuration
 
 
-class Vectorizer:
+class OperationalTextVectorizer:
     """
     A class to convert texts to vectors.
     The vectorization process uses :

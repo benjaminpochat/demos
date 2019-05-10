@@ -1,14 +1,17 @@
-import os
-
-import tensorflow as tf
-
-from tensorflow.python.keras import models
+from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.layers import Dropout
+from tensorflow.python.saved_model.builder import SavedModelBuilder
+from tensorflow.python.keras.optimizers import Adam
+from tensorflow.python.keras.callbacks import EarlyStopping
+from tensorflow.python.keras import backend
+from tensorflow.python.saved_model.signature_def_utils import predict_signature_def
+from tensorflow.python.saved_model.signature_constants import DEFAULT_SERVING_SIGNATURE_DEF_KEY
+from tensorflow.python.saved_model.tag_constants import SERVING
 
 from src.main.python.commons.configuration import Configuration
 from src.main.python.commons.loggable import Loggable
-from src.main.python.process.training.text_dataset_producer.text_ngrams_vectorizer import NgramVectorizer
+from src.main.python.process.training.text_dataset_producer.training_text_vectorizer import TrainingTextVectorizer
 
 
 class MlpModelBuilder(Loggable):
@@ -30,7 +33,7 @@ class MlpModelBuilder(Loggable):
                           learning_rate=1e-3,
                           epochs=1000,
                           batch_size=128):
-        """Trains n-gram model on the given dataset.
+        """Trains n-gram model on the given dataset, and save the model as files.
 
         # Arguments
             data: tuples of training and validation texts and labels.
@@ -53,7 +56,7 @@ class MlpModelBuilder(Loggable):
         self._verify_data(validation_labels)
 
         vectorizer = self.get_vectorizer()
-        training_vector, validation_vector = vectorizer.ngram_vectorize(training_texts, training_labels, validation_texts)
+        training_vector, validation_vector = vectorizer.vectorize(training_texts, training_labels, validation_texts)
 
         self._create_mlp_model(input_shape=training_vector.shape[1:])
 
@@ -67,13 +70,38 @@ class MlpModelBuilder(Loggable):
             validation_vector,
             validation_labels)
 
-        self._model.save(self.get_model_file_path())
+        self._save_model()
+        self._save_vectorizer_and_feature_selector(vectorizer)
+
+    def _save_model(self):
+        self._save_keras_model()
+        self._save_tensorflow_model()
+
+    def _save_keras_model(self):
+        self._model.save(self.get_keras_model_file_path())
+
+    def _save_tensorflow_model(self):
+        builder = SavedModelBuilder(self.get_tensorflow_model_file_path())
+        signature = predict_signature_def(inputs={"texts": self._model.input},
+                                          outputs={"scores": self._model.output})
+        builder.add_meta_graph_and_variables(
+            sess = backend.get_session(),
+            tags = [SERVING],
+            signature_def_map = { DEFAULT_SERVING_SIGNATURE_DEF_KEY:signature}
+        )
+        builder.save()
+
+    def get_keras_model_file_path(self):
+        return Configuration().get_keras_model_file_path()
+
+    def get_tensorflow_model_file_path(self):
+        return Configuration().get_tensorflow_model_file_path()
 
     def get_vectorizer(self):
-        return NgramVectorizer(feature_number_limit=1000, ngram_range=range(1, 3))
+        return TrainingTextVectorizer(feature_number_limit=1000, ngram_range=range(1, 3))
 
-    def get_model_file_path(self):
-        return Configuration().get_model_file_path()
+    def _save_vectorizer_and_feature_selector(self, vectorizer: TrainingTextVectorizer):
+        vectorizer.save_vectorizer_and_feature_selector()
 
     def _verify_data(self, validation_labels):
         self.log_info('Verifies that validation labels are in the same range as training labels.')
@@ -99,7 +127,7 @@ class MlpModelBuilder(Loggable):
         """
         self.log_info('Creates an instance of a multi-layer perceptron model.')
 
-        self._model = models.Sequential()
+        self._model = Sequential()
         self._model.add(Dropout(rate=self._dropout_rate, input_shape=input_shape))
 
         for _ in range(self._layers_number-1):
@@ -110,7 +138,7 @@ class MlpModelBuilder(Loggable):
 
     def _compile_model(self, learning_rate):
         self.log_info('Compiles the multi-layer perceptron model.')
-        optimizer = tf.keras.optimizers.Adam(lr=learning_rate)
+        optimizer = Adam(lr=learning_rate)
         self._model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['acc'])
 
     def _train_model(self,
@@ -123,7 +151,7 @@ class MlpModelBuilder(Loggable):
         self.log_info('Trains the multi-layer perceptron model.')
         # Create callback for early stopping on validation loss. If the loss does
         # not decrease in two consecutive tries, stop training.
-        callbacks = [tf.keras.callbacks.EarlyStopping(
+        callbacks = [EarlyStopping(
             monitor='val_loss', patience=2)]
         # Train and validate model.
         history = self._model.fit(

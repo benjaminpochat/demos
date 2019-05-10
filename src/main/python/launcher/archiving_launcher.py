@@ -11,6 +11,7 @@ class ArchivingLauncher(Launcher):
 
     SPECIFIC_DOMAIN_NAME_OPTION = '-d'
     NUMBER_OF_LOCAL_GOVERNMENTS_OPTION = '-n'
+    TENSORFLOW_SERVING_MODE = '-tfs'
 
     def __init__(self, args: list):
         self.args = args
@@ -52,18 +53,22 @@ class ArchivingManualPage(ManualPage):
     def get_options(self):
         return [
             Option(ArchivingLauncher.SPECIFIC_DOMAIN_NAME_OPTION,
-                   'set a particular domain to crawl with the following syntax :' + os.linesep +
+                   'sets a particular domain to crawl with the following syntax :' + os.linesep +
                    '\'demos archive -d <domaine_name>\'' + os.linesep +
                    'For example :' + os.linesep +
                    '\'demos achive -d chamonix.fr\' to crawl Chamonix city web site' + os.linesep +
                    'The domain name given must match a local government.' + os.linesep +
                    'By default, if this option is not used, the process chooses the local governement randomly'),
             Option(ArchivingLauncher.NUMBER_OF_LOCAL_GOVERNMENTS_OPTION,
-                   'set the number of local governments\' web sites to crawl with the following syntax :' + os.linesep +
+                   'sets the number of local governments\' web sites to crawl with the following syntax :' + os.linesep +
                    '\'demos archive -n <number>\'' + os.linesep +
                    'For example :' + os.linesep +
                    '\'demos archive -n 10\' to crawl 10 local governments chosen randomly' + os.linesep +
                    'For endless crawling, use -1 value.' + os.linesep +
                    'By default, if this option is not used, only 1 local government is crawled at a time.' + os.linesep +
-                   'This option is ignored if the parameter -d is used')
+                   'This option is ignored if the parameter -d is used'),
+            Option(ArchivingLauncher.TENSORFLOW_SERVING_MODE,
+                   'activates the "tensorflow-serving mode"' + os.linesep +
+                   'This mode must be used for production deployment, using a lightweight docker container for the classification process' + os.linesep +
+                   'With this option, the 2 following properties are used : "tensorflow_serving_host" and "tensorflow_serving_port"')
         ]

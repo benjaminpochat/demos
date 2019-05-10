@@ -1,21 +1,14 @@
-from tensorflow.python.keras import models
+from abc import abstractmethod
 
 from src.main.python.commons.boolean_enum import Boolean
 from src.main.python.model.classification import Classification
-from src.main.python.commons.configuration import Configuration
-from src.main.python.process.archiving.vectorizer import Vectorizer
 
 
-class LocalGovernmentPdfClassifier:
-    def __init__(self):
-        self._configuration = Configuration()
-        self._model = models.load_model(Configuration().get_model_file_path())
+class AbstractClassifier:
 
+    @abstractmethod
     def classify(self, text_content: str):
-        vectorized_text = Vectorizer().vectorize(text_content)
-        class_predictions = self._model.predict([vectorized_text], verbose=1)
-        classifications = self.convert_predictions_as_classifications(class_predictions)
-        return classifications[0]
+        pass
 
     def convert_predictions_as_classifications(self, class_predictions):
         classifications = []

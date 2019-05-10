@@ -3,7 +3,8 @@ database_host: localhost
 database_port: 6379
 
 # machine learning model section
-model_file: mlp_model.h5
+keras_model_file: mlp_model.h5
+tensorflow_model_file: mlp_model.pb
 vectorizer_file: vectorizer.pkl
 feature_selector_file: feature_selector.pkl
 
@@ -14,3 +15,7 @@ test_dataset_percent: 20
 
 # logging configuration
 logging_config_file: logging.conf
+
+# tensorflow serving configuration
+tensortflow_serving_host: localhost
+tensortflow_serving_port: 8501

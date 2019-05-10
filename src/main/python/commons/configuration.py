@@ -66,8 +66,11 @@ class Configuration(metaclass=Singleton):
     def get_database_port(self):
         return self.database_port
 
-    def get_model_file(self):
-        return self.model_file
+    def get_keras_model_file(self):
+        return self.keras_model_file
+
+    def get_tensorflow_model_file(self):
+        return self.tensorflow_model_file
 
     def get_vectorizer_file(self):
         return self.vectorizer_file
@@ -87,14 +90,23 @@ class Configuration(metaclass=Singleton):
     def get_test_dataset_percent(self):
         return int(self.test_dataset_percent)
 
+    def get_tensortflow_serving_host(self):
+        return self.tensortflow_serving_host
+
+    def get_tensortflow_serving_port(self):
+        return self.tensortflow_serving_port
+
     def get_demos_home(self):
         return os.environ.get('DEMOS_HOME')
 
     def _get_resource_file_path(self, file_name:str):
         return os.path.join(self.get_demos_home(), 'src', 'main', 'resources', file_name)
 
-    def get_model_file_path(self):
-        return self._get_resource_file_path(self.get_model_file())
+    def get_keras_model_file_path(self):
+        return self._get_resource_file_path(self.get_keras_model_file())
+
+    def get_tensorflow_model_file_path(self):
+        return self._get_resource_file_path(self.get_tensorflow_model_file())
 
     def get_vectorizer_file_path(self):
         return self._get_resource_file_path(self.get_vectorizer_file())

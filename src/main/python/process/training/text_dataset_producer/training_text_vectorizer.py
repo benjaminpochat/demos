@@ -7,8 +7,8 @@ from sklearn.feature_selection import f_classif
 from src.main.python.commons.configuration import Configuration
 
 
-class NgramVectorizer:
-    """A class that tokenize and vectorize texts
+class TrainingTextVectorizer:
+    """A class that tokenize and vectorize training texts
 
     Attributes:
         _ngram_range                    Range (inclusive) of n-gram sizes for tokenizing text.
@@ -25,9 +25,12 @@ class NgramVectorizer:
         self._feature_number_limit = feature_number_limit
         self._token_mode = token_mode
         self._min_document_token_frequency = min_document_token_frequency
+        self._tensorflow_vectorizer = self._initialize_tf_idf_vectorizer()
+        self._best_feature_selector = None
 
-    def ngram_vectorize(self, training_texts, training_labels, validation_texts):
-        """Vectorizes texts as n-gram vectors.
+
+    def vectorize(self, training_texts, training_labels, validation_texts):
+        """Vectorizes the training texts as n-gram vectors.
 
         1 text = 1 tf-idf vector the length of vocabulary of unigrams + bigrams.
 
@@ -39,28 +42,26 @@ class NgramVectorizer:
         # Returns
             training_vector, validation_vector: vectorized training and validation texts
         """
-        tf_idf_vectorizer = self._initialize_tf_idf_vectorizer()
 
-        # Learn vocabulary from training texts and vectorize training texts.
-        training_vector = tf_idf_vectorizer.fit_transform(training_texts)
-
-        # Learn vocabulary from validation texts and vectorize validation texts.
-        validation_vector = tf_idf_vectorizer.transform(validation_texts)
+        # Learn vocabulary vectorize training and validation texts.
+        training_vector = self._tensorflow_vectorizer.fit_transform(training_texts)
+        validation_vector = self._tensorflow_vectorizer.transform(validation_texts)
 
         # Select top 'k' of the vectorized features.
-        best_feature_selector = self._get_best_features_selector(training_labels, training_vector)
-        reduced_training_vector = self._reduce_vector_to_best_features(best_feature_selector, training_vector)
-        reduced_validation_vector = self._reduce_vector_to_best_features(best_feature_selector, validation_vector)
-
-        self.save_tf_idf_vectorizer(tf_idf_vectorizer)
-        self.save_best_feature_selector(best_feature_selector)
+        self._best_feature_selector = self._build_best_features_selector(training_labels, training_vector)
+        reduced_training_vector = self._reduce_vector_to_best_features(self._best_feature_selector, training_vector)
+        reduced_validation_vector = self._reduce_vector_to_best_features(self._best_feature_selector, validation_vector)
 
         return reduced_training_vector, reduced_validation_vector
+
+    def save_vectorizer_and_feature_selector(self):
+        self._save_tf_idf_vectorizer(self._tensorflow_vectorizer)
+        self._save_best_feature_selector(self._best_feature_selector)
 
     def _reduce_vector_to_best_features(self, best_feature_selector: SelectKBest, training_vector):
         return best_feature_selector.transform(training_vector).astype('float32')
 
-    def _get_best_features_selector(self, training_labels, training_vector):
+    def _build_best_features_selector(self, training_labels, training_vector):
         selector = SelectKBest(f_classif, k=min(self._feature_number_limit, training_vector.shape[1]))
         selector.fit(training_vector, training_labels)
         return selector
@@ -76,7 +77,7 @@ class NgramVectorizer:
         )
         return tf_idf_vectorizer
 
-    def save_tf_idf_vectorizer(self, tf_idf_vectorizer: TfidfVectorizer):
+    def _save_tf_idf_vectorizer(self, tf_idf_vectorizer: TfidfVectorizer):
         vectorizer_file = open(self.get_vectorizer_file_path(), 'wb')
         pickle.dump(tf_idf_vectorizer, vectorizer_file)
         vectorizer_file.close()
@@ -84,7 +85,7 @@ class NgramVectorizer:
     def get_vectorizer_file_path(self):
         return Configuration().get_vectorizer_file_path()
 
-    def save_best_feature_selector(self, best_feature_selector: SelectKBest):
+    def _save_best_feature_selector(self, best_feature_selector: SelectKBest):
         feature_selector_file = open(self.get_feature_selector_file_path(), 'wb')
         pickle.dump(best_feature_selector, feature_selector_file)
         feature_selector_file.close()
