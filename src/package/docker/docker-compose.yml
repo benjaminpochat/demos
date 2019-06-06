@@ -5,7 +5,7 @@ services:
     build:
       context: ../../..
       dockerfile: ./src/package/docker/scraper/Dockerfile
-    image: demos-scraper:0.0.2
+    image: benjaminpochat/demos-scraper:0.0.2
     network_mode: host
     container_name: demos-scraper
     command: archive -n 100
@@ -14,14 +14,14 @@ services:
     build:
       context: ../../..
       dockerfile: ./src/package/docker/classifier/Dockerfile
-    image: demos-classifier:0.0.2
+    image: benjaminpochat/demos-classifier:0.0.2
     network_mode: host
     container_name: demos-classifier
     ports:
       - 8501:8501
     environment:
       - MODEL_NAME=demos
-  
+
   demos-database:
     image: redis
     network_mode: host
@@ -29,5 +29,3 @@ services:
     volumes:
       - /data/redis:/data
     command: --dir /data --save 900 1 --save 300 10 --save 60 10000
-
-#TODO : quel host parametrer pour la BDD et TFS ? localhost ? Faire une config réseau plus sophistiquée que "host" ?
