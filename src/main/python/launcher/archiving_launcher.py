@@ -31,11 +31,20 @@ class ArchivingLauncher(Launcher):
         print('Start archiving data...')
         print('[ Ctrl + C ] to quit')
         selector = LocalGovernmentSelector(subset_size=subset_size, domains=domains)
-        archiver = DelibArchiver(selector=selector)
+        classifier_class = self._get_classifier_class()
+        archiver = DelibArchiver(selector=selector, classifier_class=classifier_class)
         archiver.archive()
 
     def get_manual_page(self):
         return ArchivingManualPage()
+
+    def _get_classifier_class(self):
+        if self.args.__contains__(self.TENSORFLOW_SERVING_MODE):
+            from src.main.python.process.archiving.rest_client_pdf_classifier import RestClientPdfClassifier
+            return RestClientPdfClassifier
+        else:
+            from src.main.python.process.archiving.local_pdf_classifier import LocalPdfClassifier
+            return LocalPdfClassifier
 
 
 class ArchivingManualPage(ManualPage):

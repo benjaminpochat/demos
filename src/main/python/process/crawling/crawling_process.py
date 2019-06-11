@@ -9,10 +9,11 @@ class LocalGovernmentCrawlingProcess(Loggable):
     A process that crawls a local government's domain,
     and apply the process implemented in the spider class given as attribute
     """
-    def __init__(self, local_governments: list, spider_class):
+    def __init__(self, local_governments: list, spider_class, classifier_class):
         super().__init__()
         self.local_governments = local_governments
         self.spider_class = spider_class
+        self.classifier_class = classifier_class
         self.crawler_process = CrawlerProcess()
 
     def crawl(self):
@@ -29,4 +30,4 @@ class LocalGovernmentCrawlingProcess(Loggable):
                             + '\' because it has no domain name')
             self.log_error(exception)
             raise exception
-        self.crawler_process.crawl(self.spider_class, [local_government])
+        self.crawler_process.crawl(self.spider_class, [local_government, self.classifier_class])

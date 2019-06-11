@@ -6,9 +6,10 @@ from src.main.python.commons.loggable import Loggable
 
 class DelibArchiver(Loggable):
 
-    def __init__(self, selector: LocalGovernmentSelector):
+    def __init__(self, selector: LocalGovernmentSelector, classifier_class):
         super().__init__()
         self._selector = selector
+        self.classifier_class = classifier_class
         self._selected_local_governments = []
 
     def archive(self):
@@ -18,5 +19,6 @@ class DelibArchiver(Loggable):
     def _crawl_local_governments_web_sites(self):
         crawling_process = LocalGovernmentCrawlingProcess(
             local_governments=self._selected_local_governments,
-            spider_class=LocalGovernmentPdfArchivingSpider)
+            spider_class=LocalGovernmentPdfArchivingSpider,
+            classifier_class=self.classifier_class)
         crawling_process.crawl()

@@ -6,7 +6,6 @@ from src.main.python.model.local_government import LocalGovernment
 from src.main.python.commons.boolean_enum import Boolean
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.commons.loggable import Loggable
-from src.main.python.process.archiving.local_pdf_classifier import LocalPdfClassifier
 from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
 
@@ -19,6 +18,7 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
         CrawlSpider.__init__(self, args)
         Loggable.__init__(self)
         self.local_government = args[0]
+        self.classifier_class = args[1]
         self.start_urls = ['http://' + self.local_government.domain_name]
         self.allowed_domains = [self.local_government.domain_name]
         self.name = 'local_government_pdf_spider'
@@ -40,7 +40,7 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
         :return: nothing
         """
         self.log_info('PDF found : ' + response.url)
-        classifier = LocalPdfClassifier()
+        classifier = self.classifier_class()
         text_content = self.pdf_converter.convert(response.body)
         classification = classifier.classify(text_content)
         if classification.isOfficialCouncilReport():
@@ -48,6 +48,7 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
             self.save_official_council_report(response.url, text_content)
         else:
             self.log_info('The PDF at ' + response.url + ' has not been classified as an official city council report')
+        self.log_info('gc.garbage = ')
 
     def save_official_council_report(self, url: str, text_content: str):
         self.log_info("Saving url " + url)

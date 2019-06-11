@@ -3,7 +3,6 @@ from abc import abstractclassmethod
 
 from src.main.python.commons.configuration import Configuration
 
-
 class Launcher:
     """
     An abstract class to standardize all launchers
