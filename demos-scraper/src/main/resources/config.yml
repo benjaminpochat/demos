@@ -1,0 +1,21 @@
+# database section
+database_host: localhost
+database_port: 6379
+
+# machine learning model section
+keras_model_file: mlp_model.h5
+tensorflow_model_file: mlp_model.pb
+vectorizer_file: vectorizer.pkl
+feature_selector_file: feature_selector.pkl
+
+# define how to distribute the dataset classified manually into the 3 slots of data
+traning_dataset_percent: 60
+validation_dataset_percent: 20
+test_dataset_percent: 20
+
+# logging configuration
+logging_config_file: logging.conf
+
+# tensorflow serving configuration
+tensortflow_serving_host: localhost
+tensortflow_serving_port: 8501

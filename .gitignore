@@ -1,9 +1,9 @@
-venv
-.idea
+/demos-scraper/venv
+/**/.idea
 .directory
 /**/*.pyc
 /**/_trial_temp*
-.coverage
-/htmlcov
+/demos-scraper.coverage
+/demos-scraper/htmlcov
 *.tar
-demos.log
+/**/demos.log

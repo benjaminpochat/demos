@@ -1,0 +1,46 @@
+version: '3'
+services:
+
+  demos-scraper:
+    build:
+      context: ..
+      dockerfile: ./demos-package/docker/scraper/Dockerfile
+    image: benjaminpochat/demos-scraper:0.0.2
+    network_mode: host
+    container_name: demos-scraper
+    command: archive -n 100
+
+  demos-classifier:
+    build:
+      context: ..
+      dockerfile: ./demos-package/docker/classifier/Dockerfile
+    image: benjaminpochat/demos-classifier:0.0.2
+    network_mode: host
+    container_name: demos-classifier
+    ports:
+      - 8501:8501
+    environment:
+      - MODEL_NAME=demos
+
+  demos-database:
+    image: postgres:11.3-alpine
+    network_mode: host
+    container_name: demos-database
+    volumes:
+      - /var/lib/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
+    environment:
+      - POSTGRES_PASSWORD=d3mOz
+      - POSTGRES_USER=demos
+      - PGDATA=/var/lib/postgresql/data/pgdata
+
+  demos-core:
+    build:
+      context: ..
+      dockerfile: ./demos-package/docker/core/Dockerfile
+    image: benjaminpochat/demos-rest-server:0.0.2
+    network_mode: host
+    container_name: demos-core
+    environment:
+      - demos.datasource.url=jdbc:postgresql://localhost:5432/demos
+      - demos.datasource.user=demos
+      - demos.datasource.password=d3m0z
