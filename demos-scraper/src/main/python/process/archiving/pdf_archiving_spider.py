@@ -1,8 +1,11 @@
+import json
+
+import requests
 from scrapy.http import Response
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
-from src.main.python.model.local_government import LocalGovernment
+from src.main.python.commons.configuration import Configuration
 from src.main.python.commons.boolean_enum import Boolean
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.commons.loggable import Loggable
@@ -51,15 +54,47 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
         self.log_info('gc.garbage = ')
 
     def save_official_council_report(self, url: str, text_content: str):
-        self.log_info("Saving url " + url)
+        self.log_info("Saving WebDocument with url " + url)
+        official_council_report = self._generate_web_document(text_content, url)
+        url = self._get_rest_service_url()
+        content = self._get_rest_service_content(official_council_report)
+        self.log_debug('Sending POST request :')
+        self.log_debug('- url : ' + url)
+        self.log_debug('- content : ' + json.dumps(content))
+        self._call_rest_service(url=url, data=content)
+
+    def _generate_web_document(self, text_content, url):
         official_council_report = WebDocument(
             text_content=text_content,
             url=url,
             local_government=self.local_government)
-        official_council_report.classified_as_official_report=Boolean.TRUE
+        official_council_report.classified_as_official_report = Boolean.TRUE
         official_council_report.id = official_council_report.generate_id()
-        self.redis_access.store_aggregate(official_council_report)
+        return official_council_report
 
-        self.local_government = self.redis_access.get_aggregate(the_class=LocalGovernment, aggregate_id=self.local_government.get_id())
-        self.local_government.official_council_reports.add(official_council_report)
-        self.redis_access.store_aggregate(self.local_government)
+    def _get_rest_service_url(self):
+        demos_core_host = Configuration().get_demos_core_host()
+        demos_core_port = Configuration().get_demos_core_port()
+        url = 'http://' + demos_core_host + ':' + demos_core_port + '/webDocuments'
+        return url
+
+    def _get_rest_service_content(self, web_document: WebDocument):
+        return {
+            'url': web_document.url,
+            'localGovernment':
+                {'id': web_document.local_government.id},
+            'id': web_document.id}
+
+    def _call_rest_service(self, url: str, data: dict):
+        response = requests.post(url=url,
+                                 json=data,
+                                 headers={
+                                     'Accept': 'application/json, text/plain, */*',
+                                     'Content-Type': 'application/json;charset=utf-8'
+                                 })
+        if response.status_code != 200:
+            self.log_error('POST ' + url + ' status : {}'.format(response.status_code))
+        else:
+            self.log_debug('POST ' + url + ' status : {}'.format(response.status_code))
+        return response
+

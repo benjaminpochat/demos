@@ -96,6 +96,15 @@ class Configuration(metaclass=Singleton):
     def get_tensortflow_serving_port(self):
         return self.tensortflow_serving_port
 
+    def get_demos_core_host(self):
+        return self.demos_core_host
+
+    def get_demos_core_port(self):
+        return self.demos_core_port
+
+    def get_tensortflow_serving_port(self):
+        return self.tensortflow_serving_port
+
     def get_demos_home(self):
         return os.environ.get('DEMOS_HOME')
 

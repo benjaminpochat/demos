@@ -7,5 +7,5 @@ if [ -z "$DEMOS_HOME" ]
         exit
 fi
 
-export PYTHONPATH=$DEMOS_HOME
-python3 $DEMOS_HOME/src/main/python/launcher/main_launcher.py  $*
+export PYTHONPATH=$DEMOS_HOME/demos-scraper
+python3 $DEMOS_HOME/demos-scraper/src/main/python/launcher/main_launcher.py  $*

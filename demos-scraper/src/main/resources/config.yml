@@ -19,3 +19,7 @@ logging_config_file: logging.conf
 # tensorflow serving configuration
 tensortflow_serving_host: localhost
 tensortflow_serving_port: 8501
+
+# demos-core configuration
+demos_core_host: localhost
+demos_core_port: 8080

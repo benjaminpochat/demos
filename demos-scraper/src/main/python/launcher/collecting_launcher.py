@@ -15,7 +15,7 @@ class CollectingLauncher(Launcher):
         self.args = args
 
     def start_process(self):
-        from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
+        from src.main.python.process.local_government_selection.local_government_redis_selector import LocalGovernmentRedisSelector
         from src.main.python.process.training.training_data_producer.training_data_collector import TrainingDataCollector
 
         domains = []
@@ -26,7 +26,7 @@ class CollectingLauncher(Launcher):
         elif self.args.__contains__(self.NUMBER_OF_LOCAL_GOVERNMENTS_OPTION):
             n_option_index = self.args.index(self.NUMBER_OF_LOCAL_GOVERNMENTS_OPTION)
             subset_size = int(self.args[n_option_index + 1])
-        selector = LocalGovernmentSelector(subset_size=subset_size, domains=domains)
+        selector = LocalGovernmentRedisSelector(subset_size=subset_size, domains=domains)
         collector = TrainingDataCollector(selector=selector)
         print('Start collecting data...')
         print('[ Ctrl + C ] to quit')

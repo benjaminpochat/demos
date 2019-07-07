@@ -10,7 +10,9 @@ import javax.persistence.ManyToOne;
 public class WebDocument {
     @Id
     private String id;
+
     private String url;
+
     @ManyToOne
     private LocalGovernment localGovernment;
 

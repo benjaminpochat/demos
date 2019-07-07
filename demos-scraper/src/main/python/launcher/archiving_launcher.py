@@ -1,6 +1,7 @@
 import os
 import sys
 
+from src.main.python.process.local_government_selection.local_government_rest_selector import LocalGovernmentScrappingRestSelector
 from src.main.python.launcher.launcher import Launcher, ManualPage, Option
 
 
@@ -18,21 +19,20 @@ class ArchivingLauncher(Launcher):
 
     def start_process(self):
         from src.main.python.process.archiving.archiver import DelibArchiver
-        from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
 
         subset_size = 1
-        domains = []
+        web_site = None
         if self.args.__contains__(self.SPECIFIC_DOMAIN_NAME_OPTION):
             n_option_index = sys.argv.index(self.SPECIFIC_DOMAIN_NAME_OPTION)
-            domains.append(sys.argv[n_option_index + 1])
+            web_site = sys.argv[n_option_index + 1]
         elif self.args.__contains__(self.NUMBER_OF_LOCAL_GOVERNMENTS_OPTION):
             n_option_index = self.args.index(self.NUMBER_OF_LOCAL_GOVERNMENTS_OPTION)
             subset_size = int(self.args[n_option_index + 1])
         print('Start archiving data...')
         print('[ Ctrl + C ] to quit')
-        selector = LocalGovernmentSelector(subset_size=subset_size, domains=domains)
         classifier_class = self._get_classifier_class()
-        archiver = DelibArchiver(selector=selector, classifier_class=classifier_class)
+        local_governments_selector = LocalGovernmentScrappingRestSelector(subset_size=subset_size, web_site=web_site)
+        archiver = DelibArchiver(classifier_class=classifier_class, local_governments_selector=local_governments_selector)
         archiver.archive()
 
     def get_manual_page(self):

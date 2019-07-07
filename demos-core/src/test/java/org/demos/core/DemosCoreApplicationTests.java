@@ -1,4 +1,4 @@
-package org.demos.core.main;
+package org.demos.core;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

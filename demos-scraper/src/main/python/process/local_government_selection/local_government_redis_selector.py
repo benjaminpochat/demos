@@ -3,7 +3,7 @@ from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.commons.loggable import Loggable
 
 
-class LocalGovernmentSelector(Loggable):
+class LocalGovernmentRedisSelector(Loggable):
     """
     A class to build a subset of the local governements.
     The selection is done :

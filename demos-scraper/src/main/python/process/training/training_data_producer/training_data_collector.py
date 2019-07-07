@@ -1,14 +1,14 @@
 import sys
 
 from src.main.python.commons.configuration import Configuration
-from src.main.python.process.local_government_selection.local_government_selector import LocalGovernmentSelector
+from src.main.python.process.local_government_selection.local_government_redis_selector import LocalGovernmentRedisSelector
 from src.main.python.commons.loggable import Loggable
 from src.main.python.process.crawling.crawling_process import LocalGovernmentCrawlingProcess
 from src.main.python.process.training.training_data_producer.pdf_collector_spider import LocalGovernmentPdfCollectorSpider
 
 
 class TrainingDataCollector(Loggable):
-    def __init__(self, selector: LocalGovernmentSelector):
+    def __init__(self, selector: LocalGovernmentRedisSelector):
         super().__init__()
         self._selector = selector
         self._selected_local_governments = []

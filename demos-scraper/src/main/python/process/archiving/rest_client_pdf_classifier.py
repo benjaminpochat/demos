@@ -7,8 +7,6 @@ from src.main.python.process.archiving.operational_text_vectorizer import Operat
 
 
 class RestClientPdfClassifier(AbstractClassifier, Loggable):
-    #TODO : utiliser ce classifier (avec l'option -tfs) avec le web crawler
-    #TODO : optimiser les import pout faire une petite image Docker du client
 
     def classify(self, text_content: str):
         vectorized_text = OperationalTextVectorizer().vectorize(text_content)  # csr_matrix (scipy)
