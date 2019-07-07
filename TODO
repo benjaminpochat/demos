@@ -1,6 +1,8 @@
 1 : tester demos-core + demos-database
+1bis : implémenter tout le modèle (avec LocalGov)
 2 : modifier demos-scraper pour http POST les web document classifiés comme tels
 3 : sécuriser les DockerFile (useradd + su)
+    (https://pythonspeed.com/articles/dockerizing-python-is-hard/)
 4 : sécuriser le serveur virt PostGres
 5 : sécuriser le serveur réel (quels ports ouverts ?)
 6 : sécuriser http POST (jwt ?)

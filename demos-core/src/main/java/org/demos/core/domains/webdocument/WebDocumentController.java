@@ -12,12 +12,12 @@ public class WebDocumentController {
     @Autowired
     private WebDocumentRepository webDocumentRepository;
 
-    @GetMapping(path = "/web-documents/{id}")
+    @GetMapping(path = "/webDocuments/{id}")
     public Optional<WebDocument> getWebDocument(@PathVariable Long id){
         return webDocumentRepository.findById(id);
     }
 
-    @PostMapping(path = "/web-documents")
+    @PostMapping(path = "/webDocuments")
     public void createWebDocument(@Valid @RequestBody WebDocument webDocument){
         webDocumentRepository.save(webDocument);
     }
