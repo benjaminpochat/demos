@@ -1,3 +1,6 @@
+# Light requirements for archiving functions only (using Tensorflow serving through REST access)
+# Excluding fat dependencies like Tensorflow and Keras
+
 Automat==0.7.0
 PyDispatcher==2.0.5
 PyHamcrest==1.9.0
@@ -34,7 +37,6 @@ pyasn1-modules==0.2.2
 pycparser==2.19
 pycryptodome==3.6.6
 queuelib==1.5.0
-redis==3.0.1
 requests==2.20.1
 scikit-learn==0.20.0
 scipy==1.1.0

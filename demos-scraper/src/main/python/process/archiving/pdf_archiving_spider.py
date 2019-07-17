@@ -9,7 +9,6 @@ from src.main.python.commons.configuration import Configuration
 from src.main.python.commons.boolean_enum import Boolean
 from src.main.python.model.web_resource import WebDocument
 from src.main.python.commons.loggable import Loggable
-from src.main.python.persistence.redis_access import RedisAccess
 from src.main.python.process.pdf_converter.pdf_converter import PdfConverter
 
 
@@ -25,7 +24,6 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
         self.start_urls = ['http://' + self.local_government.domain_name]
         self.allowed_domains = [self.local_government.domain_name]
         self.name = 'local_government_pdf_spider'
-        self.redis_access = RedisAccess()
         self.pdf_converter = PdfConverter(timeout=300)
 
     rules = (

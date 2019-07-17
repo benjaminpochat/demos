@@ -1,3 +1,6 @@
+# Full requirements to use demos-scraper training functions
+# Including fat dependencies like Tensorflow and Keras
+
 Automat==0.7.0
 Keras-Applications==1.0.6
 Keras-Preprocessing==1.0.5
