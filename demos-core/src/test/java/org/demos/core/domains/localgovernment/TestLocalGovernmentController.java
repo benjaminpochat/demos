@@ -38,4 +38,5 @@ public class TestLocalGovernmentController {
         // then
         assertThat(selectedLocalGovernments).containsExactlyInAnyOrder(localGovernments.get(2), localGovernments.get(3));
     }
+
 }

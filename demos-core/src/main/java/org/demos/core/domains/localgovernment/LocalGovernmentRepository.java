@@ -11,6 +11,13 @@ public interface LocalGovernmentRepository extends CrudRepository<LocalGovernmen
     @Query("select count(*) from LocalGovernment where webSite is not null")
     Long countLocalGovernmentsWithWebSite();
 
+    @Query( "select count(distinct localGov) " +
+            "from LocalGovernment as localGov," +
+            "       WebDocument as webDoc " +
+            "where webDoc.localGovernment = localGov ")
+    Long countLocalGovernmentsWithWebDocuments();
+
+
     Optional<LocalGovernment> findByWebSite(String webSite);
 
 }
