@@ -49,7 +49,6 @@ class LocalGovernmentPdfArchivingSpider(CrawlSpider, Loggable):
             self.save_official_council_report(response.url, text_content)
         else:
             self.log_info('The PDF at ' + response.url + ' has not been classified as an official city council report')
-        self.log_info('gc.garbage = ')
 
     def save_official_council_report(self, url: str, text_content: str):
         self.log_info("Saving WebDocument with url " + url)
