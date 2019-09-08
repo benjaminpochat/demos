@@ -1,6 +1,7 @@
 package org.demos.core.domains.localgovernment;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,11 @@ public class LocalGovernmentController {
     @GetMapping(path = "/localGovernments/{id}")
     public Optional<LocalGovernment> getLocalGovernment(@PathVariable Long id){
         return localGovernmentRepository.findById(id);
+    }
+
+    @GetMapping(path = "/localGovernments/searchByName/{name}")
+    public List<LocalGovernment> searchLocalGovernmentByName(@PathVariable String name){
+        return localGovernmentRepository.findFirst20ByNameStartingWithIgnoreCase(name, Sort.by("name"));
     }
 
     @GetMapping(path= "/localGovernments")

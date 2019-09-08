@@ -1,8 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { GlobalStatisticsModule } from './global-statistics/global-statistics.module';
-
 import { AppComponent } from './app.component';
+import { LocalGovernmentModule } from './local-government/local-government.module';
+import { GlobalStatisticsModule } from './global-statistics/global-statistics.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +9,7 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     GlobalStatisticsModule,
-    BrowserModule
+    LocalGovernmentModule,
   ],
 
   providers: [],

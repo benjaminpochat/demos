@@ -1,0 +1,7 @@
+1 : service rechercher commune
+2 : afficher web par commune
+3 : IHM
+4 : separation training / exploit
+5 : optim scraping / persister le SHA1 des PDF deja analyses, et ne pas analyser a nouveau ces PDF
+6 : optim scraping / persister le dates d'analyse des site et traiter les sites qui n'ont pas ete scrapes depuis longtemps / supprimer le caractere aleatoire
+7 : amelioration scraper pour gerer les site js

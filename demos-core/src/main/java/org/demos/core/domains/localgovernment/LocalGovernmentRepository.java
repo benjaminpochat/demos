@@ -1,8 +1,10 @@
 package org.demos.core.domains.localgovernment;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LocalGovernmentRepository extends CrudRepository<LocalGovernment, Long> {
@@ -17,7 +19,8 @@ public interface LocalGovernmentRepository extends CrudRepository<LocalGovernmen
             "where webDoc.localGovernment = localGov ")
     Long countLocalGovernmentsWithWebDocuments();
 
-
     Optional<LocalGovernment> findByWebSite(String webSite);
+
+    List<LocalGovernment> findFirst20ByNameStartingWithIgnoreCase(String name, Sort sort);
 
 }

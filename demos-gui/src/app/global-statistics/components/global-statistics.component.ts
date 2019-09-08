@@ -16,8 +16,8 @@ export class GlobalStatisticsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getGlobalStatistics<any>().subscribe(
-      (data: any) => this.globalStatistics = data,
+    this.service.getGlobalStatistics().subscribe(
+      (data: GlobalStatistics) => this.globalStatistics = data,
       error => () => {
         console.log('Error at GlobalStatisticsComponent#ngOnInit');
       }
