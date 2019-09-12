@@ -1,10 +1,12 @@
 package org.demos.core.domains.webdocument;
 
+import org.demos.core.domains.localgovernment.LocalGovernment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,4 +30,7 @@ public class WebDocumentController {
         webDocumentRepository.save(webDocument);
     }
 
+    public List<WebDocument> getWebDocuments(LocalGovernment localGovernment) {
+        return webDocumentRepository.findByLocalGovernment(localGovernment);
+    }
 }
