@@ -1,0 +1,6 @@
+<div *ngIf="localGovernmentSelected" class="web-document-list">
+  {{webDocuments.length}} documents found :
+</div>
+<div class="web-document-list" *ngFor="let webDocument of webDocuments">
+  <a href="{{webDocument.url}}" target="_blank">{{webDocument.url}}</a>
+</div>

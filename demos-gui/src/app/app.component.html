@@ -1,8 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
-    Welcome to {{ title }}!
+    {{ title }}
   </h1>
 </div>
+<app-local-government-selector (selected)="onLocalGovernmentSelected($event)">
+</app-local-government-selector>
+
+<app-web-document-list [webDocuments]="webDocuments" [localGovernmentSelected]="localGovernmentSelected">
+</app-web-document-list>
+<br/>
 <app-global-statistics></app-global-statistics>
-<app-local-government-selector></app-local-government-selector>

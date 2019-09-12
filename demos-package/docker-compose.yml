@@ -50,3 +50,14 @@ services:
       - demos-core
       - demos-classifier
 
+  demos-gui:
+    build:
+      context: ..
+      dockerfile: ./demos-package/gui/Dockerfile
+    image: benjaminpochat/demos-gui:0.0.3
+    network_mode: host
+    container_name: demos-gui
+    ports:
+      - 80:80
+    depends_on:
+      - demos-core
