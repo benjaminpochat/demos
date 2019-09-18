@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LocalGovernment } from '../model/local-government.model';
 import { WebDocument } from 'src/app/web-document/model/web-document.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class LocalGovernmentService {
@@ -11,10 +12,10 @@ export class LocalGovernmentService {
   }
 
   public searchLocalGovernments(name: string): Observable<Array<LocalGovernment>> {
-      return this.http.get<Array<LocalGovernment>>('http://localhost:8080/localGovernments/searchByName/' + name);
+      return this.http.get<Array<LocalGovernment>>(environment.demosCoreUrl + '/localGovernments/searchByName/' + name);
   }
 
   public getWebDocuments(localGovernment: LocalGovernment): Observable<Array<WebDocument>> {
-    return this.http.get<Array<WebDocument>>('http://localhost:8080/localGovernments/' + localGovernment.id + '/webDocuments');
+    return this.http.get<Array<WebDocument>>(environment.demosCoreUrl + '/localGovernments/' + localGovernment.id + '/webDocuments');
   }
 }

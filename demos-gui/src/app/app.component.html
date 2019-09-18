@@ -1,12 +1,13 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
     {{ title }}
   </h1>
+  All local political reports in one place.
 </div>
+<br/>
 <app-local-government-selector (selected)="onLocalGovernmentSelected($event)">
 </app-local-government-selector>
-
+<br/>
 <app-web-document-list [webDocuments]="webDocuments" [localGovernmentSelected]="localGovernmentSelected">
 </app-web-document-list>
 <br/>

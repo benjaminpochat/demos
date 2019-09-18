@@ -4,7 +4,8 @@ RUN apk update
 WORKDIR /app
 COPY ./demos-gui .
 RUN cd /app && npm set progress=false && npm install
-RUN npm run build
+ARG configuration=production
+RUN npm run build -- --configuration $configuration
 
 # STEP 2 build a small nginx image with static website
 FROM httpd:2.4.41-alpine
