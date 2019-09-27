@@ -6,6 +6,7 @@ import { WebDocument } from './web-document/model/web-document.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'Demos';
   webDocuments = new Array<WebDocument>();

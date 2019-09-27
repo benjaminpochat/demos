@@ -1,14 +1,20 @@
-<div style="text-align:center">
-  <h1>
-    {{ title }}
-  </h1>
-  All local political reports in one place.
-</div>
-<br/>
-<app-local-government-selector (selected)="onLocalGovernmentSelected($event)">
-</app-local-government-selector>
-<br/>
-<app-web-document-list [webDocuments]="webDocuments" [localGovernmentSelected]="localGovernmentSelected">
-</app-web-document-list>
-<br/>
-<app-global-statistics></app-global-statistics>
+  <div class="title">
+    <h1>
+      {{ title }}
+    </h1>
+    Toute la politique locale sur une même plateforme.
+  </div>
+  <br />
+  <app-local-government-selector (selected)="onLocalGovernmentSelected($event)">
+  </app-local-government-selector>
+  <br />
+  <app-web-document-list [webDocuments]="webDocuments" [localGovernmentSelected]="localGovernmentSelected">
+  </app-web-document-list>
+  <br />
+  <app-global-statistics></app-global-statistics>
+  <br />
+  <app-presentation></app-presentation>
+
+
+
+
