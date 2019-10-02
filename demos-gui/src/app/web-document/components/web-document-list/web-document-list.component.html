@@ -1,6 +1,11 @@
-<div *ngIf="localGovernmentSelected" class="web-document-list">
-  {{webDocuments.length}} documents trouvés :
+<div class="info-message" *ngIf="localGovernmentSelected && localGovernment && localGovernment.webSite">
+    {{webDocuments.length > 0 ? webDocuments.length + ' documents trouvés': 'Aucun document trouvé'}}
+    sur
+    <a href="http://{{localGovernment.webSite}}" target='_blank'>{{localGovernment.webSite}}</a>.
 </div>
-<div class="web-document-list" *ngFor="let webDocument of webDocuments">
+<div class="info-message" *ngIf="localGovernmentSelected && localGovernment && !localGovernment.webSite">
+    Aucun document trouvé car le site web de {{localGovernment.name}} n'est pas identifié.
+</div>
+<div class="web-document-item" *ngFor="let webDocument of webDocuments">
   <a href="{{webDocument.url}}" target="_blank">{{webDocument.url}}</a>
 </div>

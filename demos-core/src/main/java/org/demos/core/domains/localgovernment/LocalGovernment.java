@@ -24,6 +24,8 @@ public class LocalGovernment {
 
     private String codification;
 
+    private String zipCode;
+
     public Long getId() {
         return id;
     }
@@ -78,5 +80,13 @@ public class LocalGovernment {
 
     public void setType(LocalGovernmentType type) {
         this.type = type;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 }

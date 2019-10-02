@@ -18,4 +18,8 @@ export class LocalGovernmentService {
   public getWebDocuments(localGovernment: LocalGovernment): Observable<Array<WebDocument>> {
     return this.http.get<Array<WebDocument>>(environment.demosCoreUrl + '/localGovernments/' + localGovernment.id + '/webDocuments');
   }
+
+  public loadLocalGovernment(localGovernment: LocalGovernment): Observable<LocalGovernment> {
+    return this.http.get<LocalGovernment>(environment.demosCoreUrl + '/localGovernments/' + localGovernment.id);
+  }
 }

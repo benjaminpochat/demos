@@ -3,6 +3,7 @@ html, body {
 }
 
 body {
+  color: #212165;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
@@ -21,6 +22,11 @@ body {
   padding-right: 50px;
   border-radius: 50px;
   display: inline-block;
+}
+
+.subtitle {
+  font-style: italic;
+  color: #d86868;
 }
 
 .button {

@@ -1,3 +1,10 @@
-.web-document-list {
+.web-document-item {
+  margin: 5px;
   text-align: center;
+}
+
+.info-message {
+  font-size: 0.8em;
+  text-align: center;
+  margin-bottom: 10px;
 }
