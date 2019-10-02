@@ -7,7 +7,7 @@ import { PresentationComponent } from './presentation/components/presentation.co
     PresentationComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
   ],
   exports: [
     PresentationComponent

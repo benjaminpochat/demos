@@ -1,47 +1,51 @@
 <div class="presentation">
-  <a href="#" (click)='toggle()'>Qu'est-ce que c'est ?</a>
-</div>
-<div [@displayHide]="isDisplayed ? 'displayed' : 'hidden'"
-      class="presentation presentation-details">
-  <h2>La technologie pour servir la démocratie !</h2>
-  <br />
-  Demos est une plateforme d'accès aux comptes-rendus officiels des collectivités locales.<br />
-  L'idée de Demos est de faciliter l'accès et la diffusion des décisions politiques locales.<br />
-  Demos a pour objectif de réunir les délibérations, procès-verbaux et autres comptes-rendus officiels de toutes les
-  collectivités locales : communes, intercommunalités, départements, régions.<br />
-  <br />
-  Le projet est né de 2 constats :<br />
-  <ol>
-    <li>En dehors des métropoles régionales, la vie politique locale est mal représentée dans les média.</li>
-    <li>Les décisions politiques locales sont mal représentées sur le web : l'information est éclatée sur les sites
-      web des différentes collectivités, aucun moteur de recherche n'en propose une vue d'ensemble.</li>
-  </ol>
-  <br />
-  Demos a pour objectif de réunir l'ensemble des décisions politiques locales accessibles sur le web, en vue de
-  fournir ne nouveaux moyens d'accès à cette information pour les citoyens, les journalistes, les chercheurs,
-  etc...<br />
-  <br />
-  Pour collecter ces informations, Demos parcourt le web et identifie les documents officiels publiés par chaque
-  mairie, intercomunalité, département, région.<br />
-  <!-- insérer une image -->
-  <br />
-  Demos est un projet en construction.
-  L'état des lieu aujourd'hui consiste à collecter les procès-verbaux des conseils municipaux des municipalités de
-  France.
-  Les perspectives d'évolutions sont :<br />
-  <ol>
-    <li>collecter les procès-verbaux des conseils intercommunaux, des conseils départementaux et conseil régionaux
-    </li>
-    <li>structurer l'information collectée, en archivant individuellement chaque des délibération des procès-verbaux
-      collectés</li>
-    <li>classifier les délibérations par thématique : scolarité, économie, social, infrastructure, agriculture,
-      environnement, etc...</li>
-  </ol>
-  Demos a pour vocation d'utiliser les technologies du web pour servir l'intérêt public.<br />
-  <a href='https://github.com/benjaminpochat/demos' target="_blank">Le code source est donc libre d'accès sur
-    GitHub.</a><br />
-  <br/>
-  Les contributions sont les bienvenues !<br/>
-  <br/>
-  <a href="#" (click)='toggle()'>Revenir à l'accueil</a>
+  <div class="button footer" (click)='toggle()'>
+    Qu'est-ce que c'est ?
+  </div>
+  <div [@displayHide]="isDisplayed ? 'displayed' : 'hidden'"
+        class="presentation presentation-details">
+    <h2>La technologie pour servir la démocratie !</h2>
+    <br />
+    Demos est une plateforme d'accès aux comptes-rendus officiels des collectivités locales.<br />
+    L'idée de Demos est de faciliter l'accès et la diffusion des décisions politiques locales.<br />
+    Demos a pour objectif de réunir les délibérations, procès-verbaux et autres comptes-rendus officiels de toutes les
+    collectivités locales : communes, intercommunalités, départements, régions.<br />
+    <br />
+    Le projet est né de 2 constats :<br />
+    <ol>
+      <li>En dehors des métropoles régionales, la vie politique locale est mal représentée dans les média.</li>
+      <li>Les décisions politiques locales sont mal représentées sur le web : l'information est éclatée sur les sites
+        web des différentes collectivités, aucun moteur de recherche n'en propose une vue d'ensemble.</li>
+    </ol>
+    <br />
+    Demos a pour objectif de réunir l'ensemble des décisions politiques locales accessibles sur le web, en vue de
+    fournir ne nouveaux moyens d'accès à cette information pour les citoyens, les journalistes, les chercheurs,
+    etc...<br />
+    <br />
+    Pour collecter ces informations, Demos parcourt le web et identifie les documents officiels publiés par chaque
+    mairie, intercomunalité, département, région.<br />
+    <!-- insérer une image -->
+    <br />
+    Demos est un projet en construction.
+    L'état des lieu aujourd'hui consiste à collecter les procès-verbaux des conseils municipaux des municipalités de
+    France.
+    Les perspectives d'évolutions sont :<br />
+    <ol>
+      <li>collecter les procès-verbaux des conseils intercommunaux, des conseils départementaux et conseil régionaux
+      </li>
+      <li>structurer l'information collectée, en archivant individuellement chaque des délibération des procès-verbaux
+        collectés</li>
+      <li>classifier les délibérations par thématique : scolarité, économie, social, infrastructure, agriculture,
+        environnement, etc...</li>
+    </ol>
+    Demos a pour vocation d'utiliser les technologies du web pour servir l'intérêt public.<br />
+    <a href='https://github.com/benjaminpochat/demos' target="_blank">Le code source est donc libre d'accès sur
+      GitHub.</a><br />
+    <br/>
+    Les contributions sont les bienvenues !<br/>
+    <br/>
+    <div class="button" (click)='toggle()'>
+        J'ai compris.
+    </div>
+  </div>
 </div>

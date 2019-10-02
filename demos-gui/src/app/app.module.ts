@@ -19,7 +19,6 @@ import { DocumentationModule } from './documentation/documentation.module';
     WebDocumentModule,
     DocumentationModule
   ],
-
   providers: [],
   bootstrap: [AppComponent]
 })
