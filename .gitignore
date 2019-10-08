@@ -7,4 +7,6 @@
 /demos-scraper/htmlcov
 *.tar
 /**/demos.log
-/TODO
+/demos-gui/.vscode
+TODO
+
