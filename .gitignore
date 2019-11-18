@@ -1,12 +1,15 @@
-/demos-scraper/venv
+/**/venv
+/**/target
 /**/.idea
 .directory
 /**/*.pyc
 /**/_trial_temp*
-/demos-scraper.coverage
-/demos-scraper/htmlcov
+/*.coverage
+/**/htmlcov
 *.tar
 /**/demos.log
-/demos-gui/.vscode
+/**/.vscode
+/demos-scraper/temp
+/demos-scraper/node_modules
 TODO
 
