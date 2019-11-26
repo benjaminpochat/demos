@@ -12,13 +12,13 @@ services:
       - POSTGRES_USER=demos
       - PGDATA=/var/lib/postgresql/data/pgdata
 
-  demos-classifier:
+  demos-tensor-classifier:
     build:
       context: ..
-      dockerfile: ./demos-package/classifier/Dockerfile
-    image: benjaminpochat/demos-classifier:0.0.3
+      dockerfile: ./demos-package/tensor-classifier/Dockerfile
+    image: benjaminpochat/demos-tensor-classifier:0.0.3
     network_mode: host
-    container_name: demos-classifier
+    container_name: demos-tensor-classifier
     ports:
       - 8501:8501
     environment:
@@ -48,7 +48,6 @@ services:
     command: archive -tfs -n 100
     depends_on:
       - demos-core
-      - demos-classifier
 
   demos-gui:
     build:

@@ -1,0 +1,16 @@
+{
+    "id": "UQ8WWPl13RxtT7J",
+    "url": "https://metz.fr/mag/",
+    "loadedUrl": null,
+    "uniqueKey": "https://metz.fr/mag",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 1,
+    "errorMessages": [
+        "TimeoutError: Navigation Timeout Exceeded: 60000ms exceeded\n    at Promise.then (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/LifecycleWatcher.js:142:21)\n  -- ASYNC --\n    at Frame.<anonymous> (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/helper.js:111:15)\n    at Page.goto (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/Page.js:629:49)\n    at Page.<anonymous> (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/helper.js:112:23)\n    at gotoExtended (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/apify/build/puppeteer_utils.js:476:15)\n    at PuppeteerCrawler._defaultGotoFunction (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/apify/build/crawlers/puppeteer_crawler.js:313:46)\n    at PuppeteerCrawler._handleRequestFunction (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/apify/build/crawlers/puppeteer_crawler.js:282:35)\n    at process._tickCallback (internal/process/next_tick.js:68:7)"
+    ],
+    "headers": {},
+    "userData": {},
+    "handledAt": null
+}

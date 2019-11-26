@@ -1,0 +1,16 @@
+{
+    "id": "1hl3lAmWITDl7CS",
+    "url": "https://metz.fr/fichiers/2019/11/12/MM89.pdf",
+    "loadedUrl": null,
+    "uniqueKey": "https://metz.fr/fichiers/2019/11/12/MM89.pdf",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 1,
+    "errorMessages": [
+        "Error: net::ERR_ABORTED at https://metz.fr/fichiers/2019/11/12/MM89.pdf\n    at navigate (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/FrameManager.js:121:37)\n    at process._tickCallback (internal/process/next_tick.js:68:7)\n  -- ASYNC --\n    at Frame.<anonymous> (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/helper.js:111:15)\n    at Page.goto (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/Page.js:629:49)\n    at Page.<anonymous> (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/puppeteer/lib/helper.js:112:23)\n    at gotoExtended (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/apify/build/puppeteer_utils.js:476:15)\n    at PuppeteerCrawler._defaultGotoFunction (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/apify/build/crawlers/puppeteer_crawler.js:313:46)\n    at PuppeteerCrawler._handleRequestFunction (/home/benjamin/Documents/workspace/demos/demos-scraper/node_modules/apify/build/crawlers/puppeteer_crawler.js:282:35)\n    at process._tickCallback (internal/process/next_tick.js:68:7)"
+    ],
+    "headers": {},
+    "userData": {},
+    "handledAt": null
+}

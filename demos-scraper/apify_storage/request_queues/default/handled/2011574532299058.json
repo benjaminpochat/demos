@@ -1,0 +1,14 @@
+{
+    "id": "HljOKbOM7CWK8LO",
+    "url": "https://metz.fr/projets/",
+    "loadedUrl": "https://metz.fr/projets/",
+    "uniqueKey": "https://metz.fr/projets",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 0,
+    "errorMessages": null,
+    "headers": {},
+    "userData": {},
+    "handledAt": "2019-11-23T18:05:32.632Z"
+}

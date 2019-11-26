@@ -1,0 +1,14 @@
+{
+    "id": "eLfSIGrwtZZFvX0",
+    "url": "http://www.metz.fr",
+    "loadedUrl": "https://metz.fr/",
+    "uniqueKey": "http://www.metz.fr",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 0,
+    "errorMessages": null,
+    "headers": {},
+    "userData": {},
+    "handledAt": "2019-11-23T18:04:59.100Z"
+}

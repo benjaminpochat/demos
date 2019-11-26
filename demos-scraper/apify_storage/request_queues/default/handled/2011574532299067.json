@@ -1,0 +1,14 @@
+{
+    "id": "arQb4zcaRCaXlyz",
+    "url": "https://metz.fr/alerte/",
+    "loadedUrl": "https://metz.fr/alerte/",
+    "uniqueKey": "https://metz.fr/alerte",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 0,
+    "errorMessages": null,
+    "headers": {},
+    "userData": {},
+    "handledAt": "2019-11-23T18:05:39.112Z"
+}

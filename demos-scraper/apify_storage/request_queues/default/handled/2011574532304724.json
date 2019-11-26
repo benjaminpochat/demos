@@ -1,0 +1,14 @@
+{
+    "id": "wdKTYlZ2j1ldF4h",
+    "url": "https://metz.fr/associations/liste_associations.php",
+    "loadedUrl": "https://metz.fr/associations/liste_associations.php",
+    "uniqueKey": "https://metz.fr/associations/liste_associations.php",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 0,
+    "errorMessages": null,
+    "headers": {},
+    "userData": {},
+    "handledAt": "2019-11-23T18:06:53.163Z"
+}

@@ -1,0 +1,14 @@
+{
+    "id": "v4eeqUo4AaQzTIf",
+    "url": "https://metz.fr/agenda/",
+    "loadedUrl": "https://metz.fr/agenda/",
+    "uniqueKey": "https://metz.fr/agenda",
+    "method": "GET",
+    "payload": null,
+    "noRetry": false,
+    "retryCount": 0,
+    "errorMessages": null,
+    "headers": {},
+    "userData": {},
+    "handledAt": "2019-11-23T18:06:06.594Z"
+}

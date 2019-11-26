@@ -1,0 +1,17 @@
+
+# machine learning model section
+keras_model_file: mlp_model.h5
+tensorflow_model_file: mlp_model.pb
+vectorizer_file: vectorizer.pkl
+feature_selector_file: feature_selector.pkl
+
+# logging configuration
+logging_config_file: logging.conf
+
+# tensorflow serving configuration
+tensorflow_serving_host: localhost
+tensorflow_serving_port: 8501
+
+# demos-core configuration
+demos_core_host: localhost
+demos_core_port: 8080
