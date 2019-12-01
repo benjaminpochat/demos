@@ -9,3 +9,10 @@ exports.getDomainNameFromUrl = function(url) {
 exports.getDomainNameFromLocalGovernment = function(localGovernment) {
     return this.getDomainNameFromUrl(localGovernment.webSite)
 }
+
+exports.getUrlWithProtocol = function(url) {
+    if (url.match(/^\w+:\/\/.*$/g)){
+        return url;
+    }
+    return 'https://' + url;
+}

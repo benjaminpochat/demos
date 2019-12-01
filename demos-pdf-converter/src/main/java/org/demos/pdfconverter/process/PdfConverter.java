@@ -6,7 +6,7 @@ import org.apache.pdfbox.io.RandomAccessRead;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.demos.core.domains.webdocument.WebDocument;
+import org.demos.pdfconverter.model.WebDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

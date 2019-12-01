@@ -4,11 +4,12 @@
   "description": "web scraper for demos project",
   "main": "main.js",
   "dependencies": {
-    "apify": "^0.15.5",
-    "kafka-node": "^4.1.3"
+    "apify": "0.15.5",
+    "kafka-node": "4.1.3",
+    "node-fetch": "2.6.0"
   },
   "devDependencies": {
-    "jasmine": "^3.5.0"
+    "jasmine": "3.5.0"
   },
   "scripts": {
     "test": "jasmine"

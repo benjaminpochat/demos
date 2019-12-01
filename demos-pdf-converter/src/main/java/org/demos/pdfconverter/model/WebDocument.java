@@ -1,39 +1,36 @@
-package org.demos.core.domains.webdocument;
+package org.demos.pdfconverter.model;
 
-import org.demos.core.domains.localgovernment.LocalGovernment;
+public class WebDocument implements org.demos.model.domains.webdocument.WebDocument<LocalGovernment> {
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-@Entity
-public class WebDocument {
-    @Id
     private String id;
 
     private String url;
 
-    @ManyToOne
     private LocalGovernment localGovernment;
 
     private String textContent;
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public void setUrl(String url) {
         this.url = url;
     }
 
+    @Override
     public LocalGovernment getLocalGovernment() {
         return localGovernment;
     }
@@ -42,10 +39,12 @@ public class WebDocument {
         this.localGovernment = localGovernment;
     }
 
+    @Override
     public String getTextContent() {
         return textContent;
     }
 
+    @Override
     public void setTextContent(String textContent) {
         this.textContent = textContent;
     }

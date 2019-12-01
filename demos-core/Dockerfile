@@ -4,8 +4,8 @@ RUN useradd --create-home demos
 WORKDIR /home/demos
 USER demos
 
-COPY ./demos-core/src ./src
-COPY ./demos-core/pom.xml ./pom.xml
+COPY ./src ./src
+COPY ./pom.xml ./pom.xml
 
 RUN mvn clean install -DskipTests
 RUN mvn exec:java -Dexec.skip=true

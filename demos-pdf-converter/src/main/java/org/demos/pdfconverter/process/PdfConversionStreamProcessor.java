@@ -14,7 +14,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
-import org.demos.core.domains.webdocument.WebDocument;
+import org.demos.pdfconverter.model.WebDocument;
 
 import java.util.Properties;
 

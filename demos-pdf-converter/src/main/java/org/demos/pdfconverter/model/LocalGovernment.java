@@ -1,21 +1,14 @@
-package org.demos.core.domains.localgovernment;
+package org.demos.pdfconverter.model;
 
-import javax.persistence.*;
+import org.demos.model.domains.localgovernment.LocalGovernmentType;
 
-@Entity
-public class LocalGovernment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "local_government_id_generator")
-    @SequenceGenerator(name="local_government_id_generator", sequenceName = "local_government_id_seq", allocationSize = 1)
-    @Column(name = "id", updatable = false, nullable = false)
+public class LocalGovernment implements org.demos.model.domains.localgovernment.LocalGovernment {
     private Long id;
 
     private String webSite;
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
     private LocalGovernmentType type;
 
     private Float latitude;
@@ -26,66 +19,82 @@ public class LocalGovernment {
 
     private String zipCode;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public String getWebSite() {
         return webSite;
     }
 
+    @Override
     public void setWebSite(String webSite) {
         this.webSite = webSite;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    public Float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Float latitude) {
-        this.latitude = latitude;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Float longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getCodification() {
-        return codification;
-    }
-
-    public void setCodification(String codification) {
-        this.codification = codification;
-    }
-
+    @Override
     public LocalGovernmentType getType() {
         return type;
     }
 
+    @Override
     public void setType(LocalGovernmentType type) {
         this.type = type;
     }
 
+    @Override
+    public Float getLatitude() {
+        return latitude;
+    }
+
+    @Override
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
+
+    @Override
+    public Float getLongitude() {
+        return longitude;
+    }
+
+    @Override
+    public void setLongitude(Float longitude) {
+        this.longitude = longitude;
+    }
+
+    @Override
+    public String getCodification() {
+        return codification;
+    }
+
+    @Override
+    public void setCodification(String codification) {
+        this.codification = codification;
+    }
+
+    @Override
     public String getZipCode() {
         return zipCode;
     }
 
+    @Override
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }

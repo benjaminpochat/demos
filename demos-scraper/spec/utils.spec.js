@@ -26,3 +26,21 @@ describe("getDomainFromUrl", function() {
       expect(Utils.getDomainNameFromUrl('www.mairie.bechy-57.fr')).toBe('bechy-57.fr');
     });
   });
+
+  describe("getFullHttpsUrl", function(){
+    it("should return https://metz.fr from metz.fr", function() {
+      expect(Utils.getUrlWithProtocol('metz.fr')).toBe('https://metz.fr');
+    });
+
+    it("should return https://metz.fr from https://metz.fr", function() {
+      expect(Utils.getUrlWithProtocol('https://metz.fr')).toBe('https://metz.fr');
+    });
+
+    it("should return http://metz.fr from http://metz.fr", function() {
+      expect(Utils.getUrlWithProtocol('http://metz.fr')).toBe('http://metz.fr');
+    });
+
+    it("should return ftp://metz.fr from ftp://metz.fr", function() {
+      expect(Utils.getUrlWithProtocol('ftp://metz.fr')).toBe('ftp://metz.fr');
+    });
+  });

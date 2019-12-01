@@ -1,6 +1,6 @@
 package org.demos.pdfconverter.process;
 
-import org.demos.core.domains.webdocument.WebDocument;
+import org.demos.pdfconverter.model.WebDocument;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class WebDocument {
+public class WebDocument implements org.demos.model.domains.webdocument.WebDocument<LocalGovernment> {
     @Id
     private String id;
 

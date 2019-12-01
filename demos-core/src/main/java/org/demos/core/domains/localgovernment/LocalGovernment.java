@@ -1,9 +1,11 @@
 package org.demos.core.domains.localgovernment;
 
+import org.demos.model.domains.localgovernment.LocalGovernmentType;
+
 import javax.persistence.*;
 
 @Entity
-public class LocalGovernment {
+public class LocalGovernment implements org.demos.model.domains.localgovernment.LocalGovernment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "local_government_id_generator")

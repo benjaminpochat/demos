@@ -1,4 +1,4 @@
-package org.demos.core.domains.localgovernment;
+package org.demos.model.domains.localgovernment;
 
 public enum LocalGovernmentType {
     FRANCE_COMMUNE,

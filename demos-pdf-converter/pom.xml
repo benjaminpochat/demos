@@ -9,12 +9,23 @@
     <version>0.0.3-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <start-class>org.demos.pdfconverter.process.PdfConverter</start-class>
     </properties>
 
+    <parent>
+        <groupId>org.demos</groupId>
+        <artifactId>demos</artifactId>
+        <version>0.0.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.demos</groupId>
+            <artifactId>demos-model</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -66,26 +77,31 @@
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.3.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.14.0</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.demos</groupId>
-            <artifactId>demos-core</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.demos.pdfconverter.process.PdfConversionStreamProcessor</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,22 +1,21 @@
 const Apify = require('apify');
 const Kafka = require('kafka-node')
 const Utils = require('./utils.js')
+const fetch = require('node-fetch')
 
 Apify.main(async () => {
 
-    let localGovernment = {
-        id: '1234',
-        name: 'Metz',
-        webSite: 'http://www.metz.fr'
-    }
+    const localGovernments = await getLocalGovernmentsToScrape();
+    const localGovernment = localGovernments[0];
+    const localGovernementStartUrl = Utils.getUrlWithProtocol(localGovernment.webSite);
 
-    let domainName = Utils.getDomainNameFromLocalGovernment(localGovernment);
+    const domainName = Utils.getDomainNameFromLocalGovernment(localGovernment);
 
     // Apify.openRequestQueue() is a factory to get a preconfigured RequestQueue instance.
     // We add our first request to it - the initial page the crawler will visit.
     const requestQueue = await Apify.openRequestQueue();
 
-    await requestQueue.addRequest({ url: localGovernment.webSite });
+    await requestQueue.addRequest({ url: localGovernementStartUrl });
 
     const kafkaClient = new Kafka.KafkaClient({kafkaHost: 'localhost:9092' });
     const kafkaProducer = new Kafka.Producer(kafkaClient);
@@ -81,7 +80,6 @@ Apify.main(async () => {
 });
 
 async function registerPdfUrls(pdfUrls, localGovernment, kafkaProducer) {
-    //await Apify.pushData(data);
     pdfUrls.forEach(pdfUrl => {
         let pdfUrlAgregate = {
             url: pdfUrl,
@@ -100,4 +98,10 @@ async function registerPdfUrls(pdfUrls, localGovernment, kafkaProducer) {
             }
         })
     });
+}
+
+async function getLocalGovernmentsToScrape() {
+    const response = await fetch('http://localhost:8080/localGovernments/forScraping?size=1');
+    const localGovernmentsToScrape = await response.json(); 
+    return localGovernmentsToScrape;
 }

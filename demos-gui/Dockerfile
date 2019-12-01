@@ -2,7 +2,7 @@
 FROM node:10.9-alpine as builder
 RUN apk update
 WORKDIR /app
-COPY ./demos-gui .
+COPY . .
 RUN cd /app && npm set progress=false && npm install
 ARG configuration=production
 RUN npm run build -- --configuration $configuration
