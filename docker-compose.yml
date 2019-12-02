@@ -34,7 +34,6 @@ services:
 
   demos-tensor-classifier:
     build:
-      context: ""
       dockerfile: demos-classifier/Dockerfile-tensorflow
     image: benjaminpochat/demos-tensor-classifier:0.1.0
     network_mode: host
@@ -46,8 +45,7 @@ services:
 
   demos-core:
     build:
-      context: ""
-      dockerfile: ./demos-api/Dockerfile
+      dockerfile: ./demos-core/Dockerfile
     image: benjaminpochat/demos-core:0.1.0
     network_mode: host
     container_name: demos-core
@@ -68,7 +66,12 @@ services:
     depends_on:
       - demos-core
       - demos-message-bus
-
+    deploy:
+        resources:
+            limit:
+                cpus: '0.5'
+                memory: '500M'
+        
   demos-pdf-converter:
     build:
       context: ""
@@ -76,6 +79,11 @@ services:
     image: benjaminpochat/demos-pdf-converter:0.1.0
     network_mode: host
     container_name: demos-pdf-converter
+    deploy:
+        resources:
+            limit:
+                cpus: '0.5'
+                memory: '500M'
 
   demos-text-classifier:
     build:
