@@ -3,6 +3,7 @@ FROM python:3.7.0-slim
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 RUN apt-get -y install gcc
+RUN apt-get install wait-for-it
 
 RUN pip install -U pip
 RUN pip install -U setuptools
@@ -20,4 +21,6 @@ ENV DEMOS_HOME .
 RUN mkdir -p ./src/main
 COPY ./src/main ./src/main
 
-ENTRYPOINT ["python3", "./src/main/python/main.py"]
+# Wait for kafka message bus (localhost:9092)
+# and then start python classifier application
+ENTRYPOINT ["wait-for-it", "localhost:9092", "--", "python3", "./src/main/python/main.py"]

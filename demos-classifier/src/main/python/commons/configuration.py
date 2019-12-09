@@ -94,7 +94,7 @@ class Configuration(metaclass=Singleton):
         return os.environ.get('DEMOS_HOME')
 
     def _get_resource_file_path(self, file_name:str):
-        return os.path.join(self.get_demos_home(), 'demos-text-classifier', 'src', 'main', 'resources', file_name)
+        return os.path.join(self.get_demos_home(), 'src', 'main', 'resources', file_name)
 
     def get_keras_model_file_path(self):
         return self._get_resource_file_path(self.get_keras_model_file())

@@ -34,7 +34,8 @@ services:
 
   demos-tensor-classifier:
     build:
-      dockerfile: demos-classifier/Dockerfile-tensorflow
+      context: "./demos-classifier"
+      dockerfile: Dockerfile-tensorflow
     image: benjaminpochat/demos-tensor-classifier:0.1.0
     network_mode: host
     container_name: demos-tensor-classifier
@@ -43,8 +44,18 @@ services:
     environment:
       - MODEL_NAME=demos
 
+  demos-text-classifier:
+    build:
+      context: "./demos-classifier"
+    image: benjaminpochat/demos-text-classifier:0.1.0
+    network_mode: host
+    container_name: demos-text-classifier
+    depends_on:
+      - demos-message-bus
+
   demos-core:
     build:
+      context: "."
       dockerfile: ./demos-core/Dockerfile
     image: benjaminpochat/demos-core:0.1.0
     network_mode: host
@@ -58,8 +69,7 @@ services:
 
   demos-scraper:
     build:
-      context: ""
-      dockerfile: ./demos-scraper/Dockerfile
+      context: "./demos-scraper"
     image: benjaminpochat/demos-scraper:0.1.0
     network_mode: host
     container_name: demos-scraper
@@ -67,37 +77,30 @@ services:
       - demos-core
       - demos-message-bus
     deploy:
-        resources:
-            limit:
-                cpus: '0.5'
-                memory: '500M'
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '500M'
         
   demos-pdf-converter:
     build:
-      context: ""
+      context: "."
       dockerfile: demos-pdf-converter/Dockerfile
     image: benjaminpochat/demos-pdf-converter:0.1.0
     network_mode: host
     container_name: demos-pdf-converter
+    depends_on:
+      - demos-message-bus
     deploy:
-        resources:
-            limit:
-                cpus: '0.5'
-                memory: '500M'
-
-  demos-text-classifier:
-    build:
-      context: ""
-      dockerfile: demos-classifier/Dockerfile
-    image: benjaminpochat/demos-text-classifier:0.1.0
-    network_mode: host
-    container_name: demos-text-classifier
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '500M'
 
   demos-gui:
     build:
-      context: ""
-      dockerfile: ./demos-gui/Dockerfile
-    image: benjaminpochat/demos-gui:0.0.3
+      context: "./demos-gui"
+    image: benjaminpochat/demos-gui:0.1.0
     network_mode: host
     container_name: demos-gui
     ports:
