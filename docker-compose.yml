@@ -1,110 +1,129 @@
-version: '3'
+version: '3.7'
 services:
 
-  demos-database:
+  database:
     image: postgres:11.3-alpine
     network_mode: host
-    container_name: demos-database
+    networks:
+      - hostnet
     volumes:
       - /var/lib/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
     environment:
       - POSTGRES_PASSWORD=d3mOz
       - POSTGRES_USER=demos
       - PGDATA=/var/lib/postgresql/data/pgdata
+#    ports:
+#      - 5432:5432
 
-  demos-message-bus-zookeeper:
+  message-bus-zookeeper:
     image: wurstmeister/zookeeper
     network_mode: host
-    ports:
-      - 2181:2181
+    networks:
+      - hostnet
+#    ports:
+#      - 2181:2181
 
-  demos-message-bus:
+  message-bus:
     image: wurstmeister/kafka:2.12-2.3.0
-    ports:
-      - 9092:9092
+#    ports:
+#      - 9092:9092
     environment:
       KAFKA_CREATE_TOPICS: "UnclassifiedPdfUrl:1:1,UnclassifiedPdfContent:1:1"
       KAFKA_ZOOKEEPER_CONNECT: localhost:2181
       KAFKA_ADVERTISED_HOST_NAME: localhost
     network_mode: host
+    networks:
+      - hostnet
     volumes:
       - /var/lib/kafka:/var/run/docker.sock
     depends_on:
-      - demos-message-bus-zookeeper
+      - message-bus-zookeeper
 
-  demos-tensor-classifier:
+  tensor-classifier:
     build:
       context: "./demos-classifier"
       dockerfile: Dockerfile-tensorflow
     image: benjaminpochat/demos-tensor-classifier:0.1.0
     network_mode: host
-    container_name: demos-tensor-classifier
-    ports:
-      - 8501:8501
+    networks:
+      - hostnet
+#    ports:
+#      - 8501:8501
     environment:
       - MODEL_NAME=demos
 
-  demos-text-classifier:
+  text-classifier:
     build:
       context: "./demos-classifier"
     image: benjaminpochat/demos-text-classifier:0.1.0
     network_mode: host
-    container_name: demos-text-classifier
+    networks:
+      - hostnet
     depends_on:
-      - demos-message-bus
+      - message-bus
 
-  demos-core:
+  core:
     build:
       context: "."
       dockerfile: ./demos-core/Dockerfile
     image: benjaminpochat/demos-core:0.1.0
     network_mode: host
-    container_name: demos-core
+    networks:
+      - hostnet
+#    ports:
+#      - 8080:8080
     depends_on:
-      - demos-database
+      - database
     environment:
       - demos.datasource.url=jdbc:postgresql://localhost:5432/demos
       - demos.datasource.user=demos
       - demos.datasource.password=d3m0z
 
-  demos-scraper:
+  scraper:
     build:
       context: "./demos-scraper"
     image: benjaminpochat/demos-scraper:0.1.0
     network_mode: host
-    container_name: demos-scraper
+    networks:
+      - hostnet
     depends_on:
-      - demos-core
-      - demos-message-bus
+      - core
+      - message-bus
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: '500M'
-        
-  demos-pdf-converter:
+
+  pdf-converter:
     build:
       context: "."
       dockerfile: demos-pdf-converter/Dockerfile
     image: benjaminpochat/demos-pdf-converter:0.1.0
     network_mode: host
-    container_name: demos-pdf-converter
+    networks:
+      - hostnet
     depends_on:
-      - demos-message-bus
+      - message-bus
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: '500M'
 
-  demos-gui:
+  gui:
     build:
       context: "./demos-gui"
     image: benjaminpochat/demos-gui:0.1.0
     network_mode: host
-    container_name: demos-gui
-    ports:
-      - 80:80
+    networks:
+      - hostnet
+#    ports:
+#      - 80:80
     depends_on:
-      - demos-core
+      - core
 
+networks:
+  hostnet:
+    external: true
+    name: host

@@ -23,4 +23,4 @@ COPY ./src/main ./src/main
 
 # Wait for kafka message bus (localhost:9092)
 # and then start python classifier application
-ENTRYPOINT ["wait-for-it", "localhost:9092", "--", "python3", "./src/main/python/main.py"]
+ENTRYPOINT ["wait-for-it", "localhost:9092", "--timeout=120", "--", "python3", "./src/main/python/main.py"]

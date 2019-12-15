@@ -23,4 +23,4 @@ USER demos
 
 # Wait for kafka message bus (localhost:9092)
 # and then start java pdf converter
-ENTRYPOINT ["wait-for-it", "localhost:9092", "--", "mvn", "exec:java", "-s", "/usr/share/maven/ref/settings-docker.xml", "-f", "./demos-pdf-converter/pom.xml"]
+ENTRYPOINT ["wait-for-it", "localhost:9092", "--timeout=120", "--", "mvn", "exec:java", "-s", "/usr/share/maven/ref/settings-docker.xml", "-f", "./demos-pdf-converter/pom.xml"]

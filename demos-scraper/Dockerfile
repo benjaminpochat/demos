@@ -17,4 +17,4 @@ RUN npm install --production
 # Wait for java demos core application (localhost:80)
 # and wait for kafka message bus (localhost:9092)
 # and then start node scraping application
-ENTRYPOINT ["wait-for-it", "localhost:80", "--", "wait-for-it", "localhost:9092", "--", "node", "./src/main.js"]
+ENTRYPOINT ["wait-for-it", "localhost:8080", "--timeout=120", "--", "wait-for-it", "localhost:9092", "--timeout=120", "--", "node", "./src/main.js"]

@@ -23,4 +23,4 @@ USER demos
 
 # Wait for Postgre database (localhost:5432)
 # and then start java core application
-ENTRYPOINT ["wait-for-it", "localhost:5432", "--", "mvn", "exec:java", "-s", "/usr/share/maven/ref/settings-docker.xml", "-f", "./demos-core/pom.xml", "-Ddemos.datasource.url=${demos.datasource.url}", "-Ddemos.datasource.user=${demos.datasource.user}", "-Ddemos.datasource.password=${demos.datasource.password}"]
+ENTRYPOINT ["wait-for-it", "localhost:5432", "--timeout=120", "--", "mvn", "exec:java", "-s", "/usr/share/maven/ref/settings-docker.xml", "-f", "./demos-core/pom.xml", "-Ddemos.datasource.url=${demos.datasource.url}", "-Ddemos.datasource.user=${demos.datasource.user}", "-Ddemos.datasource.password=${demos.datasource.password}"]
