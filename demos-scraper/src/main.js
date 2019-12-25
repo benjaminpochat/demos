@@ -64,6 +64,7 @@ Apify.main(async () => {
 
     const crawler = new Apify.PuppeteerCrawler({
         requestQueue,
+        maxConcurrency: 10,
         launchPuppeteerOptions: {
             headless: true
         },

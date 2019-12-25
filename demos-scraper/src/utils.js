@@ -14,5 +14,5 @@ exports.getUrlWithProtocol = function(url) {
     if (url.match(/^\w+:\/\/.*$/g)){
         return url;
     }
-    return 'https://' + url;
+    return 'http://' + url;
 }
