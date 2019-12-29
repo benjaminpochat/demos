@@ -28,25 +28,28 @@ public class PdfConverter {
     public WebDocument convert(WebDocument webDocument) {
         LOGGER.info("url " + webDocument.getUrl() + " is getting converted...");
         String parsedText = null;
-        PDDocument pdDoc = null;
         try{
             initSSLSocketFactory();
             URL url = new URL(webDocument.getUrl());
-            URLConnection conn = url.openConnection();
-            InputStream in = conn.getInputStream();
-            RandomAccessRead randomAccessRead = new RandomAccessBuffer(in);
-            PDFParser parser = new PDFParser(randomAccessRead);
-            parser.parse();
-            COSDocument cosDoc = parser.getDocument();
+            URLConnection urlConnection = url.openConnection();
+            InputStream inputStream = urlConnection.getInputStream();
+            PDDocument pDDocument = getPDDocument(inputStream);
             PDFTextStripper pdfStripper = new PDFTextStripper();
-            pdDoc = new PDDocument(cosDoc);
-            parsedText = pdfStripper.getText(pdDoc);
-            pdDoc.close();
-        } catch (IOException | NoSuchAlgorithmException | KeyManagementException e){
-            LOGGER.error("An error occurs while converting " + webDocument.getUrl() + " into text.", e);
+            parsedText = pdfStripper.getText(pDDocument);
+            pDDocument.close();
+        } catch (Throwable t){
+            LOGGER.error("An error occurs while converting " + webDocument.getUrl() + " into text.", t);
         }
         webDocument.setTextContent(parsedText);
         return webDocument;
+    }
+
+    PDDocument getPDDocument(InputStream inputStream) throws IOException {
+        RandomAccessRead randomAccessRead = new RandomAccessBuffer(inputStream);
+        PDFParser parser = new PDFParser(randomAccessRead);
+        parser.parse();
+        COSDocument cosDoc = parser.getDocument();
+        return new PDDocument(cosDoc);
     }
 
     private void initSSLSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
