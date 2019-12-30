@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestLocalGovernmentController {
 
-    @Test
+/*    @Test
     public void selectSomeLocalGovernment_should_return_a_list_of_local_governments(){
         // given
         LocalGovernmentController controller = new LocalGovernmentController();
@@ -37,6 +37,6 @@ public class TestLocalGovernmentController {
 
         // then
         assertThat(selectedLocalGovernments).containsExactlyInAnyOrder(localGovernments.get(2), localGovernments.get(3));
-    }
+    }*/
 
 }

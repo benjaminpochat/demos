@@ -8,19 +8,42 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LocalGovernmentRepository extends CrudRepository<LocalGovernment, Long> {
-    Iterable<LocalGovernment> findByWebSiteIsNotNull();
+    List<LocalGovernment> findByWebSiteIsNotNull();
 
     @Query("select count(*) from LocalGovernment where webSite is not null")
-    Long countLocalGovernmentsWithWebSite();
+    int countLocalGovernmentsWithWebSite();
 
     @Query( "select count(distinct localGov) " +
             "from LocalGovernment as localGov," +
             "       WebDocument as webDoc " +
             "where webDoc.localGovernment = localGov ")
-    Long countLocalGovernmentsWithWebDocuments();
+    int countLocalGovernmentsWithWebDocuments();
 
     Optional<LocalGovernment> findByWebSite(String webSite);
 
     List<LocalGovernment> findFirst20ByNameStartingWithIgnoreCase(String name, Sort sort);
 
+    @Query("select count(*) " +
+            "from LocalGovernment as localGov " +
+            "where webSite is not null and " +
+            "not exists (" +
+            "select scrapingSession " +
+            "from ScrapingSession as scrapingSession " +
+            "where scrapingSession.localGovernment = localGov )")
+    int countLocalGovernmentsWithWebSiteAndNoScrapingSession();
+
+    @Query("select localGov " +
+            "from LocalGovernment as localGov " +
+            "where webSite is not null and " +
+            "not exists (" +
+            "select scrapingSession " +
+            "from ScrapingSession as scrapingSession " +
+            "where scrapingSession.localGovernment = localGov )")
+    List<LocalGovernment> findLocalGovernmentsWithWebSiteAndNoScrapingSession();
+
+    @Query("select localGov " +
+            "from LocalGovernment as localGov " +
+            "inner join ScrapingSession scrapingSession on scrapingSession.localGovernment = localGov " +
+            "order by scrapingSession.creation asc ")
+    List<LocalGovernment> findLocalGovernmentWithWebSiteAndNotScrapedSinceLongestTime();
 }
