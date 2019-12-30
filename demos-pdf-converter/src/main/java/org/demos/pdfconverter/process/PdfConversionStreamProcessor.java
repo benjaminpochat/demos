@@ -15,13 +15,16 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
 import org.demos.pdfconverter.model.WebDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
 public class PdfConversionStreamProcessor {
 
     /** The maximum content size in bytes (is set at 0,5 MBytes, half the maximum kafka message size) */
-    public static final int DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE = 524288;
+    private static final int DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE = 524288;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdfConversionStreamProcessor.class);
 
     private int maximumTextContentSize;
 
@@ -52,13 +55,29 @@ public class PdfConversionStreamProcessor {
         KStream<String, WebDocument> pdfUrlStream = builder.stream("UnclassifiedPdfUrl", Consumed.with(Serdes.String(), webDocumentSerde));
 
         KStream<String, WebDocument> webDocumentStream = pdfUrlStream.mapValues(converter::convert)
-                .filter((url, webDocument) -> webDocument.getTextContent() != null)
-                .filter((url, webDocument) -> webDocument.getTextContent().getBytes().length < maximumTextContentSize)
+                .filter(this::filterWebDocumentsWithTextContentNull)
+                .filter(this::filterWebDocumentsWithTextContentTooLarge)
                 .mapValues(this::generateId);
         webDocumentStream.to("UnclassifiedPdfContent", Produced.with(Serdes.String(), webDocumentSerde));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();
+    }
+
+    private boolean filterWebDocumentsWithTextContentTooLarge(String url, WebDocument webDocument) {
+        if(webDocument.getTextContent().getBytes().length < maximumTextContentSize){
+            LOGGER.info("Document found at url " + url + " is skipped from classification because its text content larger than the limit fixed at " + maximumTextContentSize + " bytes.");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean filterWebDocumentsWithTextContentNull(String url, WebDocument webDocument) {
+        if(webDocument.getTextContent() != null){
+            LOGGER.info("Document found at url " + url + " is skipped from classification because its text content is null.");
+            return true;
+        };
+        return false;
     }
 
     private WebDocument generateId(WebDocument webDocument) {
