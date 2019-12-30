@@ -19,8 +19,22 @@ import org.demos.pdfconverter.model.WebDocument;
 import java.util.Properties;
 
 public class PdfConversionStreamProcessor {
+
+    /** The maximum content size in bytes (is set at 0,5 MBytes, half the maximum kafka message size) */
+    public static final int DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE = 524288;
+
+    private int maximumTextContentSize;
+
     public static void main(String[] args) {
         new PdfConversionStreamProcessor().process(args);
+    }
+
+    public PdfConversionStreamProcessor(){
+        this.maximumTextContentSize = DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
+    }
+
+    public PdfConversionStreamProcessor(int maximumTextContentSize){
+        this.maximumTextContentSize = maximumTextContentSize;
     }
 
     private void process(String[] args){
@@ -39,6 +53,7 @@ public class PdfConversionStreamProcessor {
 
         KStream<String, WebDocument> webDocumentStream = pdfUrlStream.mapValues(converter::convert)
                 .filter((url, webDocument) -> webDocument.getTextContent() != null)
+                .filter((url, webDocument) -> webDocument.getTextContent().getBytes().length < maximumTextContentSize)
                 .mapValues(this::generateId);
         webDocumentStream.to("UnclassifiedPdfContent", Produced.with(Serdes.String(), webDocumentSerde));
 
