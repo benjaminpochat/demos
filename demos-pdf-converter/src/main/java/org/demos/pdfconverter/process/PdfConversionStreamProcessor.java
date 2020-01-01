@@ -1,13 +1,7 @@
 package org.demos.pdfconverter.process;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.kafka.common.errors.SerializationException;
-import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -22,103 +16,50 @@ import java.util.Properties;
 
 public class PdfConversionStreamProcessor {
 
-    /** The maximum content size in bytes (is set at 0,5 MBytes, half the maximum kafka message size) */
-    private static final int DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE = 524288;
     private static final Logger LOGGER = LoggerFactory.getLogger(PdfConversionStreamProcessor.class);
 
-    private int maximumTextContentSize;
+    private static final String INPUT_TOPIC_NAME = "UnclassifiedPdfUrl";
+
+    private static final String OUTPUT_TOPIC_NAME = "UnclassifiedPdfContent";
+
+    public static final String DEFAULT_SERVERS_CONFIG = "localhost:9092";
+
+    private WebDocumentFilterByContent filterByContent = new WebDocumentFilterByContent();
+
+    private WebDocumentFilterBySize filterBySize = new WebDocumentFilterBySize(WebDocumentFilterBySize.DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE);
+
+    private WebDocumentIdGenerator idGenerator = new WebDocumentIdGenerator();
+
+    private final Properties properties = new Properties();
+
+    private Serde<WebDocument> webDocumentSerde = Serdes.serdeFrom(new UnclassifiedWebDocumentSerializer(), new UnclassifierWebDocumentDeserializer());
+
+    private PdfConverter converter = new PdfConverter();
+
+    public PdfConversionStreamProcessor() {
+        new PdfConversionStreamProcessor(DEFAULT_SERVERS_CONFIG);
+    }
+
+    public PdfConversionStreamProcessor(String serversConfig){
+        properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "pdf-converter");
+        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, serversConfig);
+        properties.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        properties.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+    }
 
     public static void main(String[] args) {
-        new PdfConversionStreamProcessor().process(args);
+        new PdfConversionStreamProcessor().process();
     }
 
-    public PdfConversionStreamProcessor(){
-        this.maximumTextContentSize = DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
-    }
-
-    public PdfConversionStreamProcessor(int maximumTextContentSize){
-        this.maximumTextContentSize = maximumTextContentSize;
-    }
-
-    private void process(String[] args){
-        Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "pdf-converter");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        Serde<WebDocument> webDocumentSerde = Serdes.serdeFrom(new UnclassifiedWebDocumentSerializer(), new UnclassifierWebDocumentDeserializer());
-
+    private void process(){
         StreamsBuilder builder = new StreamsBuilder();
-        PdfConverter converter = new PdfConverter();
-
-        // stream d'entrée
-        KStream<String, WebDocument> pdfUrlStream = builder.stream("UnclassifiedPdfUrl", Consumed.with(Serdes.String(), webDocumentSerde));
-
+        KStream<String, WebDocument> pdfUrlStream = builder.stream(INPUT_TOPIC_NAME, Consumed.with(Serdes.String(), webDocumentSerde));
         KStream<String, WebDocument> webDocumentStream = pdfUrlStream.mapValues(converter::convert)
-                .filter(this::filterWebDocumentsWithTextContentNull)
-                .filter(this::filterWebDocumentsWithTextContentTooLarge)
-                .mapValues(this::generateId);
-        webDocumentStream.to("UnclassifiedPdfContent", Produced.with(Serdes.String(), webDocumentSerde));
-
-        KafkaStreams streams = new KafkaStreams(builder.build(), props);
+                .filter((url, webDocument) -> filterByContent.test(webDocument))
+                .filter((url, webDocument) -> filterBySize.test(webDocument))
+                .mapValues(webDocument -> idGenerator.generateId(webDocument));
+        webDocumentStream.to(OUTPUT_TOPIC_NAME, Produced.with(Serdes.String(), webDocumentSerde));
+        KafkaStreams streams = new KafkaStreams(builder.build(), properties);
         streams.start();
     }
-
-    private boolean filterWebDocumentsWithTextContentTooLarge(String url, WebDocument webDocument) {
-        if(webDocument.getTextContent().getBytes().length < maximumTextContentSize){
-            LOGGER.info("Document found at url " + url + " is skipped from classification because its text content larger than the limit fixed at " + maximumTextContentSize + " bytes.");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean filterWebDocumentsWithTextContentNull(String url, WebDocument webDocument) {
-        if(webDocument.getTextContent() != null){
-            LOGGER.info("Document found at url " + url + " is skipped from classification because its text content is null.");
-            return true;
-        };
-        return false;
-    }
-
-    private WebDocument generateId(WebDocument webDocument) {
-        webDocument.setId(DigestUtils.sha256Hex(webDocument.getTextContent()));
-        return webDocument;
-    }
-
-    private class UnclassifiedWebDocumentSerializer implements Serializer<WebDocument> {
-        private final ObjectMapper objectMapper = new ObjectMapper();
-
-        @Override
-        public byte[] serialize(String topic, WebDocument unclassifiedWebDocument) {
-            if (unclassifiedWebDocument == null) {
-                return null;
-            }
-            try {
-                return objectMapper.writeValueAsBytes(unclassifiedWebDocument);
-            } catch (JsonProcessingException e) {
-                throw new SerializationException("Error serializing JSON message", e);
-            }
-        }
-    }
-
-    private class UnclassifierWebDocumentDeserializer implements Deserializer<WebDocument> {
-        private final ObjectMapper objectMapper = new ObjectMapper();
-
-        @Override
-        public WebDocument deserialize(String topic, byte[] bytes) {
-            if (bytes == null)
-                return null;
-
-            WebDocument data;
-            try {
-                data = objectMapper.readValue(bytes, WebDocument.class);
-            } catch (Exception e) {
-                throw new SerializationException("Error deserializing JSON message", e);
-            }
-
-            return data;
-        }
-    }
-
-
 }

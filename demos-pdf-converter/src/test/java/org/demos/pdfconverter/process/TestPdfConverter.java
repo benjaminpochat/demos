@@ -31,6 +31,21 @@ public class TestPdfConverter {
     }
 
     @Test
+    public void convert_should_convert_another_simple_pdf() {
+        // given
+        String url = "https://www.mairie-larbresle.fr/public/files/0/mairie/conseil_municipal/comptes_rendus/2013/crcm09-07-2013_57fb82f263f07.pdf";
+        var webDocument = new WebDocument();
+        webDocument.setUrl(url);
+        var converter = new PdfConverter();
+
+        // when
+        webDocument = converter.convert(webDocument);
+
+        // then
+        assertThat(webDocument.getTextContent()).isNotNull();
+    }
+
+    @Test
     public void convert_sould_not_throw_an_exception_if_an_out_of_memory_error_occurs() {
         // given
         String path = this.getClass().getResource("/org/demos/pdfconverter/TestPdfConverter_cas1.pdf").getPath();
@@ -49,6 +64,5 @@ public class TestPdfConverter {
         // then
         assertThat(webDocument).isNotNull();
         assertThat(webDocument.getTextContent()).isNull();
-
     }
 }
