@@ -37,7 +37,7 @@ public class PdfConversionStreamProcessor {
     private PdfConverter converter = new PdfConverter();
 
     public PdfConversionStreamProcessor() {
-        new PdfConversionStreamProcessor(DEFAULT_SERVERS_CONFIG);
+        this(DEFAULT_SERVERS_CONFIG);
     }
 
     public PdfConversionStreamProcessor(String serversConfig){
