@@ -20,28 +20,49 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.*;
 
 public class PdfConverter {
 
-    static Logger LOGGER = LoggerFactory.getLogger(PdfConverter.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(PdfConverter.class);
+
+    /**
+     * Timeout for the conversion, in milliseconds
+     */
+    private int timeout;
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public PdfConverter(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public PdfConverter(){
+        // Default timeout is set to 4 minutes, in order to be less than the default Kafka timeout "max.poll.interval.ms" set to 5 minutes (https://kafka.apache.org/documentation/)
+        this(240000);
+    }
 
     public WebDocument convert(WebDocument webDocument) {
         LOGGER.info("url " + webDocument.getUrl() + " is getting converted...");
-        String parsedText = null;
-        try{
-            initSSLSocketFactory();
-            URL url = new URL(webDocument.getUrl());
-            URLConnection urlConnection = url.openConnection();
-            InputStream inputStream = urlConnection.getInputStream();
-            PDDocument pDDocument = getPDDocument(inputStream);
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            parsedText = pdfStripper.getText(pDDocument);
-            pDDocument.close();
-        } catch (Throwable t){
-            LOGGER.error("An error occurs while converting " + webDocument.getUrl() + " into text.", t);
+        try {
+            executeConversionTaskInWithinTimeoutDuration(webDocument);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            LOGGER.error("An error occurs while converting " + webDocument.getUrl() + " into text.", e);
         }
-        webDocument.setTextContent(parsedText);
+
         return webDocument;
+    }
+
+    void executeConversionTaskInWithinTimeoutDuration(WebDocument webDocument) throws InterruptedException, ExecutionException, TimeoutException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future future = executor.submit(getConversionTask(webDocument));
+        future.get(getTimeout(), TimeUnit.MILLISECONDS);
+    }
+
+    ConversionTask getConversionTask(WebDocument webDocument) {
+        return new ConversionTask(webDocument);
     }
 
     PDDocument getPDDocument(InputStream inputStream) throws IOException {
@@ -73,5 +94,32 @@ public class PdfConverter {
                 }
             }
         };
+    }
+
+    class ConversionTask implements Runnable {
+
+        private WebDocument webDocument;
+
+        ConversionTask(WebDocument webDocument) {
+            this.webDocument = webDocument;
+        }
+
+        @Override
+        public void run() {
+            String parsedText = null;
+            try{
+                initSSLSocketFactory();
+                URL url = new URL(webDocument.getUrl());
+                URLConnection urlConnection = url.openConnection();
+                InputStream inputStream = urlConnection.getInputStream();
+                PDDocument pDDocument = getPDDocument(inputStream);
+                PDFTextStripper pdfStripper = new PDFTextStripper();
+                parsedText = pdfStripper.getText(pDDocument);
+                pDDocument.close();
+            } catch (Throwable t){
+                LOGGER.error("An error occurs while converting " + webDocument.getUrl() + " into text.", t);
+            }
+            webDocument.setTextContent(parsedText);
+        }
     }
 }

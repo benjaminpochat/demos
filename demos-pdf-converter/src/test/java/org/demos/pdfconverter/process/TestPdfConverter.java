@@ -2,15 +2,21 @@ package org.demos.pdfconverter.process;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.demos.pdfconverter.model.WebDocument;
+import org.demos.pdfconverter.process.PdfConverter.ConversionTask;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 public class TestPdfConverter {
     @Test
@@ -64,5 +70,25 @@ public class TestPdfConverter {
         // then
         assertThat(webDocument).isNotNull();
         assertThat(webDocument.getTextContent()).isNull();
+    }
+
+    @Test
+    public void executeConversionTaskInWithinTimeoutDuration_should_throw_an_exception_if_the_timeout_is_reached() {
+        // given
+        ConversionTask conversionTask = mock(ConversionTask.class);
+        Mockito.doAnswer((Answer<Void>) invocation -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).when(conversionTask).run();
+        PdfConverter converter = spy(PdfConverter.class);
+        when(converter.getConversionTask(any(WebDocument.class))).thenReturn(conversionTask);
+        when(converter.getTimeout()).thenReturn(500);
+
+        // when / then
+        assertThrows(TimeoutException.class, () -> converter.executeConversionTaskInWithinTimeoutDuration(new WebDocument()));
     }
 }
