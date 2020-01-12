@@ -1,6 +1,7 @@
 package org.demos.pdfconverter.process;
 
 import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.io.RandomAccessBuffer;
 import org.apache.pdfbox.io.RandomAccessRead;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -66,11 +67,7 @@ public class PdfConverter {
     }
 
     PDDocument getPDDocument(InputStream inputStream) throws IOException {
-        RandomAccessRead randomAccessRead = new RandomAccessBuffer(inputStream);
-        PDFParser parser = new PDFParser(randomAccessRead);
-        parser.parse();
-        COSDocument cosDoc = parser.getDocument();
-        return new PDDocument(cosDoc);
+        return PDDocument.load(inputStream, MemoryUsageSetting.setupTempFileOnly());
     }
 
     private void initSSLSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
