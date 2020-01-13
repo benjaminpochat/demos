@@ -17,6 +17,8 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.demos.pdfconverter.process.WebDocumentFilterBySize.DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
+
 public class PdfConversionStreamProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PdfConversionStreamProcessor.class);
@@ -33,6 +35,8 @@ public class PdfConversionStreamProcessor {
 
     private static final String CONVERSION_TASK_TIMEOUT_KEY = "conversion.task.timeout";
 
+    private static final String MAXIMUM_TEMPORARY_FILES_SIZE_KEY = "maximum.temporary.files.size";
+
     private static final String MAXIMUM_TEXT_CONTENT_SIZE_KEY = "maximum.text.content.size";
 
     private WebDocumentFilterByContent filterByContent;
@@ -46,6 +50,8 @@ public class PdfConversionStreamProcessor {
     private int conversionTaskTimeout;
 
     private int maximumTextContentSize;
+
+    private long maximumTemporaryFilesSize;
 
     private Serde<WebDocument> webDocumentSerde = Serdes.serdeFrom(new UnclassifiedWebDocumentSerializer(), new UnclassifierWebDocumentDeserializer());
 
@@ -65,11 +71,7 @@ public class PdfConversionStreamProcessor {
         filterBySize = new WebDocumentFilterBySize(maximumTextContentSize);
         filterByContent = new WebDocumentFilterByContent();
         idGenerator = new WebDocumentIdGenerator();
-        if(conversionTaskTimeout > 0) {
-            converter = new PdfConverter(conversionTaskTimeout);
-        } else {
-            converter = new PdfConverter();
-        }
+        converter = new PdfConverter(conversionTaskTimeout, maximumTemporaryFilesSize);
     }
 
     private void setKafkaProperties(String[] arguments) {
@@ -87,8 +89,9 @@ public class PdfConversionStreamProcessor {
                 ));
         LOGGER.info("The PdfConvert arguments are :");
         pdfConverterPropertiesMap.entrySet().forEach(entry -> LOGGER.info(entry.getKey() + " = " + entry.getValue()));
-        conversionTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(CONVERSION_TASK_TIMEOUT_KEY, "-1"));
-        maximumTextContentSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEXT_CONTENT_SIZE_KEY, "-1"));
+        conversionTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(CONVERSION_TASK_TIMEOUT_KEY, "240000"));
+        maximumTextContentSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEXT_CONTENT_SIZE_KEY, String.valueOf(DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE)));
+        maximumTemporaryFilesSize = Long.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEMPORARY_FILES_SIZE_KEY, "-1"));
     }
 
     private void parseKafkaArguments(String[] arguments) {

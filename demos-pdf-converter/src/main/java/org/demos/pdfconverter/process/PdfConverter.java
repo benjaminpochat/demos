@@ -1,10 +1,6 @@
 package org.demos.pdfconverter.process;
 
-import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.io.MemoryUsageSetting;
-import org.apache.pdfbox.io.RandomAccessBuffer;
-import org.apache.pdfbox.io.RandomAccessRead;
-import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.demos.pdfconverter.model.WebDocument;
@@ -32,17 +28,23 @@ public class PdfConverter {
      */
     private int timeout;
 
+    /**
+     * The maximum size of temporary PDF files (see {@link MemoryUsageSetting#setupMainMemoryOnly(long)}
+     */
+    private long maximumTemporaryFilesSize;
+
     public int getTimeout() {
         return timeout;
     }
 
-    public PdfConverter(int timeout) {
+    public PdfConverter(int timeout, long maximumTemporaryFilesSize) {
         this.timeout = timeout;
+        this.maximumTemporaryFilesSize = maximumTemporaryFilesSize;
     }
 
     public PdfConverter(){
         // Default timeout is set to 4 minutes, in order to be less than the default Kafka timeout "max.poll.interval.ms" set to 5 minutes (https://kafka.apache.org/documentation/)
-        this(240000);
+        this(240000, -1);
     }
 
     public WebDocument convert(WebDocument webDocument) {
@@ -67,7 +69,7 @@ public class PdfConverter {
     }
 
     PDDocument getPDDocument(InputStream inputStream) throws IOException {
-        return PDDocument.load(inputStream, MemoryUsageSetting.setupTempFileOnly());
+        return PDDocument.load(inputStream, MemoryUsageSetting.setupTempFileOnly(maximumTemporaryFilesSize));
     }
 
     private void initSSLSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {

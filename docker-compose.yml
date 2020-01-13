@@ -22,12 +22,12 @@ services:
     environment:
       KAFKA_CREATE_TOPICS: "UnclassifiedPdfUrl:1:1,UnclassifiedPdfContent:1:1"
       KAFKA_ZOOKEEPER_CONNECT: localhost:2181
-      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_HOST_NAME: vps965750.ovh.net
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms128M"
     networks:
       - hostnet
     volumes:
-      - /var/lib/kafka:/var/run/docker.sock
+      - /var/lib/kafka:/kafka
     depends_on:
       - message-bus-zookeeper
 
