@@ -90,7 +90,8 @@ async function registerPdfUrls(pdfUrls, localGovernment, kafkaProducer) {
         var payloads = [
             {
                 topic: 'UnclassifiedPdfUrl',
-                messages: JSON.stringify(pdfUrlAgregate)
+                messages: JSON.stringify(pdfUrlAgregate),
+                timestamp: Date.now()
             }
         ]
         kafkaProducer.send(payloads, function(message){
