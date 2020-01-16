@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.demos.pdfconverter.process.PdfConverter.DEFAULT_CONVERSION_TASK_TIMEOUT;
 import static org.demos.pdfconverter.process.WebDocumentFilterBySize.DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
 
 public class PdfConversionStreamProcessor {
@@ -89,7 +90,7 @@ public class PdfConversionStreamProcessor {
                 ));
         LOGGER.info("The PdfConvert arguments are :");
         pdfConverterPropertiesMap.entrySet().forEach(entry -> LOGGER.info(entry.getKey() + " = " + entry.getValue()));
-        conversionTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(CONVERSION_TASK_TIMEOUT_KEY, "240000"));
+        conversionTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(CONVERSION_TASK_TIMEOUT_KEY, String.valueOf(DEFAULT_CONVERSION_TASK_TIMEOUT)));
         maximumTextContentSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEXT_CONTENT_SIZE_KEY, String.valueOf(DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE)));
         maximumTemporaryFilesSize = Long.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEMPORARY_FILES_SIZE_KEY, "-1"));
     }

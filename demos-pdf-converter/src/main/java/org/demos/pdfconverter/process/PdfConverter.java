@@ -21,6 +21,8 @@ import java.util.concurrent.*;
 
 public class PdfConverter {
 
+    public static final int DEFAULT_CONVERSION_TASK_TIMEOUT = 240000;
+
     private static Logger LOGGER = LoggerFactory.getLogger(PdfConverter.class);
 
     /**
@@ -44,7 +46,7 @@ public class PdfConverter {
 
     public PdfConverter(){
         // Default timeout is set to 4 minutes, in order to be less than the default Kafka timeout "max.poll.interval.ms" set to 5 minutes (https://kafka.apache.org/documentation/)
-        this(240000, -1);
+        this(DEFAULT_CONVERSION_TASK_TIMEOUT, -1);
     }
 
     public WebDocument convert(WebDocument webDocument) {
