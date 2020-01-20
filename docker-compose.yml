@@ -35,7 +35,7 @@ services:
     build:
       context: "./demos-classifier"
       dockerfile: Dockerfile-tensorflow
-    image: benjaminpochat/demos-tensor-classifier:0.1.0
+    image: benjaminpochat/demos-tensor-classifier:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - hostnet
     environment:
@@ -44,7 +44,7 @@ services:
   text-classifier:
     build:
       context: "./demos-classifier"
-    image: benjaminpochat/demos-text-classifier:0.1.0
+    image: benjaminpochat/demos-text-classifier:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - hostnet
     depends_on:
@@ -54,7 +54,7 @@ services:
     build:
       context: "."
       dockerfile: ./demos-core/Dockerfile
-    image: benjaminpochat/demos-core:0.1.0
+    image: benjaminpochat/demos-core:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - hostnet
     depends_on:
@@ -67,7 +67,7 @@ services:
   scraper:
     build:
       context: "./demos-scraper"
-    image: benjaminpochat/demos-scraper:0.1.0
+    image: benjaminpochat/demos-scraper:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - hostnet
     depends_on:
@@ -83,7 +83,7 @@ services:
     build:
       context: "."
       dockerfile: demos-pdf-converter/Dockerfile
-    image: benjaminpochat/demos-pdf-converter:0.1.0
+    image: benjaminpochat/demos-pdf-converter:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - hostnet
     depends_on:
@@ -97,13 +97,16 @@ services:
   gui:
     build:
       context: "./demos-gui"
-    image: benjaminpochat/demos-gui:0.1.0
+    image: benjaminpochat/demos-gui:${DOCKER_IMAGE_TAG:-latest}
     networks:
       - hostnet
     depends_on:
       - core
 
+
 networks:
   hostnet:
     external: true
     name: host
+
+
