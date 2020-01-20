@@ -21,6 +21,10 @@ import java.util.concurrent.*;
 
 public class PdfConverter {
 
+    /**
+     * Default timeout is set to 4 minutes, in order to be less than the default Kafka timeout "max.poll.interval.ms" set to 5 minutes .
+     * (https://kafka.apache.org/documentation/)
+     */
     public static final int DEFAULT_CONVERSION_TASK_TIMEOUT = 240000;
 
     private static Logger LOGGER = LoggerFactory.getLogger(PdfConverter.class);
@@ -45,7 +49,6 @@ public class PdfConverter {
     }
 
     public PdfConverter(){
-        // Default timeout is set to 4 minutes, in order to be less than the default Kafka timeout "max.poll.interval.ms" set to 5 minutes (https://kafka.apache.org/documentation/)
         this(DEFAULT_CONVERSION_TASK_TIMEOUT, -1);
     }
 
@@ -108,19 +111,31 @@ public class PdfConverter {
         @Override
         public void run() {
             String parsedText = null;
+            PDDocument pDDocument = null;
             try{
                 initSSLSocketFactory();
                 URL url = new URL(webDocument.getUrl());
                 URLConnection urlConnection = url.openConnection();
                 InputStream inputStream = urlConnection.getInputStream();
-                PDDocument pDDocument = getPDDocument(inputStream);
+                pDDocument = getPDDocument(inputStream);
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 parsedText = pdfStripper.getText(pDDocument);
-                pDDocument.close();
             } catch (Throwable t){
                 LOGGER.error("An error occurs while converting " + webDocument.getUrl() + " into text.", t);
+            } finally {
+                closePDDocument(pDDocument);
             }
             webDocument.setTextContent(parsedText);
+        }
+
+        private void closePDDocument(PDDocument pDDocument) {
+            if (pDDocument != null) {
+                try {
+                    pDDocument.close();
+                } catch (IOException e) {
+                    LOGGER.error("An critical error occurs while converting " + webDocument.getUrl() + " into text : PDDocument cannot be closed", e);
+                }
+            }
         }
     }
 }
