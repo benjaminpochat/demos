@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.demos.pdfconverter.process.PdfConverter.DEFAULT_CONVERSION_TASK_TIMEOUT;
+import static org.demos.pdfconverter.process.PdfDownloader.DEFAULT_DOWNLOAD_TASK_TIMEOUT;
+import static org.demos.pdfconverter.process.PdfDownloader.DEFAULT_MAXIMUM_PDF_FILE_SIZE;
 import static org.demos.pdfconverter.process.WebDocumentFilterByTextSize.DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
 
 public class PdfConversionStreamProcessor {
@@ -34,9 +36,11 @@ public class PdfConversionStreamProcessor {
 
     private static final String KAFKA_APPLICATION_ID = "pdf-converter";
 
-    private static final String CONVERSION_TASK_TIMEOUT_KEY = "conversion.task.timeout";
+    private static final String DOWNLOAD_TASK_TIMEOUT_KEY = "download.task.timeout";
 
-    private static final String MAXIMUM_TEMPORARY_FILES_SIZE_KEY = "maximum.temporary.files.size";
+    private static final String MAXIMUM_PDF_FILE_SIZE_KEY = "maximum.pdf.file.size";
+
+    private static final String CONVERSION_TASK_TIMEOUT_KEY = "conversion.task.timeout";
 
     private static final String MAXIMUM_TEXT_CONTENT_SIZE_KEY = "maximum.text.content.size";
 
@@ -50,11 +54,13 @@ public class PdfConversionStreamProcessor {
 
     private Properties kafkaProperties;
 
+    private int downloadTaskTimeout;
+
+    private int maximumPdfFileSize;
+
     private int conversionTaskTimeout;
 
     private int maximumTextContentSize;
-
-    private int maximumTemporaryFilesSize;
 
     private Serde<WebDocument> webDocumentSerde = Serdes.serdeFrom(new UnclassifiedWebDocumentSerializer(), new UnclassifierWebDocumentDeserializer());
 
@@ -78,7 +84,7 @@ public class PdfConversionStreamProcessor {
         filterByTextSize = new WebDocumentFilterByTextSize(maximumTextContentSize);
 
         idGenerator = new WebDocumentIdGenerator();
-        downloader = new PdfDownloader(maximumTemporaryFilesSize);
+        downloader = new PdfDownloader(maximumPdfFileSize, downloadTaskTimeout);
         converter = new PdfConverter(conversionTaskTimeout);
     }
 
@@ -97,9 +103,10 @@ public class PdfConversionStreamProcessor {
                 ));
         LOGGER.info("The PdfConvert arguments are :");
         pdfConverterPropertiesMap.entrySet().forEach(entry -> LOGGER.info(entry.getKey() + " = " + entry.getValue()));
+        downloadTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(DOWNLOAD_TASK_TIMEOUT_KEY, String.valueOf(DEFAULT_DOWNLOAD_TASK_TIMEOUT)));
+        maximumPdfFileSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_PDF_FILE_SIZE_KEY, String.valueOf(DEFAULT_MAXIMUM_PDF_FILE_SIZE)));
         conversionTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(CONVERSION_TASK_TIMEOUT_KEY, String.valueOf(DEFAULT_CONVERSION_TASK_TIMEOUT)));
         maximumTextContentSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEXT_CONTENT_SIZE_KEY, String.valueOf(DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE)));
-        maximumTemporaryFilesSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEMPORARY_FILES_SIZE_KEY, "-1"));
     }
 
     private void parseKafkaArguments(String[] arguments) {

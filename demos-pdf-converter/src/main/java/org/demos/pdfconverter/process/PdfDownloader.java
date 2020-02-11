@@ -21,6 +21,8 @@ public class PdfDownloader {
 
     public static final int DEFAULT_DOWNLOAD_TASK_TIMEOUT = 240000;
 
+    public static final int DEFAULT_MAXIMUM_PDF_FILE_SIZE = 1000000;
+
     private static Logger LOGGER = LoggerFactory.getLogger(PdfDownloader.class);
 
     private int maximumPdfContentSizeInBytes;
