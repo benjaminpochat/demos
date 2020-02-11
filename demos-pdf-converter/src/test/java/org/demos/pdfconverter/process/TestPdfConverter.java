@@ -1,14 +1,13 @@
 package org.demos.pdfconverter.process;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.demos.pdfconverter.model.WebDocument;
 import org.demos.pdfconverter.process.PdfConverter.ConversionTask;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,8 +22,9 @@ public class TestPdfConverter {
     public void convert_should_convert_a_simple_pdf() throws IOException {
         // given
         String path = this.getClass().getResource("/org/demos/pdfconverter/TestPdfConverter_cas1.pdf").getPath();
+        FileInputStream inputStream = new FileInputStream(path);
         var webDocument = new WebDocument();
-        webDocument.setUrl("file://" + path);
+        webDocument.setPdfContent(inputStream.readAllBytes());
         var converter = new PdfConverter();
 
         // when
@@ -33,43 +33,6 @@ public class TestPdfConverter {
         // then
         Path expectedPdfContentFile = Paths.get(this.getClass().getResource("/org/demos/pdfconverter/TestPdfConverter_cas1.txt").getPath());
         assertThat(webDocument.getTextContent()).isEqualTo(new String(Files.readAllBytes(expectedPdfContentFile)));
-        assertThat(webDocument.getUrl()).isEqualTo("file://" + path);
-    }
-
-    @Test
-    public void convert_should_convert_another_simple_pdf() {
-        // given
-        String url = "https://www.mairie-larbresle.fr/public/files/0/mairie/conseil_municipal/comptes_rendus/2013/crcm09-07-2013_57fb82f263f07.pdf";
-        var webDocument = new WebDocument();
-        webDocument.setUrl(url);
-        var converter = new PdfConverter();
-
-        // when
-        webDocument = converter.convert(webDocument);
-
-        // then
-        assertThat(webDocument.getTextContent()).isNotNull();
-    }
-
-    @Test
-    public void convert_sould_not_throw_an_exception_if_an_out_of_memory_error_occurs() {
-        // given
-        String path = this.getClass().getResource("/org/demos/pdfconverter/TestPdfConverter_cas1.pdf").getPath();
-        var webDocument = new WebDocument();
-        webDocument.setUrl("file://" + path);
-        var converter = new PdfConverter(){
-            @Override
-            PDDocument getPDDocument(InputStream inputStream) {
-                throw new OutOfMemoryError();
-            }
-        };
-
-        // when
-        webDocument = converter.convert(webDocument);
-
-        // then
-        assertThat(webDocument).isNotNull();
-        assertThat(webDocument.getTextContent()).isNull();
     }
 
     @Test

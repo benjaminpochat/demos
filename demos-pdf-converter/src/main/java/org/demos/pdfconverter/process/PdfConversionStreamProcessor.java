@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.demos.pdfconverter.process.PdfConverter.DEFAULT_CONVERSION_TASK_TIMEOUT;
-import static org.demos.pdfconverter.process.WebDocumentFilterBySize.DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
+import static org.demos.pdfconverter.process.WebDocumentFilterByTextSize.DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE;
 
 public class PdfConversionStreamProcessor {
 
@@ -40,9 +40,11 @@ public class PdfConversionStreamProcessor {
 
     private static final String MAXIMUM_TEXT_CONTENT_SIZE_KEY = "maximum.text.content.size";
 
-    private WebDocumentFilterByContent filterByContent;
+    private WebDocumentFilterByPdfContent filterByPdfContent;
 
-    private WebDocumentFilterBySize filterBySize;
+    private WebDocumentFilterByTextContent filterByTextContent;
+
+    private WebDocumentFilterByTextSize filterByTextSize;
 
     private WebDocumentIdGenerator idGenerator;
 
@@ -52,11 +54,13 @@ public class PdfConversionStreamProcessor {
 
     private int maximumTextContentSize;
 
-    private long maximumTemporaryFilesSize;
+    private int maximumTemporaryFilesSize;
 
     private Serde<WebDocument> webDocumentSerde = Serdes.serdeFrom(new UnclassifiedWebDocumentSerializer(), new UnclassifierWebDocumentDeserializer());
 
     private PdfConverter converter;
+
+    private PdfDownloader downloader;
 
     public Properties getKafkaProperties() {
         return kafkaProperties;
@@ -69,10 +73,13 @@ public class PdfConversionStreamProcessor {
     public PdfConversionStreamProcessor(String[] arguments){
         setKafkaProperties(arguments);
         parsePdfConverterArguments(arguments);
-        filterBySize = new WebDocumentFilterBySize(maximumTextContentSize);
-        filterByContent = new WebDocumentFilterByContent();
+        filterByPdfContent = new WebDocumentFilterByPdfContent();
+        filterByTextContent = new WebDocumentFilterByTextContent();
+        filterByTextSize = new WebDocumentFilterByTextSize(maximumTextContentSize);
+
         idGenerator = new WebDocumentIdGenerator();
-        converter = new PdfConverter(conversionTaskTimeout, maximumTemporaryFilesSize);
+        downloader = new PdfDownloader(maximumTemporaryFilesSize);
+        converter = new PdfConverter(conversionTaskTimeout);
     }
 
     private void setKafkaProperties(String[] arguments) {
@@ -92,7 +99,7 @@ public class PdfConversionStreamProcessor {
         pdfConverterPropertiesMap.entrySet().forEach(entry -> LOGGER.info(entry.getKey() + " = " + entry.getValue()));
         conversionTaskTimeout = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(CONVERSION_TASK_TIMEOUT_KEY, String.valueOf(DEFAULT_CONVERSION_TASK_TIMEOUT)));
         maximumTextContentSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEXT_CONTENT_SIZE_KEY, String.valueOf(DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE)));
-        maximumTemporaryFilesSize = Long.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEMPORARY_FILES_SIZE_KEY, "-1"));
+        maximumTemporaryFilesSize = Integer.valueOf(pdfConverterPropertiesMap.getOrDefault(MAXIMUM_TEMPORARY_FILES_SIZE_KEY, "-1"));
     }
 
     private void parseKafkaArguments(String[] arguments) {
@@ -124,9 +131,12 @@ public class PdfConversionStreamProcessor {
     private void process(){
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, WebDocument> pdfUrlStream = builder.stream(INPUT_TOPIC_NAME, Consumed.with(Serdes.String(), webDocumentSerde));
-        KStream<String, WebDocument> webDocumentStream = pdfUrlStream.mapValues(converter::convert)
-                .filter((url, webDocument) -> filterByContent.test(webDocument))
-                .filter((url, webDocument) -> filterBySize.test(webDocument))
+        KStream<String, WebDocument> webDocumentStream = pdfUrlStream
+                .mapValues(downloader::download)
+                .filter((url, webDocument) -> filterByPdfContent.test(webDocument))
+                .mapValues(converter::convert)
+                .filter((url, webDocument) -> filterByTextContent.test(webDocument))
+                .filter((url, webDocument) -> filterByTextSize.test(webDocument))
                 .mapValues(webDocument -> idGenerator.generateId(webDocument));
         webDocumentStream.to(OUTPUT_TOPIC_NAME, Produced.with(Serdes.String(), webDocumentSerde));
         KafkaStreams streams = new KafkaStreams(builder.build(), kafkaProperties);

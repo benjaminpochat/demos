@@ -1,5 +1,7 @@
 package org.demos.pdfconverter.model;
 
+import java.io.File;
+
 public class WebDocument implements org.demos.model.domains.webdocument.WebDocument<LocalGovernment> {
 
     private String id;
@@ -9,6 +11,8 @@ public class WebDocument implements org.demos.model.domains.webdocument.WebDocum
     private LocalGovernment localGovernment;
 
     private String textContent;
+
+    private byte[] pdfContent;
 
     @Override
     public String getId() {
@@ -47,5 +51,13 @@ public class WebDocument implements org.demos.model.domains.webdocument.WebDocum
     @Override
     public void setTextContent(String textContent) {
         this.textContent = textContent;
+    }
+
+    public byte[] getPdfContent() {
+        return pdfContent;
+    }
+
+    public void setPdfContent(byte[] pdfContent) {
+        this.pdfContent = pdfContent;
     }
 }

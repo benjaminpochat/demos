@@ -92,6 +92,6 @@ public class TestPdfConversionStreamProcessor {
         PdfConversionStreamProcessor pdfConversionStreamProcessor = new PdfConversionStreamProcessor(arguments);
 
         // then
-        Assertions.assertThat(pdfConversionStreamProcessor.getConversionTaskTimeout()).isEqualTo(-1);
+        Assertions.assertThat(pdfConversionStreamProcessor.getConversionTaskTimeout()).isEqualTo(240000);
     }
 }

@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
-public class WebDocumentFilterByContent implements Predicate<WebDocument> {
+public class WebDocumentFilterByTextContent implements Predicate<WebDocument> {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(WebDocumentFilterByContent.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WebDocumentFilterByTextContent.class);
 
     @Override
     public boolean test(WebDocument webDocument) {
