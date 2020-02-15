@@ -11,8 +11,10 @@ public class WebDocumentFilterByTextSize implements Predicate<WebDocument> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebDocumentFilterByTextSize.class);
 
-    /** The maximum content size in bytes (is set at 0,5 MBytes, half the maximum kafka message size) */
-    public static final int DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE = 1000000;
+    /** The maximum content size in bytes
+     * Default is set less than 1 MBytes which is the default maximum kafka message size
+     */
+    public static final int DEFAULT_MAXIMUM_TEXT_CONTENT_SIZE = 786432;
 
     private int maximumTextContentSize;
 

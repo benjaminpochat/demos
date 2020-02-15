@@ -82,6 +82,7 @@ public class PdfConverter {
                 closePDDocument(pDDocument);
             }
             webDocument.setTextContent(parsedText);
+            webDocument.setPdfContent(null);
         }
 
         private void closePDDocument(PDDocument pDDocument) {

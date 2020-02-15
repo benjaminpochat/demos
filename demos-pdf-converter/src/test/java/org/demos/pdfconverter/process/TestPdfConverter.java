@@ -33,6 +33,7 @@ public class TestPdfConverter {
         // then
         Path expectedPdfContentFile = Paths.get(this.getClass().getResource("/org/demos/pdfconverter/TestPdfConverter_cas1.txt").getPath());
         assertThat(webDocument.getTextContent()).isEqualTo(new String(Files.readAllBytes(expectedPdfContentFile)));
+        assertThat(webDocument.getPdfContent()).isNullOrEmpty();
     }
 
     @Test
