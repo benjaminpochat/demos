@@ -13,24 +13,37 @@ Apify.main(async () => {
 
     const scrapingSession = await getScrapingSession();
     const localGovernment = scrapingSession.localGovernment;
-    const localGovernementStartUrl = Utils.getUrlWithProtocol(localGovernment.webSite);
-    const domainName = Utils.getDomainNameFromLocalGovernment(localGovernment);
+    console.log(`Starting scraping session #${scrapingSession.id} for ${localGovernment.name}...`);
+    if ( !localGovernment.webSite ) {
+        console.log(`${localGovernment.name} has no web site ! Scraping session will end without scraping.`);
+    } else {
+        const localGovernementStartUrl = Utils.getUrlWithProtocol(localGovernment.webSite);
+        console.log(`Scraping session starting at ${localGovernementStartUrl}...`);
+        const domainName = Utils.getDomainNameFromLocalGovernment(localGovernment);
 
-    console.log(`Starting scraping session #${scrapingSession.id} for ${localGovernementStartUrl}...`);
+        // Apify.openRequestQueue() is a factory to get a preconfigured RequestQueue instance.
+        // We add our first request to it - the initial page the crawler will visit.
+        const requestQueue = await Apify.openRequestQueue();
 
-    // Apify.openRequestQueue() is a factory to get a preconfigured RequestQueue instance.
-    // We add our first request to it - the initial page the crawler will visit.
-    const requestQueue = await Apify.openRequestQueue();
+        await requestQueue.addRequest({ url: localGovernementStartUrl });
 
-    await requestQueue.addRequest({ url: localGovernementStartUrl });
+        // handlePage is called for each page reached by the crawler
+        const handlePageFunction = getHandlePageFunction(scrapingSession, requestQueue, domainName);
 
-    // handlePage is called for each page reached by the crawler
-    const handlePageFunction = getHandlePageFunction(scrapingSession, requestQueue, domainName);
+        // This function is called if the page processing failed more than maxRequestRetries+1 times.
+        const handleFailedRequestFunction = getHandleErrorRequestFunction();
 
-    // This function is called if the page processing failed more than maxRequestRetries+1 times.
-    const handleFailedRequestFunction = getHandleErrorRequestFunction();
+        // Run the crawler and wait for it to finish.
+        const crawler = getCrawler(requestQueue, handlePageFunction, handleFailedRequestFunction);
+        await crawler.run();
 
-    const crawler = new Apify.PuppeteerCrawler({
+        await updateScrapingSession(scrapingSession);
+        console.log(`Crawler finished scraping session #${scrapingSession.id}.`);
+    }
+});
+
+function getCrawler(requestQueue, handlePageFunction, handleFailedRequestFunction) {
+    return new Apify.PuppeteerCrawler({
         requestQueue,
         maxConcurrency: 10,
         maxRequestsPerCrawl: 1000,
@@ -40,12 +53,7 @@ Apify.main(async () => {
         handlePageFunction: handlePageFunction,
         handleFailedRequestFunction: handleFailedRequestFunction,
     });
-
-    // Run the crawler and wait for it to finish.
-    await crawler.run();
-    await updateScrapingSession(scrapingSession);
-    console.log(`Crawler finished scraping session #${scrapingSession.id}.`);
-});
+}
 
 function getHandlePageFunction(scrapingSession, requestQueue, domainName) {
     let localGovernment = scrapingSession.localGovernment

@@ -2,19 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.demos</groupId>
-    <artifactId>demos-pdf-converter</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>demos-pdf-converter</name>
-    <description>Conversion of pdf files to text files for Demos project</description>
-
-
-    <properties>
-        <start-class>org.demos.pdfconverter.process.PdfConverter</start-class>
-    </properties>
 
     <parent>
         <groupId>org.demos</groupId>
@@ -23,77 +12,72 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <dependencies>
+    <groupId>org.demos</groupId>
+    <artifactId>demos-pdf-converter</artifactId>
+    <version>${demos-version}</version>
+    <packaging>jar</packaging>
+    <name>demos-pdf-converter</name>
+    <description>Conversion of pdf files to text files for Demos project</description>
 
+    <properties>
+        <start-class>org.demos.pdfconverter.process.PdfConverter</start-class>
+    </properties>
+
+    <dependencies>
         <dependency>
             <groupId>org.demos</groupId>
             <artifactId>demos-model</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
-            <version>2.3.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>connect-json</artifactId>
-            <version>2.3.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.15</version>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.13</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.26</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.26</version>
         </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.3.2</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.14.0</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

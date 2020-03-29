@@ -98,4 +98,27 @@ public class TestRotativeScrapingSessionFactory {
         // then
         Assertions.assertThat(scrapingSession.getLocalGovernment().getName()).isEqualTo("Annecy");
     }
+
+    @Test
+    public void createNewScrapingSession_should_not_use_a_local_government_with_no_web_site(){
+        // given
+        var annecy = localGovernmentRepository.save(GenericBuilder.of(LocalGovernment::new)
+                .with(LocalGovernment::setName, "Annecy")
+                .with(LocalGovernment::setWebSite, "www.annecy.fr")
+                .build());
+        var metz = localGovernmentRepository.save(GenericBuilder.of(LocalGovernment::new)
+                .with(LocalGovernment::setName, "Metz")
+                .with(LocalGovernment::setWebSite, "")
+                .build());
+        scrapingSessionRepository.save(GenericBuilder.of(ScrapingSession::new)
+                .with(ScrapingSession::setLocalGovernment, annecy)
+                .build());
+
+        // when
+        ScrapingSession scrapingSession = scrapingSessionFactory.createNewScrapingSession();
+
+        // then
+        Assertions.assertThat(scrapingSession.getLocalGovernment().getName()).isEqualTo("Annecy");
+    }
+
 }

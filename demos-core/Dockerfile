@@ -17,7 +17,7 @@ COPY ./demos-core ./demos-core
 RUN mvn clean install -N -s /usr/share/maven/ref/settings-docker.xml -f ./pom.xml
 RUN mvn clean install -DskipTests -s /usr/share/maven/ref/settings-docker.xml -f ./demos-model/pom.xml
 RUN mvn clean install -DskipTests -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
-RUN mvn exec:java -Dexec.skip=true -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
+RUN mvn exec:java -Dexec.skip=true -Dspring.profiles.active=prod -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
 
 USER demos
 

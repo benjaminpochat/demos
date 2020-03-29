@@ -1,9 +1,12 @@
 var exports = module.exports = {};
 
 exports.getDomainNameFromUrl = function(url) {
-    let urlRegexp = /^.*\.([a-zA-Z0-9_-]+\.[a-zA-Z]+)$/g;
-    let parsedUrl = urlRegexp.exec(url);
-    return parsedUrl[1];
+    if(url){
+        let urlRegexp = /^.*\.([a-zA-Z0-9_-]+\.[a-zA-Z]+)$/g;
+        let parsedUrl = urlRegexp.exec(url);
+        return parsedUrl[1];
+    }
+    return null;
 }
 
 exports.getDomainNameFromLocalGovernment = function(localGovernment) {

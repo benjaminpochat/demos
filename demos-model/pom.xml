@@ -5,10 +5,6 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.demos</groupId>
-    <artifactId>demos-model</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
-
     <parent>
         <groupId>org.demos</groupId>
         <artifactId>demos</artifactId>
@@ -16,4 +12,22 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <groupId>org.demos</groupId>
+    <artifactId>demos-model</artifactId>
+    <version>${demos-version}</version>
+    <packaging>jar</packaging>
+    <name>demos-model</name>
+    <description>Modeling classes for Demos project</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

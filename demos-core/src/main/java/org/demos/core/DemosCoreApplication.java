@@ -1,6 +1,5 @@
 package org.demos.core;
 
-import org.demos.core.domains.scraping.RandomScrapingSessionFactory;
 import org.demos.core.domains.scraping.RotativeScrapingSessionFactory;
 import org.demos.core.domains.scraping.ScrapingSessionFactory;
 import org.springframework.boot.SpringApplication;

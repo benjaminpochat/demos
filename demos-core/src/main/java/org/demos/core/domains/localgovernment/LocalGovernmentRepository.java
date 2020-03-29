@@ -25,8 +25,9 @@ public interface LocalGovernmentRepository extends CrudRepository<LocalGovernmen
 
     @Query("select count(*) " +
             "from LocalGovernment as localGov " +
-            "where webSite is not null and " +
-            "not exists (" +
+            "where webSite is not null " +
+            "and webSite <> '' " +
+            "and not exists (" +
             "select scrapingSession " +
             "from ScrapingSession as scrapingSession " +
             "where scrapingSession.localGovernment = localGov )")
@@ -34,8 +35,9 @@ public interface LocalGovernmentRepository extends CrudRepository<LocalGovernmen
 
     @Query("select localGov " +
             "from LocalGovernment as localGov " +
-            "where webSite is not null and " +
-            "not exists (" +
+            "where webSite is not null " +
+            "and webSite <> '' " +
+            "and not exists (" +
             "select scrapingSession " +
             "from ScrapingSession as scrapingSession " +
             "where scrapingSession.localGovernment = localGov )")

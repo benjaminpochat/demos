@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.5.RELEASE</version>
-		<relativePath/>
+		<groupId>org.demos</groupId>
+		<artifactId>demos</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.demos</groupId>
 	<artifactId>demos-core</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>${demos-version}</version>
 	<packaging>jar</packaging>
 	<name>demos-core</name>
 	<description>Demos project core application</description>
 
 	<properties>
 		<start-class>org.demos.core.DemosCoreApplication</start-class>
-		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.demos</groupId>
 			<artifactId>demos-model</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -43,7 +42,6 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -55,9 +53,12 @@
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
