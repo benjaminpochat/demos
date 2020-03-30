@@ -25,6 +25,8 @@
         <junit-version>5.3.2</junit-version>
         <assertj-version>3.14.0</assertj-version>
         <mockito-version>3.1.0</mockito-version>
+        <maven-compiler-plugin-version>3.8.0</maven-compiler-plugin-version>
+        <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
     </properties>
 
     <modules>
@@ -151,9 +153,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>${maven-compiler-plugin-version}</version>
                     <configuration>
-                        <release>11</release>
+                        <release>${java.version}</release>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -161,7 +163,13 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec-maven-plugin-version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
 </project>

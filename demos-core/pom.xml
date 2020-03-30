@@ -14,7 +14,7 @@
 
 	<groupId>org.demos</groupId>
 	<artifactId>demos-core</artifactId>
-	<version>${demos-version}</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>demos-core</name>
 	<description>Demos project core application</description>

@@ -14,7 +14,7 @@
 
     <groupId>org.demos</groupId>
     <artifactId>demos-pdf-converter</artifactId>
-    <version>${demos-version}</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>demos-pdf-converter</name>
     <description>Conversion of pdf files to text files for Demos project</description>
@@ -85,7 +85,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
                 <executions>
                     <execution>
                         <goals>

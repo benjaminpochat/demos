@@ -15,12 +15,12 @@ COPY ./demos-model ./demos-model
 COPY ./demos-core ./demos-core
 
 RUN mvn clean install -N -s /usr/share/maven/ref/settings-docker.xml -f ./pom.xml
-RUN mvn clean install -DskipTests -s /usr/share/maven/ref/settings-docker.xml -f ./demos-model/pom.xml
-RUN mvn clean install -DskipTests -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
-RUN mvn exec:java -Dexec.skip=true -Dspring.profiles.active=prod -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
+RUN mvn clean install -s /usr/share/maven/ref/settings-docker.xml -f ./demos-model/pom.xml
+RUN mvn clean install -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
+RUN mvn exec:java -s /usr/share/maven/ref/settings-docker.xml -f ./demos-core/pom.xml
 
 USER demos
 
 # Wait for Postgre database (localhost:5432)
 # and then start java core application
-ENTRYPOINT ["wait-for-it", "localhost:5432", "--timeout=120", "--", "mvn", "exec:java", "-s", "/usr/share/maven/ref/settings-docker.xml", "-f", "./demos-core/pom.xml", "-Ddemos.datasource.url=${demos.datasource.url}", "-Ddemos.datasource.user=${demos.datasource.user}", "-Ddemos.datasource.password=${demos.datasource.password}"]
+ENTRYPOINT ["wait-for-it", "localhost:5432", "--timeout=120", "--", "mvn", "exec:java", "-s", "/usr/share/maven/ref/settings-docker.xml", "-f", "./demos-core/pom.xml", "-Dspring.profiles.active=prod", "-Ddemos.datasource.url=${demos.datasource.url}", "-Ddemos.datasource.user=${demos.datasource.user}", "-Ddemos.datasource.password=${demos.datasource.password}"]

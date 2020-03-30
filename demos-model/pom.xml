@@ -14,20 +14,9 @@
 
     <groupId>org.demos</groupId>
     <artifactId>demos-model</artifactId>
-    <version>${demos-version}</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>demos-model</name>
     <description>Modeling classes for Demos project</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>11</release>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
