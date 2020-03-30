@@ -1,4 +1,5 @@
-![Java CI with Maven](https://github.com/benjaminpochat/demos/workflows/Java%20CI%20with%20Maven/badge.svg)
+![maven](https://github.com/benjaminpochat/demos/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![coverage](https://coveralls.io/repos/github/benjaminpochat/demos/badge.svg?branch=master)](https://coveralls.io/github/benjaminpochat/demos?branch=master)
 
 The aim of this experimentation is to try how machine learning mecanisms can help to :
 1. identify official city council reports through the web
