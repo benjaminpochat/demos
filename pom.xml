@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <demos-version>0.0.3-SNAPSHOT</demos-version>
         <jsonpath-version>2.4.0</jsonpath-version>
@@ -27,6 +28,8 @@
         <mockito-version>3.1.0</mockito-version>
         <maven-compiler-plugin-version>3.8.0</maven-compiler-plugin-version>
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
+        <jacoco-version>0.8.5</jacoco-version>
+        <coveralls-version>4.3.0</coveralls-version>
     </properties>
 
     <modules>
@@ -168,8 +171,45 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>${exec-maven-plugin-version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${coveralls-version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <!-- TODO : remove this dependency when the following issue will be released in coveralls maven plugin (milestone 5) -->
+                <!-- https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                        <version>2.2.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
