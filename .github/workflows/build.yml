@@ -24,3 +24,5 @@ jobs:
       run: mvn -B clean test --file pom.xml
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.0.1
+      with: 
+        github-token: ${{ secrets.github_token }}
