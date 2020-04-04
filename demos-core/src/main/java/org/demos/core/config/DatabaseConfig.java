@@ -1,5 +1,7 @@
 package org.demos.core.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,13 +13,16 @@ import javax.sql.DataSource;
 @Profile("prod")
 public class DatabaseConfig {
 
+    @Autowired
+    private DataSourceProperties dataSourceProperties;
+
     @Bean
     public DataSource dataSource() {
         return DataSourceBuilder
                 .create()
-                .username("demos")
-                .password("d3m0z")
-                .url("jdbc:postgresql://localhost:5432/demos")
+                .username(dataSourceProperties.getUsername())
+                .password(dataSourceProperties.getPassword())
+                .url(dataSourceProperties.getUrl())
             .build();
     }
 }
