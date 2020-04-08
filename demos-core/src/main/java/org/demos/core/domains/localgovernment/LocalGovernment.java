@@ -4,10 +4,9 @@ import org.demos.model.domains.localgovernment.LocalGovernmentType;
 
 import javax.persistence.*;
 import java.util.Map;
-import java.util.Set;
 
 @Entity
-public class LocalGovernment implements org.demos.model.domains.localgovernment.LocalGovernment<LocalGovernment> {
+public class LocalGovernment implements org.demos.model.domains.localgovernment.LocalGovernment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "local_government_id_generator")
@@ -114,17 +113,14 @@ public class LocalGovernment implements org.demos.model.domains.localgovernment.
         this.zipCode = zipCode;
     }
 
-    @Override
     public Map<LocalGovernmentType, LocalGovernment> getOverlappingLocalGovernments() {
         return overlappingLocalGovernments;
     }
 
-    @Override
     public void setOverlappingLocalGovernments(Map<LocalGovernmentType, LocalGovernment> overlappingLocalGovernments) {
         this.overlappingLocalGovernments = overlappingLocalGovernments;
     }
 
-    @Override
     public LocalGovernment getOverlappingLocalGovernment(LocalGovernmentType type){
         return overlappingLocalGovernments.get(type);
     }

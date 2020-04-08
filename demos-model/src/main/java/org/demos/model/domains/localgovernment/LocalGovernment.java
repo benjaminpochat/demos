@@ -2,7 +2,7 @@ package org.demos.model.domains.localgovernment;
 
 import java.util.Map;
 
-public interface LocalGovernment<T extends LocalGovernment> {
+public interface LocalGovernment {
 
     public Long getId();
 
@@ -35,10 +35,4 @@ public interface LocalGovernment<T extends LocalGovernment> {
     public String getZipCode();
 
     public void setZipCode(String zipCode);
-
-    public Map<LocalGovernmentType, T> getOverlappingLocalGovernments();
-
-    public void setOverlappingLocalGovernments(Map<LocalGovernmentType, T> overlappingLocalGovernments);
-
-    public T getOverlappingLocalGovernment(LocalGovernmentType type);
 }
