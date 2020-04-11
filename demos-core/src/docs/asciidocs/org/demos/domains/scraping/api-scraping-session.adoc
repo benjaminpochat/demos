@@ -1,0 +1,17 @@
+== APIs for "scraping" domain
+
+=== Get the next scraping session to process
+
+The http request :
+include::{snippets}/get-next-scrapingSession/http-request.adoc[]
+The http response :
+include::{snippets}/get-next-scrapingSession/http-response.adoc[]
+The fields contained in the response body :
+include::{snippets}/get-next-scrapingSession/response-fields.adoc[]
+
+=== Update an existing scraping session
+
+The http request, for updating scraping session with id "1" :
+include::{snippets}/update-scrapingSession/http-request.adoc[]
+The http response :
+include::{snippets}/update-scrapingSession/http-response.adoc[]

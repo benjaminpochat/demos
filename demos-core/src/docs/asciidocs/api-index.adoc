@@ -1,0 +1,9 @@
+= REST API
+
+include::org/demos/domains/localgovernment/api-local-government.adoc[]
+
+include::org/demos/domains/scraping/api-scraping-session.adoc[]
+
+include::org/demos/domains/scrapingstatistics/api-scraping-statistics.adoc[]
+
+include::org/demos/domains/webdocument/api-web-document.adoc[]

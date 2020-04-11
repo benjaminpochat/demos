@@ -16,7 +16,7 @@ public class ScrapingStatisticsController {
     private WebDocumentRepository webDocumentRepository;
 
     @GetMapping(path = "/scrapingStatistics")
-    ScrapingStatistics coomputeScrapingStatistics(){
+    ScrapingStatistics computeScrapingStatistics(){
         ScrapingStatistics statistics = new ScrapingStatistics();
         statistics.setLocalGovernmentWithWebDocumentsCollected(localGovernmentRepository.countLocalGovernmentsWithWebDocuments());
         statistics.setWebDocumentsCollected(webDocumentRepository.count());

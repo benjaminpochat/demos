@@ -16,7 +16,7 @@ public class WebDocumentController {
     private WebDocumentRepository webDocumentRepository;
 
     @GetMapping(path = "/webDocuments/{id}")
-    public Optional<WebDocument> getWebDocument(@PathVariable Long id){
+    public Optional<WebDocument> getWebDocument(@PathVariable String id){
         return webDocumentRepository.findById(id);
     }
 

@@ -1,0 +1,7 @@
+== APIs for "scraping statistics" domain
+
+=== Get demos scraping statistics
+
+include::{snippets}/get-scrapingStatistics/http-request.adoc[]
+include::{snippets}/get-scrapingStatistics/http-response.adoc[]
+include::{snippets}/get-scrapingStatistics/response-fields.adoc[]

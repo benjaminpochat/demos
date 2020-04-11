@@ -1,0 +1,17 @@
+== APIs for "web documents" domain
+
+=== Get a specific web document
+
+include::{snippets}/get-webDocument/http-request.adoc[]
+include::{snippets}/get-webDocument/http-response.adoc[]
+include::{snippets}/get-webDocument/response-fields.adoc[]
+
+=== Get all web documents
+
+include::{snippets}/get-webDocuments/http-request.adoc[]
+include::{snippets}/get-webDocuments/http-response.adoc[]
+
+=== Create a new web document
+
+include::{snippets}/create-webDocument/http-request.adoc[]
+include::{snippets}/create-webDocument/http-response.adoc[]

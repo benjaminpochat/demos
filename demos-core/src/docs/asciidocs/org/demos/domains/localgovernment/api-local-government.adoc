@@ -1,0 +1,32 @@
+== APIs for "local governments" domain
+
+=== Get a local government
+
+The http request, for instance for local government with id "101" :
+include::{snippets}/get-localGovernments/http-request.adoc[]
+The http response :
+include::{snippets}/get-localGovernments/http-response.adoc[]
+The fields contained in the response body :
+include::{snippets}/get-localGovernments/response-fields.adoc[]
+
+=== Search local governments
+
+The http request, for instance for searching local governments starting with "Po" :
+include::{snippets}/search-localGovernments/http-request.adoc[]
+The http response :
+include::{snippets}/search-localGovernments/http-response.adoc[]
+
+=== Get a local government from its web site
+
+The http request, for instance for getting the loc government matching the web site "www.bethune.fr" :
+include::{snippets}/get-localGovernment-by-webSite/http-request.adoc[]
+The http response :
+include::{snippets}/get-localGovernment-by-webSite/http-response.adoc[]
+
+=== Get web documents of a local government
+
+The http request :
+include::{snippets}/get-webDocuments-by-localGovernemnt/http-request.adoc[]
+The http response :
+include::{snippets}/get-webDocuments-by-localGovernemnt/http-response.adoc[]
+
