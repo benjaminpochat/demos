@@ -30,7 +30,7 @@ hyperlink==18.0.0
 idna==2.7
 incremental==17.5.0
 linecache2==1.0.0
-lxml==4.2.5
+lxml==4.6.2
 matplotlib==3.0.3
 mock==2.0.0
 numpy==1.14.5
