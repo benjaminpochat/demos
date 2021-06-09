@@ -37,7 +37,7 @@ numpy==1.14.5
 parsel==1.5.0
 pbr==5.1.1
 pdfminer.six==20170720
-pip==18.1
+pip==19.2
 protobuf==3.6.1
 pyOpenSSL==18.0.0
 pyasn1==0.4.4
