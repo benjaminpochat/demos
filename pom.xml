@@ -17,7 +17,7 @@
         <jsonpath-version>2.4.0</jsonpath-version>
         <spring-version>2.1.5.RELEASE</spring-version>
         <spring-restdocs-asciidoctor-version>2.0.4.RELEASE</spring-restdocs-asciidoctor-version>
-        <postgre-version>42.2.5</postgre-version>
+        <postgre-version>42.4.1</postgre-version>
         <h2.version>1.4.200</h2.version>
         <kafka-version>2.3.0</kafka-version>
         <pdfbox-version>2.0.15</pdfbox-version>
